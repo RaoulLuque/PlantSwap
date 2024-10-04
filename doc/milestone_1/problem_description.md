@@ -4,12 +4,7 @@ PlantSwap is supposed to be a Website/Application where people can
 trade their plants / offsets for other plants of their liking.
 
 The project therefore tries to tackle the problem of many
-people having a lot of offsets and plants they do not
-like anymore. One can either sell plants for an in-app currency
-which can then be used to buy plants from other people or 
-directly trade plants with other people. This enables a more
-abstract trading process than having to find another person
-which wants to trade the exact plant one is looking for.
+people having too many offsets to use themselves and possibly even plants they don't like anymore. In the application one can either sell plants for an in-app currency which can then be used to buy plants from other people or directly trade plants with other people. This enables a more abstract trading process than having to find another person which wants to trade the exact plant one is looking for.
 
 Furthermore, this enables the option to buy the
 in-app currency for real money which would be a stream of
