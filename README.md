@@ -1,4 +1,5 @@
 # PlantSwap
+![](doc/milestone_1/logo.webp)
 
 PlantSwap is an application which enables you to trade your plant offsets for other plants of your liking.
 
@@ -6,6 +7,8 @@ You can either find a person which wants to trade their plant for your plant dir
 to receive coins which you can then use the buy plants from other people.
 
 This repository documents the progress in the cloud computing course I took part in at the Universidad de Granada for my master's.
+
+The above logo was generated using [Dall-E](https://openai.com/index/dall-e/).
 
 # Milestones
 The following are references to the tasks of the respective milestones.
