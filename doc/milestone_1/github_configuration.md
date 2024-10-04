@@ -75,3 +75,10 @@ customize the profile by creating a repository with the own username, in my
 case [https://github.com/RaoulLuque/RaoulLuque](https://github.com/RaoulLuque/RaoulLuque).
 The README.md of this repository will then be displayed to the right of 
 the profile picture as can be seen in the picture above.
+
+At last, as required by GitHub since 2023, [see](https://github.blog/news-insights/product-news/raising-the-bar-for-software-security-github-2fa-begins-march-13/)
+I have set at least one other factor of authentication. In my case, both
+an authenticator app and the GitHub mobile app as can be seen in the
+screenshot below.
+
+![Two factor authentication](two_factor_authentication.png)
