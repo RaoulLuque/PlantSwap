@@ -15,11 +15,11 @@ The following list keeps track of the development progress of the app and its ba
 
 ## [Basic functionality](https://github.com/RaoulLuque/PlantSwap/milestone/2)
 Basic functionality includes things such as:
-- [ ] #4
-- [ ] #5
-- [ ] #6
-- [ ] #7
-- [ ] #8
+- [ ] [Setup of API without functionality](https://github.com/RaoulLuque/PlantSwap/issues/4)
+- [ ] [Create (secure) login functionality for administrators](https://github.com/RaoulLuque/PlantSwap/issues/5)
+- [ ] [Create (secure) login functionality for users](https://github.com/RaoulLuque/PlantSwap/issues/6)
+- [ ] [Add option for users to create ads for their plants](https://github.com/RaoulLuque/PlantSwap/issues/7)
+- [ ] [Administrators should be able to delete ads of users](https://github.com/RaoulLuque/PlantSwap/issues/8)
 
 # Milestones
 The following are references to the tasks of the respective milestones as discussed in the [Repository](https://github.com/cvillalonga/CC-24-25) of the cloud computing class.
