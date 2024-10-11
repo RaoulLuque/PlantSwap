@@ -5,7 +5,7 @@ also already done. Therefore, in the following, I will merely refer to the
 different resources that explain the process of setting up git and GitHub
 according to our needs. All commands that will be for Linux or more precisely
 Ubuntu, as this is the platform I use. However, following the provided links,
-references for other operating systems/distributions of linux can be found.
+references for other operating systems/distributions of Linux can be found.
 
 ## Setting up git
 A step-by-step guide on how to setup Git by GitHub can be found [here](https://docs.github.com/en/get-started/getting-started-with-git/set-up-git).

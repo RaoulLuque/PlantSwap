@@ -1,5 +1,5 @@
 # PlantSwap
-![](doc/milestone_1/logo.webp)
+![Logo created using Dall-E](doc/milestone_1/logo.webp)
 
 PlantSwap is an application which enables you to trade your plant offsets for other plants of your liking.
 
