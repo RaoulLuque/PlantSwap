@@ -18,6 +18,7 @@ Basic functionality includes things such as:
 - [x] [Setup of API without functionality](https://github.com/RaoulLuque/PlantSwap/issues/4)
 - [ ] [Create (secure) login functionality for administrators](https://github.com/RaoulLuque/PlantSwap/issues/6)
 - [x] [Create (secure) login functionality for users](https://github.com/RaoulLuque/PlantSwap/issues/5)
+- [ ] [Add option for users to create accounts](https://github.com/RaoulLuque/PlantSwap/issues/10)
 - [ ] [Add option for users to create ads for their plants](https://github.com/RaoulLuque/PlantSwap/issues/7)
 - [ ] [Administrators should be able to delete ads of users](https://github.com/RaoulLuque/PlantSwap/issues/8)
 
