@@ -41,10 +41,8 @@ computing class.
 
 ## [Milestone 1](https://github.com/RaoulLuque/PlantSwap/milestone/1)
 
--
-🔧 [Configuration of Git and GitHub](doc/milestone_1/github_configuration.md)
--
-📖 [Description of the problem and the application to solve it](doc/milestone_1/problem_description.md)
+- 🔧 [Configuration of Git and GitHub](doc/milestone_1/github_configuration.md)
+- 📖 [Description of the problem and the application to solve it](doc/milestone_1/problem_description.md)
 - ⚖️ [MIT License used for the project](LICENSE)
 
 ## Milestone 2
