@@ -2,3 +2,4 @@ fastapi==0.115.2
 PyJWT==2.9.0
 passlib==1.7.4
 pydantic==2.9.2
+sqlmodel==0.0.22
