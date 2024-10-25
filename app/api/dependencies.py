@@ -15,7 +15,7 @@ from app.models import TokenData, User
 
 # Object used to let FastAPI know that we want to authenticate using OAuth2
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"/token"
+    tokenUrl=f"/login/token"
 )
 
 
