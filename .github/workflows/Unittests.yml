@@ -2,10 +2,9 @@ name: Unittests with PyTest and Postgres container
 on: [ push, pull_request ]
 
 jobs:
-  runner-job:
+  unit-tests:
     runs-on: ubuntu-latest
-
-    # Service containers to run with `runner-job`
+    # Service containers to run with `unit-tests`
     services:
       # Label used to access the service container
       postgres:
