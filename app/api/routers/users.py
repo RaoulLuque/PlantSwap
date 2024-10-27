@@ -21,7 +21,7 @@ async def read_users_me(
 
 
 @router.post(
-    "/", response_model=UserPublic
+    "/users/", response_model=UserPublic
 )
 def create_user(session: SessionDep, user_in: UserCreate):
     """
