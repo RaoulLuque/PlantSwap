@@ -6,3 +6,4 @@
 /junit
 /dist
 /reports
+poetry.lock
