@@ -2,7 +2,7 @@
 
 ![Logo created using Dall-E](doc/milestone_1/logo.webp)
 
-![Tests](https://github.com/RaoulLuque/PlantSwap/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/RaoulLuque/PlantSwap/actions/workflows/tests.yml/badge.svg) [![cov](https://raoulluque.github.io/plantswap/badges/coverage.svg)](https://github.com/raoulluque/plantswap/actions)
 
 PlantSwap is an application which enables you to trade your plant
 offsets for other plants of your liking.

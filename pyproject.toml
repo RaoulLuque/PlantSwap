@@ -20,6 +20,7 @@ addopts = """
 --doctest-modules --junitxml=reports/test-results.xml
 --cov=app --cov-report=xml:reports/coverage.xml
 --cov-report=html:reports/html_dir
+--cov-report=json:reports/coverage.json
 --cov-report term-missing
 """
 testpaths = [
