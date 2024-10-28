@@ -46,3 +46,4 @@ jobs:
         if: success() || failure()
         with:
           report_paths: 'reports/test-results.xml'
+          include_passed: 'true'
