@@ -2,9 +2,9 @@
 
 ![Logo created using Dall-E](doc/milestone_1/logo.webp)
 
-[![tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FRaoulLuque%2F5d6fa85dbeff94c59c734a06a656267f%2Fraw%2F636aa26ff6f5c7bae785c40216e6545ab0ddfdf9%2FPlantSwap-cobertura-coverage.json&style=flat
+[![tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FRaoulLuque%2F5d6fa85dbeff94c59c734a06a656267f%2Fraw%2FPlantSwap-junit-tests.json
 )](https://github.com/RaoulLuque/PlantSwap/actions)
-[![coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FRaoulLuque%2F5d6fa85dbeff94c59c734a06a656267f%2Fraw%2F636aa26ff6f5c7bae785c40216e6545ab0ddfdf9%2FPlantSwap-junit-tests.json&style=flat
+[![coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FRaoulLuque%2F5d6fa85dbeff94c59c734a06a656267f%2Fraw%2FPlantSwap-cobertura-coverage.json
 )](https://github.com/RaoulLuque/PlantSwap/actions)
 
 PlantSwap is an application which enables you to trade your plant
