@@ -3,7 +3,7 @@ from sqlmodel import Session
 
 from app.core import crud
 from app.core.config import settings
-from app.tests.utils.utils import random_email, random_lower_string
+from app.tests.utils.utils import random_email, random_lower_string, get_user_token_headers
 
 
 def test_read_users_me_superuser(
@@ -15,6 +15,14 @@ def test_read_users_me_superuser(
     assert current_user["is_active"] is True
     assert current_user["is_superuser"]
     assert current_user["email"] == settings.FIRST_SUPERUSER
+
+
+def test_read_users_me_invalid_token(
+        client: TestClient
+) -> None:
+    user_headers = get_user_token_headers(client, "", "")
+    r = client.get("/users/me", headers=user_headers)
+    print(r.json())
 
 
 def test_create_user_new_email(
