@@ -6,6 +6,30 @@ authors = ["Raoul Luqué <raoulsluque@gmail.com>"]
 readme = "README.md"
 packages = [{ include = "app" }]
 
+[tool.poetry.group.dev.dependencies]
+pytest = "8.3.3"
+pytest-cov = "5.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = """
+-rA
+--doctest-modules --junitxml=reports/test-results.xml
+--cov=app --cov-report=xml:reports/coverage.xml
+--cov-report=html:reports/html_dir
+--cov-report term-missing
+"""
+testpaths = [
+    "app/tests",
+]
+
+[tool.coverage.run]
+data_file = 'reports/.coverage'
+
 [tool.poetry.dependencies]
 python = "^3.11"
 annotated-types = "0.7.0"
@@ -56,25 +80,3 @@ uvloop = "0.21.0"
 watchfiles = "0.24.0"
 websockets = "13.1"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "8.3.3"
-pytest-cov = "5.0.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-[tool.pytest.ini_options]
-minversion = "6.0"
-addopts = """
---doctest-modules --junitxml=reports/test-results.xml
---cov=app --cov-report=xml:reports/coverage.xml
---cov-report=html:reports/html_dir
---cov-report term-missing
-"""
-testpaths = [
-    "app/tests",
-]
-
-[tool.coverage.run]
-data_file = 'reports/.coverage'
