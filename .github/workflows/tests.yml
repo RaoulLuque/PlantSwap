@@ -30,9 +30,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+        run: poetry install
       - name: Run tests
-        run: pytest
+        run: poetry run pytest
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        # always run even if the previous step fails
+        if: success() || failure()
+        with:
+          report_paths: 'reports/test-results.xml'
