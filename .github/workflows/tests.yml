@@ -47,8 +47,8 @@ jobs:
         with:
           report_paths: 'reports/test-results.xml'
           include_passed: 'true'
-      - name: Update Coverage Badge
-        # GitHub actions: default branch variable
-        # https://stackoverflow.com/questions/64781462/github-actions-default-branch-variable
-        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        uses: we-cli/coverage-badge-action@main
+      - name: Update CI Badges
+        uses: gaelgirodon/ci-badges-action@v1
+        with:
+          gist-id: 5d6fa85dbeff94c59c734a06a656267f
+          token: ${{ secrets.GIST_TOKEN }}
