@@ -1,4 +1,4 @@
-name: Unittests with PyTest and Postgres container
+name: tests
 on: [ push, pull_request ]
 
 permissions:
