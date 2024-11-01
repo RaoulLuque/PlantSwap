@@ -1,14 +1,10 @@
 [tool.poetry]
 name = "PlantSwap"
 version = "0.1.0"
-description = ""
+description = "WebApp to swap plants with other people"
 authors = ["Raoul Luqué <raoulsluque@gmail.com>"]
 readme = "README.md"
 packages = [{ include = "app" }]
-
-[tool.poetry.group.dev.dependencies]
-pytest = "8.3.3"
-pytest-cov = "5.0.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -29,6 +25,10 @@ testpaths = [
 
 [tool.coverage.run]
 data_file = 'reports/.coverage'
+
+[tool.poetry.group.dev.dependencies]
+pytest = "8.3.3"
+pytest-cov = "5.0.0"
 
 [tool.poetry.dependencies]
 python = "^3.11"
