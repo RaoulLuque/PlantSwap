@@ -1,6 +1,6 @@
 # PlantSwap
 
-![Logo created using Dall-E](doc/milestone_1/logo.webp)
+![Logo created using Dall-E](docs/milestone_1/logo.webp)
 
 [![tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FRaoulLuque%2F5d6fa85dbeff94c59c734a06a656267f%2Fraw%2FPlantSwap-junit-tests.json
 )](https://github.com/RaoulLuque/PlantSwap/actions)
@@ -46,8 +46,10 @@ computing class.
 
 ## [Milestone 1](https://github.com/RaoulLuque/PlantSwap/milestone/1)
 
-- 🔧 [Configuration of Git and GitHub](doc/milestone_1/github_configuration.md)
-- 📖 [Description of the problem and the application to solve it](doc/milestone_1/problem_description.md)
+-
+🔧 [Configuration of Git and GitHub](docs/milestone_1/github_configuration.md)
+-
+📖 [Description of the problem and the application to solve it](docs/milestone_1/problem_description.md)
 - ⚖️ [MIT License used for the project](LICENSE)
 
 ## Milestone 2
