@@ -146,6 +146,7 @@ workflow runs can be seen as displayed in the following screenshot.
 ![workflow_history.png](workflow_history.png)
 
 Clicking on a specific workflow, we can track the exact steps taken as
-shown in the following screenshot.
+shown in the following screenshot. Each of the respective steps can be
+expanded to see the exact terminal logs for the respective step.
 
 ![specific_workflow.png](specific_workflow.png)
