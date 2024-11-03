@@ -22,7 +22,6 @@ def test_read_users_me_invalid_token(
 ) -> None:
     user_headers = get_user_token_headers(client, "", "")
     r = client.get("/users/me", headers=user_headers)
-    print(r.json())
 
 
 def test_create_user_new_email(

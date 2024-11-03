@@ -47,7 +47,9 @@ async def get_current_user(token: TokenDep, session: SessionDep) -> User:
     )
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[security.ALGORITHM])
+        print(payload)
         email: str = payload.get("sub")
+        print(email)
         if email is None:
             raise credentials_exception
         token_data = TokenData(email=email)
@@ -71,6 +73,6 @@ async def get_current_active_user(
     :param current_user: Current user as dependency
     :return: Current user including hashed password
     """
-    if current_user.disabled:
+    if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
