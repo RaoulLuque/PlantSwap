@@ -21,7 +21,7 @@ took part in at the Universidad de Granada for my master.
 The above logo was generated
 using [Dall-E](https://openai.com/index/dall-e/).
 
-# General progress of development of the app
+# General development progress of the app
 
 The following list keeps track of the development progress of the app
 and its backend/API.
@@ -46,10 +46,8 @@ computing class.
 
 ## [Milestone 1](https://github.com/RaoulLuque/PlantSwap/milestone/1)
 
--
-🔧 [Configuration of Git and GitHub](docs/milestone_1/github_configuration.md)
--
-📖 [Description of the problem and the application to solve it](docs/milestone_1/problem_description.md)
+- 🔧 [Configuration of Git and GitHub](docs/milestone_1/github_configuration.md)
+- 📖 [Description of the problem and the application to solve it](docs/milestone_1/problem_description.md)
 - ⚖️ [MIT License used for the project](LICENSE)
 
 ## Milestone 2
