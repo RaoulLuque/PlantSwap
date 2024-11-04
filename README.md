@@ -16,11 +16,51 @@ to receive coins which you can then use the buy plants from other
 people.
 
 This repository documents the progress in the cloud computing course I
-took part in at the Universidad de Granada for my master.
+took part in at the Universidad de Granada for my masters.
 
 The above logo was generated
 using [Dall-E](https://openai.com/index/dall-e/).
 
+# Starting up the application
+
+## Prerequisites
+The project needs a Postgresql database to be running to be able to use all functionalities. Using a .env file one can pass the application the necessary details of the database. The specific parameters to be set are found in [config.py](app/core/config.py).
+
+## Using poetry
+To start up the application, one will have to install the dependencies first. [Poetry](https://python-poetry.org/) is recommended to be installed. An installation guide can be found [here](https://python-poetry.org/docs/#installation).
+
+After having installed poetry, to install the dependencies run
+````commandline
+poetry install
+````
+This will install all dependencies and the project can be started using
+```commandline
+poetry run fastapi dev
+```
+to use development mode and
+```commandline
+poetry run fastapi run
+```
+to use release mode.
+
+By default, the api will be served at `http://0.0.0.0:8000 `.
+
+## Using pip
+Alternatively, the dependencies can be installed using pip. Note that it is recommended to have set up a virtual environment beforehand in this case. To install the dependencies simply run
+````commandline
+pip install .
+````
+This will install all dependencies and the project can be started using
+```commandline
+fastapi dev
+```
+to use development mode and
+```commandline
+fastapi run
+```
+to use release mode.
+
+By default, the api will be served at `http://0.0.0.0:8000 `.
 # General development progress of the app
 
 The following list keeps track of the development progress of the app
