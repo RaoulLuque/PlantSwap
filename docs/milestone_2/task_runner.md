@@ -35,7 +35,7 @@ environments.
 
 Having installed pipx, Poetry can simply be installed by running
 
-```bash
+```commandline
 pipx install poetry
 ```
 
@@ -69,13 +69,13 @@ directory to interactively create a pyproject.toml file.
 
 Further dependencies can now be added using
 
-```bash
+```commandline
 poetry add dependency-name
 ```
 
 and
 
-```bash
+```commandline
 poetry remove dependency-name
 ```
 
@@ -87,7 +87,7 @@ In my case of an existing-project with existing dependencies and
 virtual environment, I simply added all my dependencies from the
 existing requirements.txt by running
 
-```bash
+```commandline
 poetry add $(cat requirements.txt)
 ```
 
@@ -105,7 +105,7 @@ deleting the project, but has the possible downside not being able to
 have multiple virtual environments for one project which is otherwise
 possible with poetry. The command to change this setting is:
 
-```bash
+```commandline
 poetry config virtualenvs.in-project true
 ```
 
@@ -114,7 +114,7 @@ poetry config virtualenvs.in-project true
 If another person would now want to use the project they could simply
 use the
 
-```bash
+```commandline
 poetry install
 ```
 
@@ -130,13 +130,13 @@ found [here](https://python-poetry.org/docs/pyproject/#scripts).
 
 So far, for starting the app one can simply run
 
-```bash
+```commandline
 poetry run fastapi dev
 ```
 
 and
 
-```bash
+```commandline
 poetry run fastapi run
 ```
 
@@ -145,7 +145,7 @@ respectively.
 
 To execute the tests one can simply run
 
-```bash
+```commandline
 poetry run pytest
 ```
 
