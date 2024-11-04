@@ -90,7 +90,14 @@ computing class.
 - 📖 [Description of the problem and the application to solve it](docs/milestone_1/problem_description.md)
 - ⚖️ [MIT License used for the project](LICENSE)
 
-## Milestone 2
+## [Milestone 2](https://github.com/RaoulLuque/PlantSwap/milestone/3)
+
+- 🤹‍♀️ [Task runner](docs/milestone_2/task_runner.md)
+- 🧪 [Testing framework and assertion library](docs/milestone_2/testing_framework_and_assertion_library.md)
+- ✍️ [Writing tests](docs/milestone_2/writing_tests.md)
+- 🤖 [Continuous integration](docs/milestone_2/continuous_integration.md)
+- 📈 [Visualization of continuous integration](docs/milestone_2/visualization_of_continuous_integration.md)
+
+## Milestone 3
 
 - ...
-
