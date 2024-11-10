@@ -7,14 +7,18 @@ from .api.main import api_router
 from .core.db import init_db, engine
 
 # Initialize the FastAPI app
-app = FastAPI()
+app = FastAPI(title="PlantSwap")
+
+# Set up logger
+logger = logging.getLogger("uvicorn.error")
+
 # Include the API endpoints specified in /api/routers/...
 app.include_router(api_router)
 # Initialize the database
 init_db(Session(engine))
 
 # Mute module 'bcrypt' has no attribute '__about__' Warning
-logging.getLogger('passlib').setLevel(logging.ERROR)
+logging.getLogger("passlib").setLevel(logging.ERROR)
 
 
 @app.get("/")
