@@ -14,9 +14,7 @@ from app.core.db import engine
 from app.models import TokenData, User
 
 # Object used to let FastAPI know that we want to authenticate using OAuth2
-reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"/login/token"
-)
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/login/token")
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -46,7 +44,9 @@ async def get_current_user(token: TokenDep, session: SessionDep) -> User:
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[security.ALGORITHM])
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[security.ALGORITHM]
+        )
         print(payload)
         email: str = payload.get("sub")
         print(email)
@@ -66,7 +66,7 @@ CurrentUserDep = Annotated[User, Depends(get_current_user)]
 
 
 async def get_current_active_user(
-        current_user: CurrentUserDep,
+    current_user: CurrentUserDep,
 ) -> User:
     """
     Checks if current user exists, is valid and is active.

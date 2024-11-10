@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.get("/users/me/", response_model=UserPublic)
 async def read_users_me(
-        current_user: CurrentUserDep,
+    current_user: CurrentUserDep,
 ):
     """
     Retrieve own user data.
@@ -20,9 +20,7 @@ async def read_users_me(
     return current_user
 
 
-@router.post(
-    "/users/", response_model=UserPublic
-)
+@router.post("/users/", response_model=UserPublic)
 def create_user(session: SessionDep, user_in: UserCreate):
     """
     Create new user.

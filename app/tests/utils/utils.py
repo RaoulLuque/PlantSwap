@@ -14,7 +14,9 @@ def random_email() -> str:
     return f"{random_lower_string()}@{random_lower_string()}.com"
 
 
-def get_user_token_headers(client: TestClient, email: str, password: str) -> dict[str, str]:
+def get_user_token_headers(
+    client: TestClient, email: str, password: str
+) -> dict[str, str]:
     """
     Returns the token headers used for authentication for the given user(data)
     :param client: TestClient
@@ -42,5 +44,7 @@ def get_superuser_token_headers(client: TestClient) -> dict[str, str]:
     :param client: TestClient
     :return: Dictionary with token headers
     """
-    headers = get_user_token_headers(client, settings.FIRST_SUPERUSER, settings.FIRST_SUPERUSER_PASSWORD)
+    headers = get_user_token_headers(
+        client, settings.FIRST_SUPERUSER, settings.FIRST_SUPERUSER_PASSWORD
+    )
     return headers

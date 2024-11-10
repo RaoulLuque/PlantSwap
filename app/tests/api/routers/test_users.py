@@ -3,11 +3,15 @@ from sqlmodel import Session
 
 from app.core import crud
 from app.core.config import settings
-from app.tests.utils.utils import random_email, random_lower_string, get_user_token_headers
+from app.tests.utils.utils import (
+    random_email,
+    random_lower_string,
+    get_user_token_headers,
+)
 
 
 def test_read_users_me_superuser(
-        client: TestClient, superuser_token_headers: dict[str, str]
+    client: TestClient, superuser_token_headers: dict[str, str]
 ) -> None:
     r = client.get("/users/me", headers=superuser_token_headers)
     current_user = r.json()
@@ -17,19 +21,17 @@ def test_read_users_me_superuser(
     assert current_user["email"] == settings.FIRST_SUPERUSER
 
 
-def test_read_users_me_invalid_token(
-        client: TestClient
-) -> None:
+def test_read_users_me_invalid_token(client: TestClient) -> None:
     user_headers = get_user_token_headers(client, "", "")
     r = client.get("/users/me", headers=user_headers)
     detail = r.json()
-    assert detail == {'detail': "Could not validate credentials"}
+    assert detail == {"detail": "Could not validate credentials"}
     headers = r.headers
     assert headers.get("www-authenticate") == "Bearer"
 
 
 def test_create_user_new_email(
-        client: TestClient, superuser_token_headers: dict[str, str], db: Session
+    client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
     username = random_email()
     password = random_lower_string()
@@ -46,7 +48,7 @@ def test_create_user_new_email(
 
 
 def test_create_user_existing_email(
-        client: TestClient, superuser_token_headers: dict[str, str], db: Session
+    client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
     data = {"email": settings.FIRST_SUPERUSER, "password": "password"}
     r = client.post(

@@ -9,9 +9,7 @@ from app.tests.utils.utils import random_email, random_lower_string
 
 @pytest.mark.asyncio
 async def test_get_current_user():
-    mocked_jwt_payload = {
-        "sub": None
-    }
+    mocked_jwt_payload = {"sub": None}
 
     with patch("jwt.decode", return_value=mocked_jwt_payload):
         with pytest.raises(HTTPException) as exception_info:
@@ -25,7 +23,7 @@ async def test_get_current_user():
 @pytest.mark.asyncio
 async def test_get_current_active_user_inactive_user():
     user = User(email=random_email(), hashed_password=random_lower_string())
-    with patch('app.api.dependencies.User.is_active', new_callable=PropertyMock) as a:
+    with patch("app.api.dependencies.User.is_active", new_callable=PropertyMock) as a:
         a.return_value = False
         with pytest.raises(HTTPException) as exception_info:
             await get_current_active_user(user)
@@ -37,7 +35,7 @@ async def test_get_current_active_user_inactive_user():
 @pytest.mark.asyncio
 async def test_get_current_active_user_active_user():
     user = User(email=random_email(), hashed_password=random_lower_string())
-    with patch('app.api.dependencies.User.is_active', new_callable=PropertyMock) as a:
+    with patch("app.api.dependencies.User.is_active", new_callable=PropertyMock) as a:
         a.return_value = True
         response_user = await get_current_active_user(user)
         assert user == response_user

@@ -16,8 +16,8 @@ router = APIRouter()
 
 @router.post("/login/token")
 async def login_for_access_token(
-        session: SessionDep,
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    session: SessionDep,
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 ) -> Token:
     """
     OAuth2 Login endpoint according to spec.

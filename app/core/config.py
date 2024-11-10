@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     """
     Settings class containing .env file settings
     """
+
     model_config = SettingsConfigDict(
         # Use top level .env file (one level above ./app/)
         env_file="../.env",
