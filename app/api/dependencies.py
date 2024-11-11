@@ -55,6 +55,8 @@ async def get_current_user(token: TokenDep, session: SessionDep) -> User:
         token_data = TokenData(email=email)
     except InvalidTokenError:
         raise credentials_exception
+    if token_data.email is None:
+        raise credentials_exception
     user = get_user_by_email(session, token_data.email)
     if user is None:
         raise credentials_exception
