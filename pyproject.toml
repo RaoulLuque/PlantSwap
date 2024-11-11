@@ -104,3 +104,6 @@ format.cmd = "ruff format ."
 
 types.help = "Statically check types using mypy"
 types.cmd = "mypy app"
+
+checks.help = "Run ruff checks, formats and mypy"
+checks.sequence = ["ruff", "format", "types"]
