@@ -54,6 +54,7 @@ dependencies = [
     "uvloop==0.21.0",
     "watchfiles==0.24.0",
     "websockets==13.1",
+    "types-passlib>=1.7.7.20240819",
 ]
 
 [tool.pytest.ini_options]
@@ -79,6 +80,7 @@ dev-dependencies = [
     "pytest-mock<4.0.0,>=3.14.0",
     "pytest-asyncio<1.0.0,>=0.24.0",
     "ruff<1.0.0,>=0.7.3",
+    "mypy>=1.13.0",
 ]
 
 [tool.poe.tasks]
@@ -99,3 +101,6 @@ ruff.cmd = "ruff check --output-format=concise ."
 
 format.help = "Format code with ruff"
 format.cmd = "ruff format ."
+
+types.help = "Statically check types using mypy"
+types.cmd = "mypy app"
