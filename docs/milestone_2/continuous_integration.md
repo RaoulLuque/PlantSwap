@@ -120,8 +120,8 @@ repository administrators and only read by the GitHub actions runner.
 
 The rest of the [tests.yml](../../.github/workflows/tests.yml)
 contains the steps to run the tests, that is, check out the repository
-code, setting up python, installing poetry, installing the
-dependencies and running the tests using poetry/pytest. After that,
+code, setting up python, installing uv and poe, installing the
+dependencies and running the tests using uv/poe/pytest. After that,
 automatic test reports are created which are attached to the GitHub
 Actions task. This is explained more thoroughly
 in [this file](visualization_of_continuous_integration.md).

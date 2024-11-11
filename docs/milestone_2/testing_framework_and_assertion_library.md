@@ -13,9 +13,9 @@ Pytest conveniently uses the assert statements from the python standard library 
 
 ## Setup of testing framework
 
-Setting up pytest is as easy as installing it via pip or in this case poetry:
+Setting up pytest is as easy as installing it via pip or in this case uv:
 ```commandline
-poetry add pytest
+uv add pytest
 ```
 Pytest will then automatically discover test functions that are named `test_*` in the project directory.
 
