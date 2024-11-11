@@ -21,46 +21,44 @@ took part in at the Universidad de Granada for my masters.
 The above logo was generated
 using [Dall-E](https://openai.com/index/dall-e/).
 
+This project is based on the [fullstack fastapi template](https://github.com/fastapi/full-stack-fastapi-template).
+
 # Starting up the application
 
 ## Prerequisites
 The project needs a Postgresql database to be running to be able to use all functionalities. Using a .env file one can pass the application the necessary details of the database. The specific parameters to be set are found in [config.py](app/core/config.py).
 
 ## Using poetry
-To start up the application, one will have to install the dependencies first. [Poetry](https://python-poetry.org/) is recommended to be installed. An installation guide can be found [here](https://python-poetry.org/docs/#installation).
-
-After having installed poetry, to install the dependencies run
+To start up the application, one will have to install the dependencies first. [uv](https://python-poetry.org/) is recommended to be installed. An installation guide can be found [here](https://docs.astral.sh/uv/getting-started/). If [pipx](https://pipx.pypa.io/stable/) is already installed on the machine, it is as easy as
 ````commandline
-poetry install
+pipx install uv
 ````
-This will install all dependencies and the project can be started using
+
+After having installed uv, to create a venv and install the necessary dependencies, run:
+````commandline
+uv python install
+uv sync --all-extras --dev
+````
+The above will install all dependencies and the project could be started using
 ```commandline
-poetry run fastapi dev
+uv run fastapi dev
 ```
-to use development mode and
+However, the project uses [poethepoet](https://github.com/nat-n/poethepoet) as a task runner. To install poethepoet, run with pipx installed
+````commandline
+pipx install poethepoet
+````
+
+Now the application can be started in development mode running
 ```commandline
-poetry run fastapi run
+poe dev
 ```
-to use release mode.
+and in production mode using
+````commandline
+poe deploy
+````
 
 By default, the api will be served at `http://0.0.0.0:8000 `.
 
-## Using pip
-Alternatively, the dependencies can be installed using pip. Note that it is recommended to have set up a virtual environment beforehand in this case. To install the dependencies simply run
-````commandline
-pip install .
-````
-This will install all dependencies and the project can be started using
-```commandline
-fastapi dev
-```
-to use development mode and
-```commandline
-fastapi run
-```
-to use release mode.
-
-By default, the api will be served at `http://0.0.0.0:8000 `.
 # General development progress of the app
 
 The following list keeps track of the development progress of the app
