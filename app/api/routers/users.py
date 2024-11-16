@@ -24,7 +24,7 @@ async def read_users_me(
 def create_user(session: SessionDep, user_in: UserCreate):
     """
     Create new user.
-    :param session: The current session of the database.
+    :param session: Current database session.
     :param user_in: The user data for the to-be-created user.
     :return: User data excluding password in shape of a UserPublic instance.
     """
