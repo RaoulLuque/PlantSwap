@@ -36,12 +36,12 @@ def test_create_user_new_email(
     username = random_email()
     password = random_lower_string()
     data = {"email": username, "password": password}
-    r = client.post(
+    response = client.post(
         "/users/",
         json=data,
     )
-    assert 200 <= r.status_code < 300
-    created_user = r.json()
+    assert 200 <= response.status_code < 300
+    created_user = response.json()
     user = crud.get_user_by_email(session=db, email=username)
     assert user
     assert user.email == created_user["email"]
@@ -51,8 +51,8 @@ def test_create_user_existing_email(
     client: TestClient, superuser_token_headers: dict[str, str], db: Session
 ) -> None:
     data = {"email": settings.FIRST_SUPERUSER, "password": "password"}
-    r = client.post(
+    response = client.post(
         "/users/",
         json=data,
     )
-    assert r.status_code == 400
+    assert response.status_code == 400
