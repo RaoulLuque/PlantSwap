@@ -5,6 +5,7 @@ from sqlmodel import Session
 
 from app.core import crud
 from app.core.config import settings
+from app.models import UserCreate
 from app.tests.utils.utils import (
     random_email,
     random_lower_string,
@@ -95,6 +96,29 @@ def test_create_user_existing_email(client: TestClient, db: Session) -> None:
         json=data,
     )
     assert response.status_code == 400
+
+
+def test_delete_user_existing_user(client: TestClient, db: Session):
+    username = random_email()
+    password = random_lower_string()
+    user_create = UserCreate(email=username, password=password)
+    user = crud.create_user(db, user_create)
+    headers = get_user_token_headers(client, username, password)
+    response = client.post(f"/users/{user.id}", headers=headers)
+    assert response.status_code == 200
+    assert_if_user_and_json_response_user_match(user, response.json())
+
+
+def test_delete_user_existing_user_superuser(
+    client: TestClient, db: Session, superuser_token_headers: dict[str, str]
+) -> None:
+    username = random_email()
+    password = random_lower_string()
+    user_create = UserCreate(email=username, password=password)
+    user = crud.create_user(db, user_create)
+    response = client.post(f"/users/{user.id}", headers=superuser_token_headers)
+    assert response.status_code == 200
+    assert_if_user_and_json_response_user_match(user, response.json())
 
 
 def test_delete_user_not_found(
