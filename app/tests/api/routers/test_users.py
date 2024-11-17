@@ -8,22 +8,32 @@ from app.core.config import settings
 from app.tests.utils.utils import (
     random_email,
     random_lower_string,
-    get_user_token_headers,
+)
+from app.tests.utils.users import (
     create_random_user,
+    get_user_token_headers,
     assert_if_user_and_json_response_user_match,
 )
 
 
 def test_read_users_me_superuser(
-    client: TestClient, superuser_token_headers: dict[str, str]
+    client: TestClient, db: Session, superuser_token_headers: dict[str, str]
 ) -> None:
     response = client.get("/users/me", headers=superuser_token_headers)
     current_user = response.json()
-    assert current_user
-    assert current_user["id"] is not None
-    assert current_user["is_active"] is True
-    assert current_user["is_superuser"]
-    assert current_user["email"] == settings.FIRST_SUPERUSER
+    superuser = crud.get_user_by_email(db, settings.FIRST_SUPERUSER)
+    assert superuser
+    assert_if_user_and_json_response_user_match(superuser, current_user)
+
+
+def test_read_users_me_random_user(client: TestClient, db: Session) -> None:
+    with create_random_user(db) as (user, password):
+        user_headers = get_user_token_headers(client, user.email, password)
+        response = client.get("/users/me", headers=user_headers)
+        json_user = response.json()
+        db_user = crud.get_user_by_email(db, user.email)
+        assert db_user
+        assert_if_user_and_json_response_user_match(db_user, json_user)
 
 
 def test_read_users_me_invalid_token(client: TestClient) -> None:
@@ -111,13 +121,22 @@ def test_delete_user_not_enough_permissions(
 
 
 def test_create_user_read_user_and_delete_user(client: TestClient, db: Session) -> None:
-    with create_random_user(db) as (user, password):
-        id = user.id
-        response_read_user = client.get(f"/users/{id}")
-        user_two = response_read_user.json()
-        assert_if_user_and_json_response_user_match(user, user_two)
-        headers = get_user_token_headers(client, user.email, password)
-        response_delete_user = client.post(f"/users/{id}", headers=headers)
-        assert response_delete_user.status_code == 200
-        user_two = response_delete_user.json()
-        assert_if_user_and_json_response_user_match(user, user_two)
+    username = random_email()
+    password = random_lower_string()
+    data = {"email": username, "password": password}
+    response = client.post(
+        "/users/signup",
+        json=data,
+    )
+    assert 200 <= response.status_code < 300
+    user = crud.get_user_by_email(db, data["email"])
+    assert user
+    id = user.id
+    response_read_user = client.get(f"/users/{id}")
+    user_two = response_read_user.json()
+    assert_if_user_and_json_response_user_match(user, user_two)
+    headers = get_user_token_headers(client, str(user.email), password)
+    response_delete_user = client.post(f"/users/{id}", headers=headers)
+    assert response_delete_user.status_code == 200
+    user_two = response_delete_user.json()
+    assert_if_user_and_json_response_user_match(user, user_two)

@@ -21,7 +21,7 @@ async def login_for_access_token(
 ) -> Token:
     """
     OAuth2 Login endpoint according to spec.
-    :param session: Database session to check if user exists
+    :param session: Database session to check if plant exists
     :param form_data: User data to identify
     :return: Token used for further identification
     """
@@ -29,7 +29,7 @@ async def login_for_access_token(
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect email or password")
     elif not user.is_active:
-        raise HTTPException(status_code=400, detail="Inactive user")
+        raise HTTPException(status_code=400, detail="Inactive plant")
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=access_token_expires

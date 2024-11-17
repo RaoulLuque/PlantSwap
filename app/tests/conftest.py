@@ -6,8 +6,8 @@ from sqlmodel import Session, delete
 
 from app.core.db import engine, init_db
 from app.main import app
-from app.models import User
-from app.tests.utils.utils import get_superuser_token_headers
+from app.models import User, Plant
+from app.tests.utils.users import get_superuser_token_headers
 
 
 @pytest.fixture(scope="module")
@@ -26,7 +26,9 @@ def db() -> Generator[Session, None, None]:
     with Session(engine) as session:
         init_db(session)
         yield session
-        # Delete the user column in DB to remove any edits made by tests
+        # Delete the user and item column in DB to remove any edits made by tests
+        statement = delete(Plant)
+        session.execute(statement)
         statement = delete(User)
         session.execute(statement)
         session.commit()
