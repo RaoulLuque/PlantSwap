@@ -1,7 +1,9 @@
 from sqlmodel import Session, create_engine, select, SQLModel
 from app.core import crud
 from app.core.config import settings
-from app.models import User, UserCreate
+
+# Models need to be imported before database is initialized
+from app.models import User, UserCreate  # noqa: F401
 
 # Engine used to communicate with database
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))

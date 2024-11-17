@@ -1,9 +1,13 @@
 import random
 import string
+from contextlib import contextmanager
 
 from fastapi.testclient import TestClient
+from sqlmodel import Session
 
+from app.core import crud
 from app.core.config import settings
+from app.models import Plant, UserCreate, User
 
 
 def random_lower_string() -> str:
@@ -48,3 +52,36 @@ def get_superuser_token_headers(client: TestClient) -> dict[str, str]:
         client, settings.FIRST_SUPERUSER, settings.FIRST_SUPERUSER_PASSWORD
     )
     return headers
+
+
+@contextmanager
+def create_random_user(database: Session):
+    """
+    Context manager for creating a random user with random email and password.
+    :param database: Database session.
+    :return: User and (un-hashed) password.
+    """
+    username = random_email()
+    password = random_lower_string()
+    user_create = UserCreate(email=username, password=password)
+    user = crud.create_user(database, user_create)
+    try:
+        yield user, password
+    finally:
+        crud.delete_user(database, user)
+
+
+def assert_if_user_and_json_response_user_match(user: User, json_user: dict) -> None:
+    """
+    Asserts if the User instance and the JSON response user match.
+    :param user: User instance
+    :param json_user: JSON response user
+    :return: None
+    """
+    assert user
+    assert json_user
+    assert json_user["id"] == str(user.id)
+    assert json_user["email"] == user.email
+    assert json_user["is_active"] == user.is_active
+    assert json_user["is_superuser"] == user.is_superuser
+    assert json_user["full_name"] == user.full_name

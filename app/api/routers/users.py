@@ -1,14 +1,17 @@
+import uuid
+from typing import Any
+
 from fastapi import APIRouter, HTTPException
 
 from app.api.dependencies import CurrentUserDep, SessionDep
 from app.core import crud
-from app.models import UserPublic, UserCreate
+from app.models import UserPublic, UserCreate, User
 
 # Router for api endpoints regarding user functionality
 router = APIRouter()
 
 
-@router.get("/users/me/", response_model=UserPublic)
+@router.get("/users/me", response_model=UserPublic)
 async def read_users_me(
     current_user: CurrentUserDep,
 ):
@@ -20,7 +23,24 @@ async def read_users_me(
     return current_user
 
 
-@router.post("/users/", response_model=UserPublic)
+@router.get("/users/{id}", response_model=UserPublic)
+def read_user(session: SessionDep, id: uuid.UUID) -> Any:
+    """
+    Retrieve user with given id.
+    :param id: id of user.
+    :param session: Current database session.
+    :return: User with given id, if exists.
+    """
+    user = session.get(User, id)
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No user with the given id exists.",
+        )
+    return user
+
+
+@router.post("/users/signup", response_model=UserPublic)
 def create_user(session: SessionDep, user_in: UserCreate):
     """
     Create new user.
@@ -37,3 +57,36 @@ def create_user(session: SessionDep, user_in: UserCreate):
 
     user = crud.create_user(session, user_in)
     return user
+
+
+@router.post("/users/{id}", response_model=UserPublic)
+def delete_user(
+    session: SessionDep, current_user: CurrentUserDep, id: uuid.UUID
+) -> Any:
+    """
+    Delete user with given id if it matches current_user id or current_user is a superuser.
+    :param current_user: Currently logged-in user
+    :param id: id of user to be deleted.
+    :param session: Current database session.
+    :return: User with given id, if deleted successfully.
+    """
+    if current_user.is_superuser:
+        user = session.get(User, id)
+        if user is None:
+            raise HTTPException(
+                status_code=404,
+                detail="No user with the given id exists.",
+            )
+        session.delete(user)
+        session.commit()
+        return user
+    else:
+        if id != current_user.id:
+            raise HTTPException(
+                status_code=401,
+                detail="You are not allowed to delete other users.",
+            )
+        user = session.get(User, id)
+        session.delete(user)
+        session.commit()
+        return user
