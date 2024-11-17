@@ -46,3 +46,14 @@ def authenticate_user(session: Session, email: str, password: str) -> User | Non
     if not verify_password(password, db_user.hashed_password):
         return None
     return db_user
+
+
+def delete_user(session: Session, user: User) -> User:
+    """
+    Delete user from database.
+    :param session: Database session
+    :param user: User to be deleted
+    """
+    session.delete(user)
+    session.commit()
+    return user
