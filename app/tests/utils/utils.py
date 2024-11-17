@@ -7,7 +7,7 @@ from sqlmodel import Session
 
 from app.core import crud
 from app.core.config import settings
-from app.models import Plant, UserCreate, User
+from app.models import UserCreate, User
 
 
 def random_lower_string() -> str:
