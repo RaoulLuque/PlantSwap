@@ -19,6 +19,12 @@ class UserPublic(UserBase):
     id: uuid.UUID
 
 
+# Class to return multiple UserPublic instances at the same time
+class UsersPublic(SQLModel):
+    data: list[UserPublic]
+    count: int
+
+
 # User properties to receive via API on creation
 class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=40)
@@ -71,11 +77,9 @@ class Plant(PlantBase, table=True):
 class PlantPublic(PlantBase):
     id: uuid.UUID
     owner_id: uuid.UUID
-    # name: str
-    # description: str | None
 
 
-# Class to return multiple PlantPublic at the same time
+# Class to return multiple PlantPublic instances at the same time
 class PlantsPublic(SQLModel):
     data: list[PlantPublic]
     count: int

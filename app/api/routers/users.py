@@ -2,10 +2,11 @@ import uuid
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
+from sqlmodel import select
 
 from app.api.dependencies import CurrentUserDep, SessionDep
 from app.core import crud
-from app.models import UserPublic, UserCreate, User
+from app.models import UserPublic, UserCreate, User, UsersPublic
 
 # Router for api endpoints regarding user functionality
 router = APIRouter()
@@ -38,6 +39,21 @@ def read_user(session: SessionDep, id: uuid.UUID) -> Any:
             detail="No user with the given id exists.",
         )
     return user
+
+
+@router.get("/users/", response_model=UsersPublic)
+def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
+    """
+    Retrieve all existing users.
+    :param session: Current database session.
+    :param skip: Number of users to skip.
+    :param limit: Limit of users to retrieve.
+    :return: List of users with number of users as a UsersPublic instance
+    """
+    statement = select(User).offset(skip).limit(limit)
+    users = session.exec(statement).all()
+    count = len(users)
+    return UsersPublic(data=users, count=count)
 
 
 @router.post("/users/signup", response_model=UserPublic)

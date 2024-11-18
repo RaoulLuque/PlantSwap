@@ -73,6 +73,30 @@ def test_read_user_not_found(client: TestClient) -> None:
     assert response.json() == {"detail": "No user with the given id exists."}
 
 
+def test_read_users(client: TestClient, db: Session) -> None:
+    with create_random_user(db) as (user_one, _):
+        with create_random_user(db) as (user_two, _):
+            response = client.get("/users/")
+            response_json = response.json()
+            assert_if_user_and_json_response_user_match(
+                user_one, response_json["data"][1]
+            )
+            assert_if_user_and_json_response_user_match(
+                user_two, response_json["data"][2]
+            )
+            assert len(response_json["data"]) >= 3
+
+
+def test_read_plants_limit(client: TestClient, db: Session) -> None:
+    with create_random_user(db) as (user_one, _):
+        with create_random_user(db) as (user_two, _):
+            with create_random_user(db) as (user_three, _):
+                limit = 2
+                response = client.get(f"/users/?limit={limit}")
+                response_json = response.json()
+                assert len(response_json["data"]) == 2
+
+
 def test_create_user_new_email(client: TestClient, db: Session) -> None:
     username = random_email()
     password = random_lower_string()
