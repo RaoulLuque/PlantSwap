@@ -15,6 +15,8 @@ plant directly or sell your plants on the platform
 to receive coins which you can then use the buy plants from other
 people.
 
+The project is build using [FastAPI](https://github.com/fastapi/fastapi), [SQLModel](https://github.com/fastapi/sqlmodel), [Postgresql](https://www.postgresql.org/), [Docker](https://www.docker.com/), [GitHub Actions](https://docs.github.com/en/actions), [uv](https://github.com/astral-sh/uv) and  [poethepoet](https://github.com/nat-n/poethepoet).
+
 This repository documents the progress in the cloud computing course I
 took part in at the Universidad de Granada for my masters.
 
