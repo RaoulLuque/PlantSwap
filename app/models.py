@@ -73,6 +73,12 @@ class Plant(PlantBase, table=True):
         foreign_key="user.id", nullable=False, ondelete="CASCADE"
     )
     owner: User = Relationship(back_populates="plants")
+    # This attribute is of no real use, it simply takes care of deleting the corresponding
+    # trade requests of a plant when the respective plant is deleted
+    trade_requests: list["TradeRequest"] = Relationship(
+        sa_relationship=RelationshipProperty("TradeRequest", back_populates="plant"),
+        cascade_delete=True,
+    )
 
 
 # Plant properties to return via API, id is always required
@@ -115,6 +121,12 @@ class TradeRequest(SQLModel, table=True):
             foreign_keys="[TradeRequest.incoming_user_id]",
         )
     )
+    plant_id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        foreign_key="plant.id",
+        ondelete="CASCADE",
+    )
+    plant: Plant = Relationship(back_populates="trade_requests")
     message: str | None = Field(default=None, max_length=255)
 
 
