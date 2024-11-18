@@ -64,7 +64,7 @@ def create_user(session: SessionDep, user_in: UserCreate):
     :param user_in: The user data for the to-be-created user.
     :return: User data excluding password in shape of a UserPublic instance.
     """
-    user = crud.get_user_by_email(session, user_in.email)
+    user = crud.get_user_by_email(session, str(user_in.email))
     if user:
         raise HTTPException(
             status_code=400,
