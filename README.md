@@ -28,6 +28,14 @@ This project is based on the [fullstack fastapi template](https://github.com/fas
 ## Prerequisites
 The project needs a Postgresql database to be running to be able to use all functionalities. Using a .env file one can pass the application the necessary details of the database. The specific parameters to be set are found in [config.py](app/core/config.py).
 
+The .env file in the project directory contains some default values for the database connection. Using these one can also use the dockerfile contained in the project directory to start a postgresql container. This can be done using the [poethepoet](https://github.com/nat-n/poethepoet) script `db` by typing:
+
+*Attention*: The following command deletes and removes all running docker containers and starts a new postgresql container
+````commandline
+poe db
+````
+
+
 ## Using poetry
 To start up the application, one will have to install the dependencies first. [uv](https://python-poetry.org/) is recommended to be installed. An installation guide can be found [here](https://docs.astral.sh/uv/getting-started/). If [pipx](https://pipx.pypa.io/stable/) is already installed on the machine, it is as easy as
 ````commandline
