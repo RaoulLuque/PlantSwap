@@ -2,8 +2,10 @@ from unittest.mock import patch, PropertyMock
 
 import pytest
 from fastapi import HTTPException, status
+from sqlmodel import Session
 
 from app.api.dependencies import User, get_current_active_user, get_current_user
+from app.models import TokenData
 from app.tests.utils.utils import random_email, random_lower_string
 
 
@@ -39,3 +41,32 @@ async def test_get_current_active_user_active_user():
         a.return_value = True
         response_user = await get_current_active_user(user)
         assert user == response_user
+
+
+@pytest.mark.asyncio
+async def test_get_current_user_no_email(db: Session):
+    mocked_jwt_payload = {"sub": "example@example.com"}
+    mocked_token_data = TokenData(email=None)
+
+    with patch("jwt.decode", return_value=mocked_jwt_payload):
+        with patch("app.api.dependencies.TokenData", return_value=mocked_token_data):
+            with pytest.raises(HTTPException) as exception_info:
+                await get_current_user("fake_token", db)
+            response = exception_info.value
+            assert response.status_code == status.HTTP_401_UNAUTHORIZED
+            assert response.detail == "Could not validate credentials"
+            assert response.headers == {"WWW-Authenticate": "Bearer"}
+
+
+@pytest.mark.asyncio
+async def test_get_current_user_no_user(db: Session):
+    mocked_jwt_payload = {"sub": "example@example.com"}
+
+    with patch("jwt.decode", return_value=mocked_jwt_payload):
+        # with patch("app.core.crud.get_user_by_email", return_value=None):
+        with pytest.raises(HTTPException) as exception_info:
+            await get_current_user("fake_token", db)
+        response = exception_info.value
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.detail == "Could not validate credentials"
+        assert response.headers == {"WWW-Authenticate": "Bearer"}

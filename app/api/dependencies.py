@@ -50,7 +50,7 @@ async def get_current_user(token: TokenDep, session: SessionDep) -> User:
         email: str = payload.get("sub")
         if email is None:
             raise credentials_exception
-        token_data = TokenData(email=email)
+        token_data: TokenData = TokenData(email=email)
     except InvalidTokenError:
         raise credentials_exception
     if token_data.email is None:
