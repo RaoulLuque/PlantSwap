@@ -6,7 +6,7 @@ from sqlmodel import Session, delete
 
 from app.core.db import engine, init_db
 from app.main import app
-from app.models import User, Plant
+from app.models import User, Plant, TradeRequest
 from app.tests.utils.users import get_superuser_token_headers
 
 
@@ -30,5 +30,8 @@ def db() -> Generator[Session, None, None]:
         statement = delete(Plant)
         session.execute(statement)
         statement = delete(User)
+        session.execute(statement)
+        session.commit()
+        statement = delete(TradeRequest)
         session.execute(statement)
         session.commit()

@@ -41,13 +41,15 @@ class User(UserBase, table=True):
             back_populates="incoming_user",
             foreign_keys="[TradeRequest.incoming_user_id]",
         ),
+        cascade_delete=True,
     )
     outgoing_requests: list["TradeRequest"] = Relationship(
         sa_relationship=RelationshipProperty(
             "TradeRequest",
             back_populates="outgoing_user",
             foreign_keys="[TradeRequest.outgoing_user_id]",
-        )
+        ),
+        cascade_delete=True,
     )
 
 
@@ -88,7 +90,10 @@ class PlantsPublic(SQLModel):
 # Link model (table) for many-to-many relationship of incoming and outgoing trade requests
 class TradeRequest(SQLModel, table=True):
     outgoing_user_id: uuid.UUID = Field(
-        default_factory=uuid.uuid4, foreign_key="user.id", primary_key=True
+        default_factory=uuid.uuid4,
+        foreign_key="user.id",
+        primary_key=True,
+        ondelete="CASCADE",
     )
     outgoing_user: User = Relationship(
         sa_relationship=RelationshipProperty(
@@ -98,7 +103,10 @@ class TradeRequest(SQLModel, table=True):
         )
     )
     incoming_user_id: uuid.UUID = Field(
-        default_factory=uuid.uuid4, foreign_key="user.id", primary_key=True
+        default_factory=uuid.uuid4,
+        foreign_key="user.id",
+        primary_key=True,
+        ondelete="CASCADE",
     )
     incoming_user: User = Relationship(
         sa_relationship=RelationshipProperty(
