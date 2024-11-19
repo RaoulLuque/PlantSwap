@@ -40,16 +40,16 @@ class User(UserBase, table=True):
             "TradeRequest",
             back_populates="incoming_user",
             foreign_keys="[TradeRequest.incoming_user_id]",
+            cascade="all, delete-orphan",
         ),
-        cascade_delete=True,
     )
     outgoing_requests: list["TradeRequest"] = Relationship(
         sa_relationship=RelationshipProperty(
             "TradeRequest",
             back_populates="outgoing_user",
             foreign_keys="[TradeRequest.outgoing_user_id]",
+            cascade="all, delete-orphan",
         ),
-        cascade_delete=True,
     )
 
 
@@ -80,16 +80,16 @@ class Plant(PlantBase, table=True):
             "TradeRequest",
             back_populates="outgoing_plant",
             foreign_keys="[TradeRequest.outgoing_plant_id]",
+            cascade="all, delete-orphan",
         ),
-        cascade_delete=True,
     )
     incoming_trade_requests: list["TradeRequest"] = Relationship(
         sa_relationship=RelationshipProperty(
             "TradeRequest",
             back_populates="incoming_plant",
             foreign_keys="[TradeRequest.incoming_plant_id]",
+            cascade="all, delete-orphan",
         ),
-        cascade_delete=True,
     )
 
 
