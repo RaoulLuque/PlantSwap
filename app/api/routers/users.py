@@ -2,7 +2,6 @@ import uuid
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
-from sqlmodel import select
 
 from app.core.crud import users_crud
 from app.api.dependencies import CurrentUserDep, SessionDep
@@ -48,12 +47,10 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     :param session: Current database session.
     :param skip: Number of users to skip.
     :param limit: Limit of users to retrieve.
-    :return: List of users with number of users as a UsersPublic instance
+    :return: List of users with number of users as a UsersPublic instance.
     """
-    statement = select(User).offset(skip).limit(limit)
-    users = session.exec(statement).all()
-    count = len(users)
-    return UsersPublic(data=users, count=count)
+    users_public = users_crud.get_all_users(session, skip=skip, limit=limit)
+    return users_public
 
 
 @router.post("/users/signup", response_model=UserPublic)
@@ -70,7 +67,6 @@ def create_user(session: SessionDep, user_in: UserCreate):
             status_code=400,
             detail="The user with this email already exists in the system.",
         )
-
     user = users_crud.create_user(session, user_in)
     return user
 
@@ -93,8 +89,7 @@ def delete_user(
                 status_code=404,
                 detail="No user with the given id exists.",
             )
-        session.delete(user)
-        session.commit()
+        user = users_crud.delete_user(session, user)
         return user
     else:
         if id != current_user.id:
@@ -103,6 +98,5 @@ def delete_user(
                 detail="You are not allowed to delete other users.",
             )
         user = session.get(User, id)
-        session.delete(user)
-        session.commit()
+        user = users_crud.delete_user(session, user)  # type: ignore # (user is not None since exception would have been raised)
         return user

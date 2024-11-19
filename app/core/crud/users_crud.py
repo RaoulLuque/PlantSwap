@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
-from app.models import UserCreate, User
+from app.models import UserCreate, User, UsersPublic
 
 
 def create_user(session: Session, user_create: UserCreate) -> User:
@@ -9,7 +9,7 @@ def create_user(session: Session, user_create: UserCreate) -> User:
     Create user entry in database.
     :param session: Database session
     :param user_create: User data for the user to be created
-    :return:
+    :return: user that was created including hashed password
     """
     db_obj = User.model_validate(
         user_create, update={"hashed_password": get_password_hash(user_create.password)}
@@ -27,9 +27,24 @@ def get_user_by_email(session: Session, email: str) -> User | None:
     :param email: Email of user
     :return: User data including hashed password
     """
-    statement = select(User).where(User.email == email)
-    session_user = session.exec(statement).first()
+    # noinspection Pydantic
+    statement = select(User).where(User.email == email)  # type: ignore
+    session_user = session.exec(statement).first()  # type: ignore
     return session_user
+
+
+def get_all_users(session: Session, skip: int = 0, limit: int = 100) -> UsersPublic:
+    """
+    Retrieve all existing users up to the given limit with the given offset.
+    :param session: Current database session
+    :param skip: Number of users to skip
+    :param limit: Limit of users to retrieve
+    :return: List of users with number of users as a UsersPublic instance
+    """
+    statement = select(User).offset(skip).limit(limit)
+    users = session.exec(statement).all()
+    count = len(users)
+    return UsersPublic(data=users, count=count)  # type: ignore
 
 
 def authenticate_user(session: Session, email: str, password: str) -> User | None:
@@ -38,7 +53,7 @@ def authenticate_user(session: Session, email: str, password: str) -> User | Non
     :param session: Database session
     :param email: Email of user
     :param password: Hashed password of user
-    :return: User if credentials match user in database and None otherwise
+    :return: user if credentials match user in database and None otherwise
     """
     db_user = get_user_by_email(session=session, email=email)
     if not db_user:
