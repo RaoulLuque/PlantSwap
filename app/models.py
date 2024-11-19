@@ -160,6 +160,12 @@ class TradeRequest(SQLModel, table=True):
     message: str | None = Field(default=None, max_length=255)
 
 
+# Class to return multiple TradeRequest instances at the same time
+class TradeRequests(SQLModel):
+    data: list[TradeRequest]
+    count: int
+
+
 # Token data class for JWT Encoding
 class TokenData(BaseModel):
     email: str | None = None

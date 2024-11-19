@@ -9,7 +9,7 @@ from sqlmodel import Session
 
 from app.core.config import settings
 from app.core import security
-from app.core.crud import get_user_by_email
+from app.core.crud.users_crud import get_user_by_email
 from app.core.db import engine
 from app.models import TokenData, User
 

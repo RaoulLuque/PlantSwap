@@ -4,8 +4,8 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 
+from app.core.crud import users_crud
 from app.api.dependencies import CurrentUserDep, SessionDep
-from app.core import crud
 from app.models import UserPublic, UserCreate, User, UsersPublic
 
 # Router for api endpoints regarding user functionality
@@ -64,14 +64,14 @@ def create_user(session: SessionDep, user_in: UserCreate):
     :param user_in: The user data for the to-be-created user.
     :return: User data excluding password in shape of a UserPublic instance.
     """
-    user = crud.get_user_by_email(session, str(user_in.email))
+    user = users_crud.get_user_by_email(session, str(user_in.email))
     if user:
         raise HTTPException(
             status_code=400,
             detail="The user with this email already exists in the system.",
         )
 
-    user = crud.create_user(session, user_in)
+    user = users_crud.create_user(session, user_in)
     return user
 
 

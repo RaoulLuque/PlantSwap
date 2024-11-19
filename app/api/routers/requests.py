@@ -69,3 +69,20 @@ def create_trade_request(
     session.commit()
     session.refresh(trade_request)
     return trade_request
+
+
+# @router.get("/requests/outgoing", response_model=PublicTradeRequests)
+# def read_own_outgoing_trade_requests(
+#     session: SessionDep, skip: int = 0, limit: int = 100
+# ) -> Any:
+#     """
+#     Retrieve all existing plant ads
+#     :param session: Current database session
+#     :param skip: Number of plant ads to skip
+#     :param limit: Limit of plant ads to retrieve
+#     :return: List of plants with number of plants as a PlantsPublic instance
+#     """
+#     statement = select(Plant).offset(skip).limit(limit)
+#     plants = session.exec(statement).all()
+#     count = len(plants)
+#     return PlantsPublic(data=plants, count=count)

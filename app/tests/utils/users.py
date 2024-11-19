@@ -4,7 +4,7 @@ from typing import Generator, Tuple
 from sqlmodel import Session
 from starlette.testclient import TestClient
 
-from app.core import crud
+from app.core.crud import users_crud
 from app.core.config import settings
 from app.models import User, UserCreate
 from app.tests.utils.utils import random_email, random_lower_string
@@ -22,11 +22,11 @@ def create_random_user(
     username = random_email()
     password = random_lower_string()
     user_create = UserCreate(email=username, password=password)
-    user = crud.create_user(database, user_create)
+    user = users_crud.create_user(database, user_create)
     try:
         yield user, password
     finally:
-        crud.delete_user(database, user)
+        users_crud.delete_user(database, user)
 
 
 def get_user_token_headers(

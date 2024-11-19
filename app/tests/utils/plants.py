@@ -3,7 +3,7 @@ from typing import Generator, Tuple
 
 from sqlmodel import Session
 
-from app.core import crud
+from app.core.crud import users_crud, plants_crud
 from app.models import User, Plant, UserCreate, PlantCreate
 from app.tests.utils.utils import random_email, random_lower_string
 
@@ -20,13 +20,13 @@ def create_random_plant(
     username = random_email()
     password = random_lower_string()
     user_create = UserCreate(email=username, password=password)
-    user = crud.create_user(database, user_create)
+    user = users_crud.create_user(database, user_create)
     plant_in = PlantCreate(name="Monstera", description="Nice")
-    plant = crud.create_plant(database, user, plant_in)
+    plant = plants_crud.create_plant(database, user, plant_in)
     try:
         yield user, password, plant
     finally:
-        crud.delete_user(database, user)
+        users_crud.delete_user(database, user)
 
 
 def assert_if_plant_and_json_response_plant_match(

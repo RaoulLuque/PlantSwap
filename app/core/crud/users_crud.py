@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
 
 from app.core.security import get_password_hash, verify_password
-from app.models import User, UserCreate, PlantCreate, Plant
+from app.models import UserCreate, User
 
 
 def create_user(session: Session, user_create: UserCreate) -> User:
@@ -57,11 +57,3 @@ def delete_user(session: Session, user: User) -> User:
     session.delete(user)
     session.commit()
     return user
-
-
-def create_plant(session: Session, user: User, plant_in: PlantCreate) -> Plant:
-    plant: Plant = Plant.model_validate(plant_in, update={"owner_id": user.id})
-    session.add(plant)
-    session.commit()
-    session.refresh(plant)
-    return plant

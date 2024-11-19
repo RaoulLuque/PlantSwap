@@ -4,8 +4,8 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from sqlmodel import select
 
+from app.core.crud import plants_crud
 from app.api.dependencies import SessionDep, CurrentUserDep
-from app.core import crud
 from app.models import PlantPublic, PlantCreate, Plant, PlantsPublic
 
 # Router for api endpoints regarding plants/creation of ad functionality
@@ -17,24 +17,24 @@ def create_plant_ad(
     session: SessionDep, current_user: CurrentUserDep, plant_in: PlantCreate
 ):
     """
-    Create new plant ad
+    Create new plant ad.
     :param current_user: Currently logged-in user
     :param session: Current database session.
     :param plant_in: Plant data for the to-be-created plant ad.
     :return: Name, description, owner_id and id of the created plant.
     """
-    plant: Plant = crud.create_plant(session, current_user, plant_in)
+    plant: Plant = plants_crud.create_plant(session, current_user, plant_in)
     return plant
 
 
 @router.get("/plants/", response_model=PlantsPublic)
 def read_plants(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     """
-    Retrieve all existing plant ads
-    :param session: Current database session
-    :param skip: Number of plant ads to skip
-    :param limit: Limit of plant ads to retrieve
-    :return: List of plants with number of plants as a PlantsPublic instance
+    Retrieve all existing plant ads.
+    :param session: Current database session.
+    :param skip: Number of plant ads to skip.
+    :param limit: Limit of plant ads to retrieve.
+    :return: List of plants with number of plants as a PlantsPublic instance.
     """
     statement = select(Plant).offset(skip).limit(limit)
     plants = session.exec(statement).all()

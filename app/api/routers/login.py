@@ -5,7 +5,7 @@ from fastapi import Depends, APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.api.dependencies import SessionDep
-from app.core.crud import authenticate_user
+from app.core.crud.users_crud import authenticate_user
 from app.core.security import create_access_token
 from app.core.config import settings
 from app.models import Token

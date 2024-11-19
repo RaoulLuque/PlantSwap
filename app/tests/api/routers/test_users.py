@@ -3,7 +3,7 @@ import uuid
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
-from app.core import crud
+from app.core.crud import users_crud
 from app.core.config import settings
 from app.models import UserCreate
 from app.tests.utils.utils import (
@@ -22,7 +22,7 @@ def test_read_users_me_superuser(
 ) -> None:
     response = client.get("/users/me", headers=superuser_token_headers)
     current_user = response.json()
-    superuser = crud.get_user_by_email(db, settings.FIRST_SUPERUSER)
+    superuser = users_crud.get_user_by_email(db, settings.FIRST_SUPERUSER)
     assert superuser
     assert_if_user_and_json_response_user_match(superuser, current_user)
 
@@ -32,7 +32,7 @@ def test_read_users_me_random_user(client: TestClient, db: Session) -> None:
         user_headers = get_user_token_headers(client, user.email, password)
         response = client.get("/users/me", headers=user_headers)
         json_user = response.json()
-        db_user = crud.get_user_by_email(db, user.email)
+        db_user = users_crud.get_user_by_email(db, user.email)
         assert db_user
         assert_if_user_and_json_response_user_match(db_user, json_user)
 
@@ -107,10 +107,10 @@ def test_create_user_new_email(client: TestClient, db: Session) -> None:
     )
     assert 200 <= response.status_code < 300
     created_user = response.json()
-    user = crud.get_user_by_email(session=db, email=str(username))
+    user = users_crud.get_user_by_email(session=db, email=str(username))
     assert user
     assert_if_user_and_json_response_user_match(user, created_user)
-    crud.delete_user(db, user)
+    users_crud.delete_user(db, user)
 
 
 def test_create_user_existing_email(client: TestClient, db: Session) -> None:
@@ -126,7 +126,7 @@ def test_delete_user_existing_user(client: TestClient, db: Session):
     username = random_email()
     password = random_lower_string()
     user_create = UserCreate(email=username, password=password)
-    user = crud.create_user(db, user_create)
+    user = users_crud.create_user(db, user_create)
     headers = get_user_token_headers(client, str(username), password)
     response = client.post(f"/users/{user.id}", headers=headers)
     assert response.status_code == 200
@@ -139,7 +139,7 @@ def test_delete_user_existing_user_superuser(
     username = random_email()
     password = random_lower_string()
     user_create = UserCreate(email=username, password=password)
-    user = crud.create_user(db, user_create)
+    user = users_crud.create_user(db, user_create)
     response = client.post(f"/users/{user.id}", headers=superuser_token_headers)
     assert response.status_code == 200
     assert_if_user_and_json_response_user_match(user, response.json())
@@ -177,7 +177,7 @@ def test_create_user_read_user_and_delete_user(client: TestClient, db: Session) 
         json=data,
     )
     assert 200 <= response.status_code < 300
-    user = crud.get_user_by_email(db, str(data["email"]))
+    user = users_crud.get_user_by_email(db, str(data["email"]))
     assert user
     id = user.id
     response_read_user = client.get(f"/users/{id}")
