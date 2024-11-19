@@ -40,6 +40,7 @@ def get_all_trade_requests(
     if outgoing_only and incoming_only:
         raise ValueError("Cannot be both outgoing and incoming only.")
     elif outgoing_only:
+        # noinspection Pydantic
         statement = (
             select(TradeRequest)
             .where(TradeRequest.outgoing_user_id == user.id)
@@ -47,6 +48,7 @@ def get_all_trade_requests(
             .limit(limit)
         )
     elif incoming_only:
+        # noinspection Pydantic
         statement = (
             select(TradeRequest)
             .where(TradeRequest.incoming_user_id == user.id)
@@ -54,6 +56,7 @@ def get_all_trade_requests(
             .limit(limit)
         )
     else:
+        # noinspection Pydantic
         statement = (
             select(TradeRequest)
             .where(
@@ -65,8 +68,19 @@ def get_all_trade_requests(
             .offset(skip)
             .limit(limit)
         )
+    # noinspection PyTypeChecker
     trade_requests = session.exec(statement).all()
     count = len(trade_requests)
     return TradeRequestsPublic(data=list(trade_requests), count=count)
 
 
+def delete_trade_request(session: Session, trade_request: TradeRequest) -> TradeRequest:
+    """
+    Delete an existing trade request.
+    :param trade_request: Trade request to be deleted from the database
+    :param session: Current database session
+    :return: Deleted trade request as TradeRequest instance
+    """
+    session.delete(trade_request)
+    session.commit()
+    return trade_request
