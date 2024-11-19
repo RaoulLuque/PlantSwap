@@ -2,7 +2,6 @@ import uuid
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
-from sqlmodel import select
 
 from app.core.crud import plants_crud
 from app.api.dependencies import SessionDep, CurrentUserDep
@@ -36,10 +35,8 @@ def read_plants(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     :param limit: Limit of plant ads to retrieve.
     :return: List of plants with number of plants as a PlantsPublic instance.
     """
-    statement = select(Plant).offset(skip).limit(limit)
-    plants = session.exec(statement).all()
-    count = len(plants)
-    return PlantsPublic(data=plants, count=count)
+    plants_public = plants_crud.get_all_plant_ads(session, skip, limit)
+    return plants_public
 
 
 @router.get("/plants/{id}", response_model=PlantPublic)
@@ -82,6 +79,5 @@ def delete_plant(
                 status_code=401,
                 detail="You are not the owner of the plant.",
             )
-    session.delete(plant)
-    session.commit()
+    plant = plants_crud.delete_plant_ad(session, plant)
     return plant
