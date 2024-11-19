@@ -137,7 +137,6 @@ def delete_trade_request(
     session: SessionDep,
     outgoing_plant_id: uuid.UUID,
     incoming_plant_id: uuid.UUID,
-    message: str | None = None,
 ):
     """
     Delete an existing trade request.
@@ -145,7 +144,6 @@ def delete_trade_request(
     :param session: Current database session
     :param outgoing_plant_id: id of the plant the user wants to offer
     :param incoming_plant_id: id of the plant the user wants in return
-    :param message: Optional message to the owner of the plant the user wants to trade with
     :return: Information about the deleted trade request as a TradeRequest instance
     """
     trade_request = session.exec(
