@@ -1,6 +1,8 @@
+import uuid
+
 from sqlmodel import Session, select, or_
 
-from app.models import TradeRequest, TradeRequestsPublic, User
+from app.models import TradeRequest, TradeRequestsPublic, User, Plant
 
 
 def create_trade_request(session: Session, trade_request: TradeRequest) -> TradeRequest:
@@ -10,6 +12,39 @@ def create_trade_request(session: Session, trade_request: TradeRequest) -> Trade
     :param session: Current database session
     :return: Created trade request
     """
+    session.add(trade_request)
+    session.commit()
+    session.refresh(trade_request)
+    return trade_request
+
+
+def create_trade_request_from_plant_ids(
+    session: Session,
+    outgoing_plant_id: uuid.UUID,
+    incoming_plant_id: uuid.UUID,
+    message: str | None = None,
+) -> TradeRequest:
+    """
+    Create a new trade request using the plant ids.
+
+    Throws a value error if one of the plants does not exist.
+    :param outgoing_plant_id: id of the plant the user wants to offer
+    :param incoming_plant_id: id of the plant the user wants in return
+    :param session: Current database session
+    :param message: Optional message
+    :return: Created trade request
+    """
+    outgoing_plant: Plant | None = session.get(Plant, outgoing_plant_id)
+    incoming_plant: Plant | None = session.get(Plant, incoming_plant_id)
+    if outgoing_plant is None or incoming_plant is None:
+        raise ValueError("One of the plants does not exist.")
+    trade_request = TradeRequest(
+        outgoing_plant_id=outgoing_plant_id,
+        incoming_plant_id=incoming_plant_id,
+        outgoing_user_id=outgoing_plant.owner_id,
+        incoming_user_id=incoming_plant.owner_id,
+        message=message,
+    )
     session.add(trade_request)
     session.commit()
     session.refresh(trade_request)
