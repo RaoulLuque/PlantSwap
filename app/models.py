@@ -111,6 +111,7 @@ class TradeRequest(SQLModel, table=True):
         default_factory=uuid.uuid4,
         foreign_key="user.id",
         ondelete="CASCADE",
+        index=True,
     )
     outgoing_user: User = Relationship(
         sa_relationship=RelationshipProperty(
@@ -123,6 +124,7 @@ class TradeRequest(SQLModel, table=True):
         default_factory=uuid.uuid4,
         foreign_key="user.id",
         ondelete="CASCADE",
+        index=True,
     )
     incoming_user: User = Relationship(
         sa_relationship=RelationshipProperty(
@@ -161,7 +163,7 @@ class TradeRequest(SQLModel, table=True):
 
 
 # Class to return multiple TradeRequest instances at the same time
-class TradeRequests(SQLModel):
+class TradeRequestsPublic(SQLModel):
     data: list[TradeRequest]
     count: int
 
