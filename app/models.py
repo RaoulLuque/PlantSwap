@@ -110,7 +110,6 @@ class TradeRequest(SQLModel, table=True):
     outgoing_user_id: uuid.UUID = Field(
         default_factory=uuid.uuid4,
         foreign_key="user.id",
-        primary_key=True,
         ondelete="CASCADE",
     )
     outgoing_user: User = Relationship(
@@ -123,7 +122,6 @@ class TradeRequest(SQLModel, table=True):
     incoming_user_id: uuid.UUID = Field(
         default_factory=uuid.uuid4,
         foreign_key="user.id",
-        primary_key=True,
         ondelete="CASCADE",
     )
     incoming_user: User = Relationship(
@@ -136,6 +134,7 @@ class TradeRequest(SQLModel, table=True):
     outgoing_plant_id: uuid.UUID = Field(
         default_factory=uuid.uuid4,
         foreign_key="plant.id",
+        primary_key=True,
         ondelete="CASCADE",
     )
     outgoing_plant: Plant = Relationship(
@@ -148,6 +147,7 @@ class TradeRequest(SQLModel, table=True):
     incoming_plant_id: uuid.UUID = Field(
         default_factory=uuid.uuid4,
         foreign_key="plant.id",
+        primary_key=True,
         ondelete="CASCADE",
     )
     incoming_plant: Plant = Relationship(
