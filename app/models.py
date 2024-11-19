@@ -75,8 +75,20 @@ class Plant(PlantBase, table=True):
     owner: User = Relationship(back_populates="plants")
     # This attribute is of no real use, it simply takes care of deleting the corresponding
     # trade requests of a plant when the respective plant is deleted
-    trade_requests: list["TradeRequest"] = Relationship(
-        sa_relationship=RelationshipProperty("TradeRequest", back_populates="plant"),
+    outgoing_trade_requests: list["TradeRequest"] = Relationship(
+        sa_relationship=RelationshipProperty(
+            "TradeRequest",
+            back_populates="outgoing_plant",
+            foreign_keys="[TradeRequest.outgoing_plant_id]",
+        ),
+        cascade_delete=True,
+    )
+    incoming_trade_requests: list["TradeRequest"] = Relationship(
+        sa_relationship=RelationshipProperty(
+            "TradeRequest",
+            back_populates="incoming_plant",
+            foreign_keys="[TradeRequest.incoming_plant_id]",
+        ),
         cascade_delete=True,
     )
 
@@ -121,12 +133,30 @@ class TradeRequest(SQLModel, table=True):
             foreign_keys="[TradeRequest.incoming_user_id]",
         )
     )
-    plant_id: uuid.UUID = Field(
+    outgoing_plant_id: uuid.UUID = Field(
         default_factory=uuid.uuid4,
         foreign_key="plant.id",
         ondelete="CASCADE",
     )
-    plant: Plant = Relationship(back_populates="trade_requests")
+    outgoing_plant: Plant = Relationship(
+        sa_relationship=RelationshipProperty(
+            "Plant",
+            back_populates="outgoing_trade_requests",
+            foreign_keys="[TradeRequest.outgoing_plant_id]",
+        )
+    )
+    incoming_plant_id: uuid.UUID = Field(
+        default_factory=uuid.uuid4,
+        foreign_key="plant.id",
+        ondelete="CASCADE",
+    )
+    incoming_plant: Plant = Relationship(
+        sa_relationship=RelationshipProperty(
+            "Plant",
+            back_populates="incoming_trade_requests",
+            foreign_keys="[TradeRequest.incoming_plant_id]",
+        )
+    )
     message: str | None = Field(default=None, max_length=255)
 
 
