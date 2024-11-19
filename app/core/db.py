@@ -18,7 +18,7 @@ def init_db(session: Session):
 
     SQLModel.metadata.create_all(engine)
     # noinspection Pydantic
-    user = session.exec(
+    user: models.User | None = session.exec(
         select(models.User).where(models.User.email == settings.FIRST_SUPERUSER)  # type: ignore
     ).first()
     if not user:

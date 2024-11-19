@@ -69,7 +69,7 @@ def assert_if_user_and_json_response_user_match(user: User, json_user: dict) -> 
     """
     Asserts if the User instance and the JSON response user match.
     :param user: User instance
-    :param json_user: JSON response user
+    :param json_user: Response user as JSON dict
     :return: None
     """
     assert user

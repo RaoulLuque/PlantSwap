@@ -146,6 +146,7 @@ def delete_trade_request(
     :param incoming_plant_id: id of the plant the user wants in return
     :return: Information about the deleted trade request as a TradeRequest instance
     """
+    # noinspection Pydantic
     trade_request = session.exec(
         select(TradeRequest)
         .where(TradeRequest.incoming_plant_id == incoming_plant_id)
