@@ -75,16 +75,17 @@ def create_trade_request(
 
 
 @router.get(
-    "/requests/{outgoing_plant_id}/{incoming_plant_id}", response_model=TradeRequest
+    "/requests/outgoing/{outgoing_plant_id}/{incoming_plant_id}",
+    response_model=TradeRequest,
 )
-def read_specific_trade_request(
+def read_specific_outgoing_trade_request(
     current_user: CurrentUserDep,
     session: SessionDep,
     outgoing_plant_id: uuid.UUID,
     incoming_plant_id: uuid.UUID,
 ):
     """
-    Retrieve specific trade request with the given plant ids.
+    Retrieve specific outgoing trade request with the given plant ids if you are the owner of the outgoing plant.
     :param current_user: Currently logged-in user.
     :param session: Current database session
     :param outgoing_plant_id: id of the plant that is being offered
@@ -100,6 +101,43 @@ def read_specific_trade_request(
         raise HTTPException(
             status_code=401,
             detail="You do not own a plant with the provided outgoing plant id.",
+        )
+    trade_request = session.get(TradeRequest, (outgoing_plant_id, incoming_plant_id))
+    if trade_request is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No trade request with the given plant ids exists.",
+        )
+    return trade_request
+
+
+@router.get(
+    "/requests/incoming/{outgoing_plant_id}/{incoming_plant_id}",
+    response_model=TradeRequest,
+)
+def read_specific_incoming_trade_request(
+    current_user: CurrentUserDep,
+    session: SessionDep,
+    outgoing_plant_id: uuid.UUID,
+    incoming_plant_id: uuid.UUID,
+):
+    """
+    Retrieve specific incoming trade request with the given plant ids if you are the owner of the incoming plant.
+    :param current_user: Currently logged-in user.
+    :param session: Current database session
+    :param outgoing_plant_id: id of the plant that is being offered
+    :param incoming_plant_id: id of the plant that is wanted in return
+    :return: Desired trade request if exists as a TradeRequest instance
+    """
+    plant_owned_by_user: bool = False
+    for plant in current_user.plants:
+        if plant.id == incoming_plant_id:
+            plant_owned_by_user = True
+            break
+    if not plant_owned_by_user:
+        raise HTTPException(
+            status_code=401,
+            detail="You do not own a plant with the provided incoming plant id.",
         )
     trade_request = session.get(TradeRequest, (outgoing_plant_id, incoming_plant_id))
     if trade_request is None:
