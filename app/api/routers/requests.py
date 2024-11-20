@@ -203,6 +203,44 @@ def read_own_trade_requests(
 
 
 @router.post(
+    "/requests/accept/{outgoing_plant_id}/{incoming_plant_id}",
+    response_model=TradeRequest,
+)
+def accept_trade_request(
+    current_user: CurrentUserDep,
+    session: SessionDep,
+    outgoing_plant_id: uuid.UUID,
+    incoming_plant_id: uuid.UUID,
+):
+    """
+    Accept a trade request, if the user is owner of the incoming plant.
+    :param current_user: Currently logged-in user.
+    :param session: Current database session
+    :param outgoing_plant_id: id of the plant that is being offered
+    :param incoming_plant_id: id of the plant that is wanted in return
+    :return: Desired trade request if exists as a TradeRequest instance
+    """
+    plant_owned_by_user: bool = False
+    for plant in current_user.plants:
+        if plant.id == incoming_plant_id:
+            plant_owned_by_user = True
+            break
+    if not plant_owned_by_user:
+        raise HTTPException(
+            status_code=401,
+            detail="You do not own a plant with the provided incoming plant id.",
+        )
+    trade_request = session.get(TradeRequest, (outgoing_plant_id, incoming_plant_id))
+    if trade_request is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No trade request with the given plant ids exists.",
+        )
+    trade_request = requests_crud.accept_trade_request(session, trade_request)
+    return trade_request
+
+
+@router.post(
     "/requests/delete/{outgoing_plant_id}/{incoming_plant_id}",
     response_model=TradeRequest,
 )

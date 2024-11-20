@@ -109,6 +109,20 @@ def get_all_trade_requests(
     return TradeRequestsPublic(data=list(trade_requests), count=count)
 
 
+def accept_trade_request(session: Session, trade_request: TradeRequest) -> TradeRequest:
+    """
+    Set a trade request as accepted.
+    :param trade_request: Trade request to be set as accepted
+    :param session: Current database session
+    :return: Updated trade request as TradeRequest instance
+    """
+    trade_request.accepted = True
+    session.add(trade_request)
+    session.commit()
+    session.refresh(trade_request)
+    return trade_request
+
+
 def delete_trade_request(session: Session, trade_request: TradeRequest) -> TradeRequest:
     """
     Delete an existing trade request.

@@ -159,6 +159,7 @@ class TradeRequest(SQLModel, table=True):
             foreign_keys="[TradeRequest.incoming_plant_id]",
         )
     )
+    accepted: bool = Field(default=False)
     message: str | None = Field(default=None, max_length=255)
 
 
