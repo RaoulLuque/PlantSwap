@@ -56,6 +56,7 @@ def assert_if_trade_request_json_and_trade_request_data_match(
     incoming_plant: Plant,
     json_trade_request: dict[str, str],
     message: str | None = None,
+    accepted: bool = False,
 ) -> None:
     """
     Asserts if the request json and the request data match.
@@ -71,3 +72,4 @@ def assert_if_trade_request_json_and_trade_request_data_match(
     assert str(outgoing_plant.owner_id) == json_trade_request["outgoing_user_id"]
     assert str(incoming_plant.owner_id) == json_trade_request["incoming_user_id"]
     assert message == json_trade_request["message"]
+    assert accepted == json_trade_request["accepted"]

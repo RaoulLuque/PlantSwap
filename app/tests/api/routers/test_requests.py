@@ -469,6 +469,61 @@ def test_read_own_trade_requests_two_requests_limit_to_one(
         )
 
 
+def test_accept_trade_request_successful(client: TestClient, db: Session):
+    with create_random_trade_request(db) as (
+        user_one,
+        password_one,
+        plant_one,
+        user_two,
+        password_two,
+        plant_two,
+        trade_request,
+    ):
+        user_two_headers = get_user_token_headers(client, user_two.email, password_two)
+        response = client.post(
+            f"/requests/accept/{plant_one.id}/{plant_two.id}", headers=user_two_headers
+        )
+        assert 200 == response.status_code
+        assert_if_trade_request_json_and_trade_request_data_match(
+            plant_one,
+            plant_two,
+            response.json(),
+            accepted=True,
+        )
+
+
+def test_accept_trade_request_plant_not_owned(client: TestClient, db: Session):
+    with create_random_trade_request(db) as (
+        user_one,
+        password_one,
+        plant_one,
+        user_two,
+        password_two,
+        plant_two,
+        trade_request,
+    ):
+        user_one_headers = get_user_token_headers(client, user_one.email, password_one)
+        response = client.post(
+            f"/requests/accept/{plant_one.id}/{plant_two.id}", headers=user_one_headers
+        )
+        assert 401 == response.status_code
+        assert {
+            "detail": "You do not own a plant with the provided incoming plant id."
+        } == response.json()
+
+
+def test_accept_trade_request_trade_request_not_found(client: TestClient, db: Session):
+    with create_random_plant(db) as (user_one, password_one, plant_one):
+        user_one_headers = get_user_token_headers(client, user_one.email, password_one)
+        response = client.post(
+            f"/requests/accept/{uuid.uuid4()}/{plant_one.id}", headers=user_one_headers
+        )
+        assert 404 == response.status_code
+        assert {
+            "detail": "No trade request with the given plant ids exists."
+        } == response.json()
+
+
 def test_delete_trade_request_success_user_one(client: TestClient, db: Session):
     with create_random_trade_request(db) as (
         user_one,
