@@ -52,13 +52,17 @@ def create_random_trade_request(
 
 
 def assert_if_trade_request_json_and_trade_request_data_match(
-    outgoing_plant: Plant, incoming_plant: Plant, json_trade_request: dict[str, str]
+    outgoing_plant: Plant,
+    incoming_plant: Plant,
+    json_trade_request: dict[str, str],
+    message: str | None = None,
 ) -> None:
     """
     Asserts if the request json and the request data match.
     :param outgoing_plant: Outgoing plant instance
     :param incoming_plant: Incoming plant instance
     :param json_trade_request: Response trade request as JSON dict
+    :param message: Optional message
     :return: None
     """
     assert json_trade_request
@@ -66,3 +70,4 @@ def assert_if_trade_request_json_and_trade_request_data_match(
     assert str(incoming_plant.id) == json_trade_request["incoming_plant_id"]
     assert str(outgoing_plant.owner_id) == json_trade_request["outgoing_user_id"]
     assert str(incoming_plant.owner_id) == json_trade_request["incoming_user_id"]
+    assert message == json_trade_request["message"]

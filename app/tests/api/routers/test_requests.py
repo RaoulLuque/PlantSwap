@@ -1,7 +1,7 @@
 import uuid
 
 from fastapi.testclient import TestClient
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from app.core.crud import requests_crud
 from app.models import Plant, TradeRequest
@@ -440,7 +440,7 @@ def test_read_own_trade_requests_two_requests_limit_to_one(
         trade_request_one,
     ):
         with create_random_plant(db) as (_, _, plant_three):
-            requests_crud.create_trade_request_from_plant_ids(
+            trade_request_two = requests_crud.create_trade_request_from_plant_ids(
                 db, plant_two.id, plant_three.id
             )
             user_two_headers = get_user_token_headers(
@@ -457,3 +457,93 @@ def test_read_own_trade_requests_two_requests_limit_to_one(
             assert_if_trade_request_json_and_trade_request_data_match(
                 plant_two, plant_three, response.json()["data"][0]
             )
+        assert (
+            db.get(
+                TradeRequest,
+                (
+                    trade_request_two.outgoing_plant_id,
+                    trade_request_two.incoming_plant_id,
+                ),
+            )
+            is None
+        )
+
+
+def test_delete_trade_request_success_user_one(client: TestClient, db: Session):
+    with create_random_trade_request(db) as (
+        user_one,
+        password_one,
+        plant_one,
+        user_two,
+        password_two,
+        plant_two,
+        trade_request,
+    ):
+        user_one_headers = get_user_token_headers(client, user_one.email, password_one)
+        response = client.post(
+            f"/requests/delete/{plant_one.id}/{plant_two.id}", headers=user_one_headers
+        )
+        assert 200 == response.status_code
+        assert_if_trade_request_json_and_trade_request_data_match(
+            plant_one, plant_two, response.json()
+        )
+        # noinspection PyTypeChecker,Pydantic
+        trade_request_none: TradeRequest | None = db.exec(
+            select(TradeRequest)
+            .where(TradeRequest.outgoing_plant_id == trade_request.outgoing_plant_id)
+            .where(TradeRequest.incoming_plant_id == trade_request.incoming_plant_id)
+        ).first()
+        assert trade_request_none is None
+
+
+def test_delete_trade_request_success_user_two(client: TestClient, db: Session):
+    with create_random_trade_request(db) as (
+        user_one,
+        password_one,
+        plant_one,
+        user_two,
+        password_two,
+        plant_two,
+        trade_request,
+    ):
+        user_two_headers = get_user_token_headers(client, user_two.email, password_two)
+        response = client.post(
+            f"/requests/delete/{plant_one.id}/{plant_two.id}", headers=user_two_headers
+        )
+        assert 200 == response.status_code
+        assert_if_trade_request_json_and_trade_request_data_match(
+            plant_one, plant_two, response.json()
+        )
+        # noinspection PyTypeChecker,Pydantic
+        trade_request_none: TradeRequest | None = db.exec(
+            select(TradeRequest)
+            .where(TradeRequest.outgoing_plant_id == trade_request.outgoing_plant_id)
+            .where(TradeRequest.incoming_plant_id == trade_request.incoming_plant_id)
+        ).first()
+        assert trade_request_none is None
+
+
+def test_delete_trade_request_not_authorized(client: TestClient, db: Session):
+    with create_random_trade_request(db) as (
+        user_one,
+        password_one,
+        plant_one,
+        user_two,
+        password_two,
+        plant_two,
+        trade_request,
+    ):
+        with create_random_user(db) as (user_three, password_three):
+            user_three_headers = get_user_token_headers(
+                client, user_three.email, password_three
+            )
+            response = client.post(
+                f"/requests/delete/{plant_one.id}/{plant_two.id}",
+                headers=user_three_headers,
+            )
+            assert 404 == response.status_code
+            assert {
+                "detail": "No trade request with the given plant ids exists."
+            } == response.json()
+            trade_request_in_db = db.get(TradeRequest, (plant_one.id, plant_two.id))
+            assert trade_request_in_db is not None
