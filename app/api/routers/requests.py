@@ -61,7 +61,7 @@ def create_trade_request(
     if possible_existing_entry is not None:
         raise HTTPException(
             status_code=409,
-            detail="You already have a trade request for this plant.",
+            detail="You already have a trade request for these two plants.",
         )
     trade_request: TradeRequest = TradeRequest(
         outgoing_plant_id=outgoing_plant_id,
@@ -99,7 +99,7 @@ def read_specific_trade_request(
     if not plant_owned_by_user:
         raise HTTPException(
             status_code=401,
-            detail="You cannot trade other people's plants (you do not own the plant you want to offer).",
+            detail="You do not own a plant with the provided outgoing plant id.",
         )
     trade_request = session.get(TradeRequest, (outgoing_plant_id, incoming_plant_id))
     if trade_request is None:
