@@ -73,7 +73,7 @@ def get_all_trade_requests(
     :return: List of plant ads with number of ads as a PlantsPublic instance
     """
     if outgoing_only and incoming_only:
-        raise ValueError("Cannot be both outgoing and incoming only.")
+        raise ValueError("Cannot filter by both outgoing and incoming only.")
     elif outgoing_only:
         # noinspection Pydantic
         statement = (
