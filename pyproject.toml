@@ -72,6 +72,10 @@ testpaths = [
 
 [tool.coverage.run]
 data_file = 'reports/.coverage'
+omit = [
+    # omit anything in a "tests" directory anywhere
+    "*/tests/*",
+]
 
 [tool.uv]
 dev-dependencies = [
