@@ -78,6 +78,7 @@ def test_read_users(client: TestClient, db: Session) -> None:
         with create_random_user(db) as (user_two, _):
             response = client.get("/users/")
             response_json = response.json()
+            print(response_json)
             assert_if_user_and_json_response_user_match(
                 user_one, response_json["data"][1]
             )

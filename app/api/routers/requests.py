@@ -148,7 +148,7 @@ def read_specific_incoming_trade_request(
     return trade_request
 
 
-@router.get("/requests/outgoing", response_model=TradeRequestsPublic)
+@router.get("/requests/outgoing/", response_model=TradeRequestsPublic)
 def read_own_outgoing_trade_requests(
     current_user: CurrentUserDep, session: SessionDep, skip: int = 0, limit: int = 100
 ):
@@ -166,7 +166,7 @@ def read_own_outgoing_trade_requests(
     return trade_requests
 
 
-@router.get("/requests/incoming", response_model=TradeRequestsPublic)
+@router.get("/requests/incoming/", response_model=TradeRequestsPublic)
 def read_own_incoming_trade_requests(
     current_user: CurrentUserDep, session: SessionDep, skip: int = 0, limit: int = 100
 ):
@@ -184,7 +184,7 @@ def read_own_incoming_trade_requests(
     return trade_requests
 
 
-@router.get("/requests/all", response_model=TradeRequestsPublic)
+@router.get("/requests/all/", response_model=TradeRequestsPublic)
 def read_own_trade_requests(
     current_user: CurrentUserDep, session: SessionDep, skip: int = 0, limit: int = 100
 ):
