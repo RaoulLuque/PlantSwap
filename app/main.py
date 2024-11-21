@@ -11,6 +11,8 @@ app = FastAPI(title="PlantSwap")
 
 # Set up logger
 logger = logging.getLogger("uvicorn.error")
+logger.info(msg="----- ----- APPLICATION STARTING ----- -----")
+
 # Mute module 'bcrypt' has no attribute '__about__' Warning
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
