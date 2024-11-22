@@ -94,13 +94,10 @@ test-run.cmd = "pytest"
 test.help = "Run tests using pytest and reset db before"
 test.sequence = ["db", "test-run"]
 
-dev.help = "Start the applicatoin in development mode with reloading enabled"
+dev.help = "Start the applicatoin in development mode with reloading enabled and log configuration as specified in log_config.json"
 dev.cmd = "uvicorn app.main:app --reload --log-config log_config.json --reload-dir app"
 
-dev-extensive-logging.help = "Start the applicatoin in development mode with log-level trace"
-dev-extensive-logging.cmd = "uvicorn app.main:app --reload --log-config log_config.json --reload-dir app --log-level trace"
-
-deploy.help = "Start the application with reloading disabled and log-level info"
+deploy.help = "Start the application with reloading disabled and log configuration as specified in log_config.json"
 deploy.cmd = "uvicorn app.main:app --log-config log_config.json"
 
 ruff.help = "Check codebaes using ruff"
