@@ -100,6 +100,7 @@ Advanced functionality includes things such as:
 - [x] Users can accept trade requests
 - [ ] Users can deny trade requests
 - [ ] Users can answer trade requests with a text message
+- [ ] Basic frontend
 
 # Milestones
 
