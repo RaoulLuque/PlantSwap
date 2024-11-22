@@ -15,15 +15,13 @@ plant directly or sell your plants on the platform
 to receive coins which you can then use the buy plants from other
 people.
 
-The project is build using [FastAPI](https://github.com/fastapi/fastapi), [SQLModel](https://github.com/fastapi/sqlmodel), [Postgresql](https://www.postgresql.org/), [Docker](https://www.docker.com/), [GitHub Actions](https://docs.github.com/en/actions), [uv](https://github.com/astral-sh/uv) and  [poethepoet](https://github.com/nat-n/poethepoet).
-
 This repository documents the progress in the cloud computing course I
 took part in at the Universidad de Granada for my masters.
 
 The above logo was generated
 using [Dall-E](https://openai.com/index/dall-e/).
 
-This project is based on the [fullstack fastapi template](https://github.com/fastapi/full-stack-fastapi-template).
+This project is used the [fullstack fastapi template](https://github.com/fastapi/full-stack-fastapi-template) as its starting point.
 
 # Starting up the application
 
@@ -74,16 +72,34 @@ By default, the api will be served at `http://0.0.0.0:8000 `.
 The following list keeps track of the development progress of the app
 and its backend/API.
 
+## Tech stack
+- ⚡ [FastAPI](https://fastapi.tiangolo.com) for the Python backend API.
+    - 🧰 [SQLModel](https://sqlmodel.tiangolo.com) for the Python SQL database interactions (ORM).
+    - 🔍 [Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
+    - 💾 [PostgreSQL](https://www.postgresql.org) as the SQL database.
+    - 🦄 [Uvicorn](https://github.com/encode/uvicorn) used by FastAPI as ASGI webserver.
+- 🔒 Secure password hashing by default.
+- 🔑 JWT (JSON Web Token) authentication.
+- ✅ Tests with [Pytest](https://pytest.org).
+- 🪄 [Poethepoet](https://github.com/nat-n/poethepoet) as task runner.
+- 📦 Package management with [uv](https://github.com/astral-sh/uv).
+- 🏭 CI (continuous integration) and CD (continuous deployment) based on [GitHub Actions](https://github.com/features/actions).
+
 ## [Basic functionality](https://github.com/RaoulLuque/PlantSwap/milestone/2)
 
 Basic functionality includes things such as:
+- [x] Administrators have a (secure) way of logging in
+- [x] Users have a (secure) way of logging in
+- [x] Users can create accounts
+- [x] Administrators can create accounts
+- [x] Administrators can delete ads of users
+- [x] Administrators can delete accounts of users
 
-- [x] [Setup of API without functionality](https://github.com/RaoulLuque/PlantSwap/issues/4)
-- [x] [Create (secure) login functionality for administrators](https://github.com/RaoulLuque/PlantSwap/issues/6)
-- [x] [Create (secure) login functionality for users](https://github.com/RaoulLuque/PlantSwap/issues/5)
-- [x] [Add option for users to create accounts](https://github.com/RaoulLuque/PlantSwap/issues/10)
-- [x] [Add option for users to create ads for their plants](https://github.com/RaoulLuque/PlantSwap/issues/7)
-- [x] [Administrators should be able to delete ads of users](https://github.com/RaoulLuque/PlantSwap/issues/8)
+Advanced functionality includes things such as:
+- [x] Users can send other users trade requests for their plants
+- [x] Users can accept trade requests
+- [ ] Users can deny trade requests
+- [ ] Users can answer trade requests with a text message
 
 # Milestones
 
@@ -106,6 +122,12 @@ computing class.
 - 🤖 [Continuous integration](docs/milestone_2/continuous_integration.md)
 - 📈 [Visualization of continuous integration](docs/milestone_2/visualization_of_continuous_integration.md)
 
-## Milestone 3
+## [Milestone 3](https://github.com/RaoulLuque/PlantSwap/milestone/4)
+- 🚀 [API framework used](docs/milestone_3/api_framework.md)
+- 🏗️ [Design of API](docs/milestone_3/design_of_api.md)
+- 📜 [Logging setup](docs/milestone_3/logging.md)
+- 🧪 [Testing update](docs/milestone_3/test_execution.md)
 
+
+## Milestone 4
 - ...
