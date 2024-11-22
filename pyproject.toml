@@ -1,6 +1,6 @@
 [project]
 name = "PlantSwap"
-version = "0.2.0"
+version = "0.3.0"
 description = "WebApp to swap plants with other people"
 authors = ["Raoul Luqué <raoulsluque@gmail.com>"]
 readme = "README.md"
