@@ -80,10 +80,10 @@ and its backend/API.
     - 🦄 [Uvicorn](https://github.com/encode/uvicorn) used by FastAPI as ASGI webserver.
 - 🔒 Secure password hashing by default.
 - 🔑 JWT (JSON Web Token) authentication.
-- ✅ Tests with [Pytest](https://pytest.org).
+- 🧪 Tests with [Pytest](https://pytest.org).
 - 🪄 [Poethepoet](https://github.com/nat-n/poethepoet) as task runner.
 - 📦 Package management with [uv](https://github.com/astral-sh/uv).
-- 🏭 CI (continuous integration) and CD (continuous deployment) based on [GitHub Actions](https://github.com/features/actions).
+- ⚙️ CI (continuous integration) and CD (continuous deployment) based on [GitHub Actions](https://github.com/features/actions).
 
 ## [Basic functionality](https://github.com/RaoulLuque/PlantSwap/milestone/2)
 
