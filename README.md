@@ -21,7 +21,7 @@ took part in at the Universidad de Granada for my masters.
 The above logo was generated
 using [Dall-E](https://openai.com/index/dall-e/).
 
-This project is used the [fullstack fastapi template](https://github.com/fastapi/full-stack-fastapi-template) as its starting point.
+This project used the [fullstack fastapi template](https://github.com/fastapi/full-stack-fastapi-template) as its starting point.
 
 # Starting up the application
 
