@@ -1,0 +1,56 @@
+services:
+  plantswap-postgres:
+    image: "postgres:latest"
+    container_name: plantswap-postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - PGUSER=${POSTGRES_USER}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    # Log all Queries
+    command: [ "postgres", "-c", "logging_collector=on", "-c", "log_statement=all" ]
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "db_prod" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+  
+  plantswap-app:
+    build: .
+    container_name: plantswap-app
+    restart: always
+    environment:
+      - POSTGRES_SERVER=plantswap-postgres
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
+      - FIRST_SUPERUSER=${FIRST_SUPERUSER}
+      - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD}
+    ports:
+      - "8000:8000"
+    volumes:
+      - app-logs:/PlantSwap/reports
+    depends_on:
+      plantswap-postgres:
+        condition: service_healthy
+    links:
+      - plantswap-postgres
+
+  plantswap-logging:
+    image: "offen/docker-volume-backup:latest"
+    container_name: plantswap-logging
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/backup/database_data_and_logs
+      - app-logs:/var/lib/backup/application_logs
+
+volumes:
+  postgres-data:
+  app-logs:

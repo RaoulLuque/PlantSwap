@@ -94,11 +94,22 @@ test-run.cmd = "pytest"
 test.help = "Execute db and test-run tasks in sequence: Run tests using pytest and reset db before"
 test.sequence = ["db", "test-run"]
 
+compose.help = "Start the applications' services containerized using docker compose up"
+compose.cmd = "docker compose up"
+
+compose-build.help = "Build the applications' services containerized using docker compose build"
+compose-build.cmd = "docker compose build"
+
+
+
+compose-clean.help = "Delete the applications' containers and volumes to completely reset the application"
+compose-clean.cmd = "docker compose down -v"
+
 dev.help = "Start the applicatoin in development mode with reloading enabled and log configuration as specified in log_config.json"
-dev.cmd = "uvicorn app.main:app --reload --log-config log_config.json --reload-dir app"
+dev.cmd = "uvicorn app.main:app --reload --log-config log_config.json --reload-dir app --host 0.0.0.0 --port 8000"
 
 deploy.help = "Start the application with reloading disabled and log configuration as specified in log_config.json"
-deploy.cmd = "uvicorn app.main:app --log-config log_config.json"
+deploy.cmd = "uvicorn app.main:app --log-config log_config.json --host 0.0.0.0 --port 8000"
 
 ruff.help = "Check codebaes using ruff"
 ruff.cmd = "ruff check --output-format=concise ."
@@ -115,7 +126,7 @@ checks.sequence = ["ruff", "format", "types"]
 db.shell = """
 docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
-docker run --name plantswap-postgres -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -d -p 5432:5432 postgres
+docker run --name plantswap-postgres-single -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -d -p 5432:5432 postgres
 """
 db.help = "Stops and removes all running containers and starts a new postgres container from the postgres image"
 db.envfile = ".env"
