@@ -21,3 +21,21 @@ jobs:
 
       - name: Shut down services
         run: poe compose-down
+
+      - name: Wait for app-test container to finish
+        run: |
+          while docker ps -q --filter "name=test-app" | grep -q .; do
+            sleep 5
+          done
+          echo "{EXIT_CODE}={$(docker inspect -f '{{.State.ExitCode}}' test-app)}" >> "$GITHUB_ENV"
+
+      - name: Check exit code and shut down services
+        run: |
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "Test container exited successfully. Shutting down services."
+            poe compose-down
+          else
+            echo "Test container failed with exit code $EXIT_CODE. Shutting down services."
+            poe compose-down
+            exit 1
+          fi
