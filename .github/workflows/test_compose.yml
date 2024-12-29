@@ -19,9 +19,6 @@ jobs:
       - name: Start compose with Poethepoet
         run: poe compose-test -d
 
-      - name: Shut down services
-        run: poe compose-down
-
       - name: Wait for app-test container to finish
         run: |
           while docker ps -q --filter "name=test-app" | grep -q .; do
