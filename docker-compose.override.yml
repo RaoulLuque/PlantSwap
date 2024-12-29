@@ -1,0 +1,21 @@
+# This override is used to run the tests of the app
+services:
+  plantswap-app:
+    command: sh -c "poe deploy"
+    #    sh -c "uv sync --all-extras --dev && poe test-run && poe deploy"
+    healthcheck:
+      test: [ "CMD-SHELL", "python3 -c 'import http.client; conn = http.client.HTTPConnection(\"0.0.0.0\", 8000); conn.request(\"GET\", \"/\"); exit(0) if conn.getresponse().status == 200 else exit(1)'" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 300s
+
+  test-app:
+    build: .
+    container_name: test-app
+    command: sh -c "uv sync --all-extras --dev && uv run pytest --noconftest app/tests/compose/"
+    links:
+      - plantswap-app
+    depends_on:
+      plantswap-app:
+        condition: service_healthy
