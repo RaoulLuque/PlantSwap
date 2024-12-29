@@ -25,6 +25,7 @@ jobs:
             sleep 5
           done
           echo "{EXIT_CODE}={$(docker inspect -f '{{.State.ExitCode}}' test-app)}" >> "$GITHUB_ENV"
+          echo $EXIT_CODE
 
       - name: Check exit code and shut down services
         run: |
