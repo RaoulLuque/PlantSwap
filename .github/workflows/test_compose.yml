@@ -24,7 +24,8 @@ jobs:
           while docker ps -q --filter "name=test-app" | grep -q .; do
             sleep 5
           done
-          echo "{EXIT_CODE}={$(docker inspect -f '{{.State.ExitCode}}' test-app)}" >> "$GITHUB_ENV"
+          EXIT_CODE=$(docker inspect -f '{{.State.ExitCode}}' test-app)
+          echo "EXIT_CODE=$EXIT_CODE" >> "$GITHUB_ENV"
 
       - name: Check exit code and shut down services
         run: |
