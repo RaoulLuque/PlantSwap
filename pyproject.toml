@@ -100,7 +100,7 @@ compose.cmd = "docker compose -f docker-compose.yml up"
 compose-build.help = "Build the applications' services containerized using docker compose build"
 compose-build.cmd = "docker compose build"
 
-compose-clean.help = "Delete the applications' (compose) containers and volumes to completely reset the application using docker compose down"
+compose-down.help = "Delete the applications' (compose) containers and volumes to completely reset the application using docker compose down"
 compose-down.shell = """
 docker compose down -v
 """
