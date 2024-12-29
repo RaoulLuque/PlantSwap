@@ -17,7 +17,7 @@ jobs:
         run: pipx install poethepoet
 
       - name: Start compose with Poethepoet
-        run: poe compose-test
+        run: poe compose-test -d
 
       - name: Shut down services
         run: poe compose-down
