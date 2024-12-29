@@ -1,15 +1,23 @@
-name: Test Docker Composing Application
+name: Build and Test with Docker Compose
 
-on: [ push ]
+on: push
 
 jobs:
-  build:
+  docker-compose-test:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Run docker-compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        with:
-          compose-file: "./docker-compose.yml"
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Set up Poethepoet
+        run: pipx install poethepoet
+
+      - name: Start compose with Poethepoet
+        run: poe compose-test
+
+      - name: Shut down services
+        run: poe compose-down
