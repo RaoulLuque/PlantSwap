@@ -5,7 +5,7 @@ FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
 # Install the project into `/PlantSwap`
 WORKDIR /PlantSwap
 
-# Enable bytecode compilation
+# Enable bytecode compilation (for uv)
 ENV UV_COMPILE_BYTECODE=1
 
 # Copy from the cache instead of linking since it's a mounted volume
@@ -20,24 +20,23 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
     uv sync --frozen --no-install-project --no-dev
 
-# Then, add the rest of the project source code and install it
+# Add the rest of the project source code and install it
 # Installing separately from its dependencies allows optimal layer caching
 ADD pyproject.toml LICENSE log_config.json README.md uv.lock ./
 ADD app app
 
+# Create a directory for reports
 RUN mkdir reports
 
-
+# Install the project's dependencies
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Reset the entrypoint, don't invoke `uv`
+# Reset the entrypoint (don't invoke `uv` as the base image would)
 ENTRYPOINT []
 
-# Run the FastAPI application by default
-# Uses `fastapi dev` to enable hot-reloading when the `watch` sync occurs
-# Uses `--host 0.0.0.0` to allow access from outside the container
+# Run the application using poethepoet
 CMD ["poe", "deploy"]
