@@ -25,15 +25,15 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 ADD pyproject.toml LICENSE log_config.json README.md uv.lock ./
 ADD app app
 
-# Create a directory for reports
-RUN mkdir reports
-
 # Install the project's dependencies
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
 
 # Place executables in the environment at the front of the path
 ENV PATH="/app/.venv/bin:$PATH"
+
+# Create a directory for reports
+RUN mkdir reports
 
 # Reset the entrypoint (don't invoke `uv` as the base image would)
 ENTRYPOINT []
