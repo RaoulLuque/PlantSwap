@@ -67,12 +67,19 @@ poe deploy
 
 By default, the api will be served at `http://0.0.0.0:8000 `.
 
-# General development progress of the app
+## Using docker compose
 
-The following list keeps track of the development progress of the app
-and its backend/API.
+Using [docker compose](https://docs.docker.com/compose/) and poethepoet, one can start a cluster of containers. One for the application, another one for the postgresql database, and a third one for backup of the database and logging. Starting the cluster is as easy as
+```commandline
+poe compose
+```
+with poethepoet. Or 
+```commandline
+docker compose -f docker-compose.yml up
+```
+without poe.
 
-## Tech stack
+# Tech stack
 - ⚡ [FastAPI](https://fastapi.tiangolo.com) for the Python backend API.
     - 🧰 [SQLModel](https://sqlmodel.tiangolo.com) for the Python SQL database interactions (ORM).
     - 🔍 [Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
@@ -85,6 +92,12 @@ and its backend/API.
 - 📦 Package management with [uv](https://github.com/astral-sh/uv).
 - ⚙️ CI (continuous integration) and CD (continuous deployment) based on [GitHub Actions](https://github.com/features/actions).
 
+
+# General development progress of the app
+
+The following list keeps track of the development progress of the app
+and its backend/API.
+
 ## [Basic functionality](https://github.com/RaoulLuque/PlantSwap/milestone/2)
 
 Basic functionality includes things such as:
@@ -94,6 +107,8 @@ Basic functionality includes things such as:
 - [x] Administrators can create accounts
 - [x] Administrators can delete ads of users
 - [x] Administrators can delete accounts of users
+
+## [Advanced functionality](https://github.com/RaoulLuque/PlantSwap/milestone/5)
 
 Advanced functionality includes things such as:
 - [x] Users can send other users trade requests for their plants
@@ -106,17 +121,15 @@ Advanced functionality includes things such as:
 
 The following are references to the tasks of the respective milestones
 as discussed in
-the [Repository](https://github.com/cvillalonga/CC-24-25) of the cloud
+the [repository](https://github.com/cvillalonga/CC-24-25) of the cloud
 computing class.
 
-## [Milestone 1](https://github.com/RaoulLuque/PlantSwap/milestone/1)
-
+****## [Milestone 1](https://github.com/RaoulLuque/PlantSwap/milestone/1)
 - 🔧 [Configuration of Git and GitHub](docs/milestone_1/github_configuration.md)
 - 📖 [Description of the problem and the application to solve it](docs/milestone_1/problem_description.md)
 - ⚖️ [MIT License used for the project](LICENSE)
 
 ## [Milestone 2](https://github.com/RaoulLuque/PlantSwap/milestone/3)
-
 - 🤹‍♀️ [Task runner](docs/milestone_2/task_runner.md)
 - 🧪 [Testing framework and assertion library](docs/milestone_2/testing_framework_and_assertion_library.md)
 - ✍️ [Writing tests](docs/milestone_2/writing_tests.md)
@@ -129,6 +142,9 @@ computing class.
 - 📜 [Logging setup](docs/milestone_3/logging.md)
 - 🧪 [Testing update](docs/milestone_3/test_execution.md)
 
-
-## Milestone 4
-- ...
+## [Milestone 4](https://github.com/RaoulLuque/PlantSwap/milestone/6)
+- 🛠️ [Container composition setup](docs/milestone_4/01_container_composition_setup.md)
+- 🐳 [Dockerfile](docs/milestone_4/02_dockerfile_in_depth_explanation.md)
+- 📜 [Compose file](docs/milestone_4/03_compose_file_in_depth_explanation.md)
+- 📤 [Publishing images](docs/milestone_4/04_automatically_publishing_images.md)
+- 🧪 [Testing the composed services](docs/milestone_4/05_automatically_testing_the_composition_of_containers.md)
