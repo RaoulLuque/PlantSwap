@@ -148,3 +148,8 @@ computing class.
 - 📜 [Compose file](docs/milestone_4/03_compose_file_in_depth_explanation.md)
 - 📤 [Publishing images](docs/milestone_4/04_automatically_publishing_images.md)
 - 🧪 [Testing the composed services](docs/milestone_4/05_automatically_testing_the_composition_of_containers.md)
+
+## [Milestone 5](https://github.com/RaoulLuque/PlantSwap/milestone/7)
+- 🌟 [Deploying the application](docs/milestone_5/deploying_the_application_to_the_cloud.md)
+- 🤖 [Continuous deployment](docs/milestone_5/continuous_deployment_using_github_actions.md)
+- 📊 [Benchmarking the app](docs/milestone_5/performance_benchmarking.md)
