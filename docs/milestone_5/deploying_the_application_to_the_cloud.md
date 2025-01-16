@@ -59,7 +59,7 @@ Having created our fly.toml file, we are ready to deploy the application. As exp
 ```commandline
 (plantswap) *[main][../PlantSwap]$ fly deploy                        
 ==> Verifying app config
-Validating /home/raoul/Documents/Produktivität/RWTH/Semester_7/CC/PlantSwap/fly.toml
+Validating .../CC/PlantSwap/fly.toml
 ✓ Configuration is valid
 --> Verified app config
 Error: Could not find App "plantswap"
@@ -71,7 +71,7 @@ Therefore, we first had to run the [`fly launch`](https://fly.io/docs/reference/
 An existing fly.toml file was found for app plantswap
 ? Would you like to copy its configuration to the new app? Yes
 Using build strategies '[the "Dockerfile" dockerfile]'. Remove [build] from fly.toml to force a rescan
-Creating app in /home/raoul/Documents/Produktivität/RWTH/Semester_7/CC/PlantSwap
+Creating app in .../CC/PlantSwap
 We're about to launch your app on Fly.io. Here's what you're getting:
 
 Organization: Raoul Luqué             (fly launch defaults to the personal org)
@@ -100,60 +100,14 @@ DATABASE_POOLER_URL: hidden
 DATABASE_URL: hidden
 
 ? Create .dockerignore from 8 .gitignore files? Yes
-Created /home/raoul/Documents/Produktivität/RWTH/Semester_7/CC/PlantSwap/.dockerignore from 8 .gitignore files.
+Created .../CC/PlantSwap/.dockerignore from 8 .gitignore files.
 Wrote config file fly.toml
-Validating /home/raoul/Documents/Produktivität/RWTH/Semester_7/CC/PlantSwap/fly.toml
+Validating .../CC/PlantSwap/fly.toml
 ✓ Configuration is valid
 ==> Building image
-==> Building image with Depot
---> build:  (​)
-[+] Building 22.7s (13/13) FINISHED                                                           
- => [internal] load build definition from Dockerfile                                           
- => => transferring dockerfile: 1.40kB                                                        
- => [internal] load metadata for ghcr.io/astral-sh/uv:python3.12-bookworm-slim                 
- => [internal] load .dockerignore                                                             
- => => transferring context: 884B                                                             
- => [stage-0 1/8] FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim@sha256:1d87359da9ea13a3aaf7988e70fae3118c1e351b26337830b1f6fccbf9eab6d0    
- => => resolve ghcr.io/astral-sh/uv:python3.12-bookworm-slim@sha256:1d87359da9ea13a3aaf7988e70fae3118c1e351b26337830b1f6fccbf9eab6d0    
- => => sha256:184aff3eb8fbdeb25b5697c83adcfadb6deef75d7001234b86bd6ec2d6a610a4 249B / 249B    
- => => sha256:63132b2c7e872e7fedbc801585d4f7ba03447a8bcaa6e61ea022521dcebadc12 15.66MB / 15.66MB 
- => => sha256:de2a998baeb3b693572201ce82da66e97b26f2feabf01efbb4c9a952587a839d 13.65MB / 13.65MB
- => => sha256:ad5b6a1962fdac425252ec07daae642d785bd6d9c9fb9c665495ac32fb6c7346 3.32MB / 3.32MB
- => => sha256:fd674058ff8f8cfa7fb8a20c006fc0128541cbbad7f7f7f28df570d08f9e4d92 28.23MB / 28.23MB 
- => => extracting sha256:fd674058ff8f8cfa7fb8a20c006fc0128541cbbad7f7f7f28df570d08f9e4d92     
- => => extracting sha256:ad5b6a1962fdac425252ec07daae642d785bd6d9c9fb9c665495ac32fb6c7346     
- => => extracting sha256:de2a998baeb3b693572201ce82da66e97b26f2feabf01efbb4c9a952587a839d     
- => => extracting sha256:184aff3eb8fbdeb25b5697c83adcfadb6deef75d7001234b86bd6ec2d6a610a4     
- => => extracting sha256:63132b2c7e872e7fedbc801585d4f7ba03447a8bcaa6e61ea022521dcebadc12     
- => [internal] load build context                                                             
- => => transferring context: 258.02kB                                                         
- => [stage-0 2/8] WORKDIR /PlantSwap                                                          
- => [stage-0 3/8] RUN pip install poethepoet                                                  
- => [stage-0 4/8] RUN --mount=type=cache,target=/root/.cache/uv     --mount=type=bind,source=uv.lock,target=uv.lock     --mount=type=bind,source=pyproject.toml,target=pyproject.toml     uv sync --frozen --no-inst  1.7s
- => [stage-0 5/8] ADD pyproject.toml LICENSE log_config.json README.md uv.lock ./             
- => [stage-0 6/8] ADD app app                                                                 
- => [stage-0 7/8] RUN --mount=type=cache,target=/root/.cache/uv     uv sync --frozen --no-dev  
- => [stage-0 8/8] RUN mkdir reports                                                           
- => exporting to image                                                                        
- => => exporting layers                                                                       
- => => exporting manifest sha256:61a8299b7c4517ac6553d9354b32295cfaf8f8084190007a66931b2fad54429d                     
- => => exporting config sha256:d81842238178cb28db43344c0052be19ed6f31d1abcd4064daa909ee4f8535b6                     
- => => pushing layers for registry.fly.io/plantswap:deployment-01JHKBE7DFWT7E692V6FYX9GG7@sha256:61a8299b7c4517ac6553d9354b32295cfaf8f8084190007a66931b2fad54429d                           
- => => pushing layer sha256:20a882825dc0f1396f4402f73f57e11d10a662cf977fd890b1027a07c8682345  
- => => pushing layer sha256:cd5aa750824d2c4122dd156907d903d29398a08f329b273e1452e2316042ffab  
- => => pushing layer sha256:bd9ddc54bea929a22b334e73e026d4136e5b73f5cc29942896c72e4ece69b13d  
- => => pushing layer sha256:736f2b16ffb1a6952a5a25c4d1c946f789e47b5276356e0d52f8d91ceaf4ed75  
- => => pushing layer sha256:e1c600fbf54fb6220989b838bcf4acdf88b9224fced7b4f6bdf4fd75caca4f71  
- => => pushing layer sha256:2367ef07c00768f1fe71396351fe9b1fe692b72881e715888c9419b7f8b39ae4  
- => => pushing layer sha256:184aff3eb8fbdeb25b5697c83adcfadb6deef75d7001234b86bd6ec2d6a610a4  
- => => pushing layer sha256:f748a4803666b9f6af424cdeedbb2231ee2b0e5309400a95a3338b11dd081463  
- => => pushing layer sha256:63132b2c7e872e7fedbc801585d4f7ba03447a8bcaa6e61ea022521dcebadc12  
- => => pushing layer sha256:fd674058ff8f8cfa7fb8a20c006fc0128541cbbad7f7f7f28df570d08f9e4d92  
- => => pushing layer sha256:de2a998baeb3b693572201ce82da66e97b26f2feabf01efbb4c9a952587a839d  
- => => pushing layer sha256:d81842238178cb28db43344c0052be19ed6f31d1abcd4064daa909ee4f8535b6  
- => => pushing layer sha256:ad5b6a1962fdac425252ec07daae642d785bd6d9c9fb9c665495ac32fb6c7346  
- => => pushing manifest for hidden                        
---> Build Summary:  (​)
+
+--- Building logs snipped ---
+
 --> Building image done
 image: hidden
 image size: 100 MB
