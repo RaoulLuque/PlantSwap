@@ -16,7 +16,7 @@ Regarding why we even chose a IaaS (as which fly.io technically counts), the set
 
 ## Setting up fly
 
-[Fly.io](fly.io) has an own CLI tool which can be used to deploy applications. The documentation can be found [here](https://fly.io/docs/flyctl/) and the installation is as easy as running
+[Fly.io](fly.io) has its own CLI tool which can be used to deploy applications. The documentation can be found [here](https://fly.io/docs/flyctl/) and the installation is as easy as running
 ```commandline
 curl -L https://fly.io/install.sh | sh
 ```
@@ -24,6 +24,8 @@ on linux. After having then added the binary to the PATH variable of your shell,
 
 Since I already had an existing account I could login into the CLI tool using
 `fly auth login`. Similar to how they handle other configuration and login processes, this opens a browser where one can simply log in and this login is transferred to the CLI tool.
+
+Additionally, I want to note that I already had 2 factor authentication setup, as is recommended with cloud providers.
 
 ## Deploying the application
 
