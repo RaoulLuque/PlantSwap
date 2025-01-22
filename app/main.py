@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from sqlmodel import Session
 
 from .api.main import api_router
@@ -22,6 +23,6 @@ app.include_router(api_router)
 init_db(Session(engine))
 
 
-@app.get("/")
+@app.get("/", response_class=RedirectResponse)
 async def root():
-    return {"message": "Hello World!"}
+    return RedirectResponse(url="/docs")
