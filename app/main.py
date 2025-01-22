@@ -26,3 +26,8 @@ init_db(Session(engine))
 @app.get("/", response_class=RedirectResponse)
 async def root():
     return RedirectResponse(url="/docs")
+
+
+@app.get("/health")
+async def health_check():
+    return {"message": "Healthy!"}
