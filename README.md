@@ -124,7 +124,7 @@ as discussed in
 the [repository](https://github.com/cvillalonga/CC-24-25) of the cloud
 computing class.
 
-****## [Milestone 1](https://github.com/RaoulLuque/PlantSwap/milestone/1)
+## [Milestone 1](https://github.com/RaoulLuque/PlantSwap/milestone/1)
 - 🔧 [Configuration of Git and GitHub](docs/milestone_1/github_configuration.md)
 - 📖 [Description of the problem and the application to solve it](docs/milestone_1/problem_description.md)
 - ⚖️ [MIT License used for the project](LICENSE)
