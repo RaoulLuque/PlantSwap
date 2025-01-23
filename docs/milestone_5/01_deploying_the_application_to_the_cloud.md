@@ -2,7 +2,7 @@
 
 As a cloud provider, we chose [fly.io](https://fly.io), a relatively small player that initially offered a great [free-tier](https://fly.io/docs/about/pricing/#discontinued-plans). Unfortunately, this tier is no longer available to new accounts. However, since I had previously used fly.io for a [Connect Four bot](https://connect-rust.fly.dev/) written in Rust, my account remains on the old free-tier.
 
-The decision to use fly.io was not solely based on monetary considerations. Deployment with fly.io is straightforward and seamless, as demonstrated below. Additionally, it offers excellent Docker support and straightforward continuous deployment integration with GitHub Actions, as described in [Continuous Deployment Using GitHub Actions](continuous_deployment_using_github_actions.md). However, fly.io’s relatively small ecosystem does come with some limitations, such as fewer features and potential risks related to security or the possibility of the service being discontinued as we have discussed in class as well.
+The decision to use fly.io was not solely based on monetary considerations. Deployment with fly.io is straightforward and seamless, as demonstrated below. Additionally, it offers excellent Docker support and straightforward continuous deployment integration with GitHub Actions, as described in [Continuous Deployment Using GitHub Actions](02_continuous_deployment_using_github_actions.md). However, fly.io’s relatively small ecosystem does come with some limitations, such as fewer features and potential risks related to security or the possibility of the service being discontinued as we have discussed in class as well.
 
 Despite these drawbacks, fly.io proved to be an excellent choice for this project due to the free-tier benefits for hosting both the application and a PostgreSQL database.
 
@@ -16,7 +16,7 @@ Regarding why we even chose a IaaS (as which fly.io technically counts), the set
 
 ## Setting up fly
 
-[Fly.io](fly.io) has its own CLI tool which can be used to deploy applications. The documentation can be found [here](https://fly.io/docs/flyctl/) and the installation is as easy as running
+[Fly.io](https://fly.io/) has its own CLI tool which can be used to deploy applications. The documentation can be found [here](https://fly.io/docs/flyctl/) and the installation is as easy as running
 ```commandline
 curl -L https://fly.io/install.sh | sh
 ```

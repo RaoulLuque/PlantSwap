@@ -150,6 +150,6 @@ computing class.
 - 🧪 [Testing the composed services](docs/milestone_4/05_automatically_testing_the_composition_of_containers.md)
 
 ## [Milestone 5](https://github.com/RaoulLuque/PlantSwap/milestone/7)
-- 🌟 [Deploying the application](docs/milestone_5/deploying_the_application_to_the_cloud.md)
-- 🤖 [Continuous deployment](docs/milestone_5/continuous_deployment_using_github_actions.md)
-- 📊 [Benchmarking the app](docs/milestone_5/performance_benchmarking.md)
+- 🌟 [Deploying the application](docs/milestone_5/01_deploying_the_application_to_the_cloud.md)
+- 🤖 [Continuous deployment](docs/milestone_5/02_continuous_deployment_using_github_actions.md)
+- 📊 [Benchmarking the app](docs/milestone_5/03_performance_benchmarking.md)
