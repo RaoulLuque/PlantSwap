@@ -2,17 +2,25 @@
 
 As a cloud provider, we chose [fly.io](https://fly.io), a relatively small player that initially offered a great [free-tier](https://fly.io/docs/about/pricing/#discontinued-plans). Unfortunately, this tier is no longer available to new accounts. However, since I had previously used fly.io for a [Connect Four bot](https://connect-rust.fly.dev/) written in Rust, my account remains on the old free-tier.
 
-The decision to use fly.io was not solely based on monetary considerations. Deployment with fly.io is straightforward and seamless, as demonstrated below. Additionally, it offers excellent Docker support and straightforward continuous deployment integration with GitHub Actions, as described in [Continuous Deployment Using GitHub Actions](02_continuous_deployment_using_github_actions.md). However, fly.io’s relatively small ecosystem does come with some limitations, such as fewer features and potential risks related to security or the possibility of the service being discontinued as we have discussed in class as well.
+Instead, fly now offers a 7-day free tier for users signing up using their GitHub account. This trial becomes visible when entering the credit card details after signing up using GitHub.
+
+![free_trial.png](free_trial.png)
+
+Additionally, fly has a policy of [waving off invoices less than $5 per month](https://community.fly.io/t/clarification-on-fly-ios-free-tier-and-billing-policy/20909). Which would very much be enough for our purposes.
+
+The decision to use fly.io was not solely based on monetary considerations however. Deployment with fly.io is straightforward and seamless, as demonstrated below. Additionally, it offers excellent Docker support and straightforward continuous deployment integration with GitHub Actions, as described in [Continuous Deployment Using GitHub Actions](02_continuous_deployment_using_github_actions.md). However, fly.io’s relatively small ecosystem does come with some limitations, such as fewer features and potential risks related to security or the possibility of the service being discontinued as we have discussed in class as well.
 
 Despite these drawbacks, fly.io proved to be an excellent choice for this project due to the free-tier benefits for hosting both the application and a PostgreSQL database.
 
 ## Evaluation Criteria
 
-The criteria used to choose the platform-as-a-service (PaaS) were cost efficiency, ease of deployment, scalability, and reliability and security. Fly.io was evaluated against other services such as Heroku and AWS Elastic Beanstalk. Heroku, while offering a developer-friendly experience, has a free-tier that was recently restricted, similar to fly.io. Therefore, Heroku’s pricing is higher compared to fly.io, making it less appealing for this project’s budget constraints. AWS Elastic Beanstalk offers a more feature-rich environment with greater scalability and ecosystem support, but the complexity of setup and management, combined with the lack of a meaningful free-tier, made it less suitable for this project’s requirements.
+The criteria used to choose the platform-as-a-service (PaaS) were cost efficiency, ease of deployment, scalability, and reliability and security. Fly.io was evaluated against other services such as [Heroku](https://www.heroku.com/) and [AWS Elastic Beanstalk](https://aws.amazon.com/elasticbeanstalk/). Heroku, while offering a developer-friendly experience, has a free-tier that was recently restricted, similar to fly.io. Therefore, Heroku’s pricing is higher compared to fly.io, making it less appealing for this project’s budget constraints. AWS Elastic Beanstalk offers a more feature-rich environment with greater scalability and ecosystem support, but the complexity of setup and management, combined with the lack of a meaningful free-tier, made it less suitable for this project’s requirements.
 
 Fly.io’s integration with Docker and its simplicity in setup provided a significant advantage over both Heroku and AWS Elastic Beanstalk. While Heroku also supports Docker, its reliance on buildpacks can sometimes introduce limitations. AWS Elastic Beanstalk’s Docker support, though comprehensive, requires more manual configuration, which could increase deployment time and effort. Fly.io strikes a balance between ease of use and functionality for containerized applications, which was a key deciding factor. Of course, also the existing experience and good results using fly.io proved to be a deciding factor in chosing a cloud provider.
 
 Regarding why we even chose a IaaS (as which fly.io technically counts), the setup is really easy. We just containerize our application and know it will exactly the same as on our local machine (running docker engine). Furthermore, we are not committed to a specific platform, language or framework, since we can simply change our entire backend if necessary and the container will wrap that application so that the users would not even notice a change.
+
+Other platforms like [Render](https://render.com/) were also considered, however, due to its similarities with fly, the native integration of using configuration files in fly ([fly.toml](../../fly.toml)), their great CLI integrations and the positive experiences with fly, I opted for fly.
 
 ## Setting up fly
 
