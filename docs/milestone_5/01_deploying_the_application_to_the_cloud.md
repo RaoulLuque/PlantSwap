@@ -151,7 +151,30 @@ However, there was another problem.
 
 ## Connecting to the database
 
-Somehow, we had to make sure that the fly hosted application would connect to the database hosted by supabase. This could be done with the provided IPv6/IPv4 addresses of the database. However, we would have to somehow pass these arguments to the application. For this, fly has a [secrets feature](https://fly.io/docs/apps/secrets/) which securely stores secrets for a fly application and automatically injects these as environment variables into the containers when deploying.
+We had to make sure that the fly-hosted application would somehow connect to the database hosted by supabase. This could be achieved with the provided IPv6/IPv4 addresses of the database. 
+
+Note that the provided database URLs did not work for our connection purposes. Instead we had to use the following command to open the supabase dashboard:
+
+```commandline
+flyctl ext supabase dashboard plantswap-db
+```
+
+And within that dashboard, open the connections options (seen in the top bar on the following screenshot).
+
+![supabase_dashboard.png](supabase_dashboard.png)
+
+In these connection options, there was a Session pooler connection option which supports IPv4, as desired for our application which we then used as the connection details. Note that the specific URL is snipped from the following screenshots.
+
+![session_pooler_one.png](session_pooler_one.png)
+![session_pooler_two.png](session_pooler_two.png)
+
+Also note that the provided connection string comes in a URL format whereas we pass the specific database options to our app as environment variables. That is, we pass the db name, port number, password, etc. individually. As explained in [this StackOverflow Answer](https://stackoverflow.com/a/52718093), the structure of such connection strings is as follows:
+
+```text
+postgres://YourUserName:YourPassword@YourHostname:YourPort/YourDatabaseName
+```
+
+Now, the next step was passing these environment variables safely to the fly application. For this, fly has a [secrets feature](https://fly.io/docs/apps/secrets/) which securely stores secrets for a fly application and automatically safely injects these as environment variables into the containers when deploying.
 
 Using this feature and the `fly secrets set` CLI, we were able to set the postgres connection details and the details of the first superuser for the application/database.
 
@@ -182,6 +205,8 @@ Using the dashboard provided by fly.io we can now see the status of our applicat
 ![dashboard.png](dashboard.png)
 
 At last, we want to note that the current setup of the app with 1 machine and 1 database instance is of course not the best for real production. Instead it is a proof-of-concept and was chosen mostly due to its cost effectiveness. However, fly.io also offers great [scalability options](https://fly.io/docs/launch/scale-count/), where one can automatically scale the number of machines up and down depending on the demand. This of course integrates great with our setup, since we can have multiple instances of the app running in parallel and sending separate requests to the database if necessary. At some point, the database will become a bottleneck of course, but for a start this could be a viable setup (the database can also be scaled using [supabase](https://supabase.com/)).
+
+TBD
 
 ## Testing the application
 
