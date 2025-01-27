@@ -1,17 +1,35 @@
+from fastapi import UploadFile
 from sqlmodel import Session, select
 
+from app.core.config import settings
+from app.core.images import upload_image_to_cloudinary, delete_image_from_cloudinary
 from app.models import User, PlantCreate, Plant, PlantsPublic
 
 
-def create_plant(session: Session, user: User, plant_in: PlantCreate) -> Plant:
+def create_plant(
+    session: Session,
+    user: User,
+    plant_in: PlantCreate,
+    image: UploadFile | None = None,
+) -> Plant:
     """
     Create a new plant ad.
     :param session: Current database session
     :param user: User creating the plant ad
     :param plant_in: Data for the to-be-created plant ad
+    :param image: Optional image of the plant
     :return: Created plant instance
     """
-    plant: Plant = Plant.model_validate(plant_in, update={"owner_id": user.id})
+    # Obtain plant id to pass it to image upload
+    plant: Plant = Plant.model_validate(
+        plant_in, update={"owner_id": user.id, "image_url": None}
+    )
+
+    # Handle image upload or set image_url to None
+    image_url = None
+    if image is not None:
+        image_url = upload_image_to_cloudinary(image, str(plant.id))
+    plant.image_url = image_url
     session.add(plant)
     session.commit()
     session.refresh(plant)
@@ -36,10 +54,12 @@ def get_all_plant_ads(
 
 def delete_plant_ad(session: Session, plant: Plant) -> Plant:
     """
-    Delete plant ad from database.
+    Delete plant ad from database and delete image from image hosting if it exists.
     :param session: Database session
     :param plant: Plant ad to be deleted
     """
+    if plant.image_url is not None and settings.USE_IMAGE_UPLOAD:
+        delete_image_from_cloudinary(str(plant.id))
     session.delete(plant)
     session.commit()
     return plant

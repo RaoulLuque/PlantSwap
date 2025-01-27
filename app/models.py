@@ -73,6 +73,8 @@ class Plant(PlantBase, table=True):
         foreign_key="user.id", nullable=False, ondelete="CASCADE"
     )
     owner: User = Relationship(back_populates="plants")
+    # URL to image of plant if it exists, otherwise None
+    image_url: str | None = Field(default=None, max_length=255)
     # This attribute is of no real use, it simply takes care of deleting the corresponding
     # trade requests of a plant when the respective plant is deleted
     outgoing_trade_requests: list["TradeRequest"] = Relationship(
@@ -97,6 +99,7 @@ class Plant(PlantBase, table=True):
 class PlantPublic(PlantBase):
     id: uuid.UUID
     owner_id: uuid.UUID
+    image_url: str | None = Field(default=None, max_length=255)
 
 
 # Class to return multiple PlantPublic instances at the same time

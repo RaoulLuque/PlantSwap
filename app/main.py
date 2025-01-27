@@ -6,6 +6,7 @@ from sqlmodel import Session
 
 from .api.main import api_router
 from .core.db import init_db, engine
+from .core.images import set_cloudinary_config
 
 # Initialize the FastAPI app
 app = FastAPI(title="PlantSwap")
@@ -21,6 +22,8 @@ logging.getLogger("passlib").setLevel(logging.ERROR)
 app.include_router(api_router)
 # Initialize the database
 init_db(Session(engine))
+# Set cloudinary config
+set_cloudinary_config()
 
 
 @app.get("/", response_class=RedirectResponse)

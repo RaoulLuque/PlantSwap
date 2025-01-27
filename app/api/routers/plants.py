@@ -1,11 +1,12 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile, Form
 
+from app.core.config import settings
 from app.core.crud import plants_crud
 from app.api.dependencies import SessionDep, CurrentUserDep
-from app.models import PlantPublic, PlantCreate, Plant, PlantsPublic
+from app.models import PlantPublic, Plant, PlantsPublic, PlantCreate
 
 # Router for api endpoints regarding plants/creation of ad functionality
 router = APIRouter()
@@ -13,16 +14,32 @@ router = APIRouter()
 
 @router.post("/plants/create", response_model=PlantPublic)
 def create_plant_ad(
-    session: SessionDep, current_user: CurrentUserDep, plant_in: PlantCreate
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    name: str = Form(...),
+    description: str | None = Form(None),
+    image: UploadFile | str | None = None,
 ):
     """
     Create new plant ad.
     :param current_user: Currently logged-in user
     :param session: Current database session.
-    :param plant_in: Plant data for the to-be-created plant ad.
+    :param name: Name of the plant
+    :param description: Description of the plant
     :return: Name, description, owner_id and id of the created plant.
+    :param image: Optional image of the plant.
     """
-    plant: Plant = plants_crud.create_plant(session, current_user, plant_in)
+    plant_in = PlantCreate(name=name, description=description)
+    if isinstance(image, str) or image is None:
+        image = None
+    else:
+        if not settings.USE_IMAGE_UPLOAD:
+            raise HTTPException(
+                status_code=500,
+                detail="Image upload is not configured for the app.",
+            )
+
+    plant: Plant = plants_crud.create_plant(session, current_user, plant_in, image)
     return plant
 
 
