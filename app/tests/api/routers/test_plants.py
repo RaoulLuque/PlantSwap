@@ -16,8 +16,14 @@ from app.tests.utils.users import create_random_user, get_user_token_headers
 def test_create_plant_new_plant(client: TestClient, db: Session) -> None:
     with create_random_user(db) as (user, password):
         user_headers = get_user_token_headers(client, user.email, password)
-        data = {"name": random_lower_string(), "description": random_lower_string()}
-        response = client.post("/plants/create", json=data, headers=user_headers)
+        data = {
+            "name": random_lower_string(),
+            "description": random_lower_string(),
+        }
+        response = client.post(
+            "/plants/create", data=data, files=None, headers=user_headers
+        )
+        print(response)
         assert 200 == response.status_code
         response_json = response.json()
         assert response_json["name"] == data["name"]
