@@ -8,7 +8,6 @@ function App() {
       <ChakraProvider>
         <BrowserRouter>
             <div className="App">
-              <h1>Plant Swap App</h1>
               <Routes>
                 {/* Include the PlantsRouter component for plants-related routes */}
                 <Route path="/plants/*" element={<PlantsRouter />} />
