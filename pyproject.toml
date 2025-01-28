@@ -107,8 +107,11 @@ compose-down.shell = """
 docker compose down -v
 """
 
-compose-test.help = "Run tests using pytest in a containerized environment using docker compose"
-compose-test.cmd = "docker compose up"
+compose-test-run.help = "Run tests using pytest in a containerized environment using docker compose"
+compose-test-run.cmd = "docker compose up"
+
+compose-test.help = "Execute compose-build and compose-test-run tasks in sequence: Run tests using pytest in a containerized environment using docker compose and build the newest versions of the containers before"
+compose-test.sequence = ["compose-build", "compose-test-run"]
 
 dev.help = "Start the applicatoin in development mode with reloading enabled and log configuration as specified in log_config.json"
 dev.cmd = "uvicorn app.main:app --reload --log-config log_config.json --reload-dir app --host 0.0.0.0 --port 8000"
