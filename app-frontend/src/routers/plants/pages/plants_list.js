@@ -30,7 +30,7 @@ const PlantOwner = ({ date, name }) => {
       <Image
         borderRadius="full"
         boxSize="40px"
-        src="https://100k-faces.glitch.me/random-image"
+        src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png"
         alt={`Avatar of ${name}`}
       />
       <Text fontWeight="medium">{name}</Text>
@@ -98,9 +98,10 @@ function PlantList() {
               <Box textDecoration="none" _hover={{ textDecoration: 'none' }}>
                 <Image
                   borderRadius="lg"
-                  src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80"
-                  alt="some good alt text"
-                  objectFit="contain"
+                  src={plant.image_url}
+                  alt="Image of the Plant"
+                  boxSize="500px" // Set a fixed size for the image
+                  objectFit="cover" // Ensures the image covers the entire box without distorting
                 />
               </Box>
             </Box>
