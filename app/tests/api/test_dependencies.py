@@ -63,7 +63,6 @@ async def test_get_current_user_no_user(db: Session):
     mocked_jwt_payload = {"sub": "example@example.com"}
 
     with patch("jwt.decode", return_value=mocked_jwt_payload):
-        # with patch("app.core.crud.get_user_by_email", return_value=None):
         with pytest.raises(HTTPException) as exception_info:
             await get_current_user("fake_token", db)
         response = exception_info.value

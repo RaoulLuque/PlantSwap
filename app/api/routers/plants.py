@@ -30,6 +30,7 @@ def create_plant_ad(
     :param image: Optional image of the plant.
     """
     plant_in = PlantCreate(name=name, description=description)
+    print(not settings.USE_IMAGE_UPLOAD)
     if isinstance(image, str) or image is None:
         image = None
     else:
