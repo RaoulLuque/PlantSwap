@@ -42,29 +42,58 @@ const PlantOwner = ({ date, name }) => {
 
 function PlantList() {
   const [plants, setPlants] = useState([]);
+  const [owners, setOwners] = useState({});
   const toast = useToast();
 
-  // Ensure that `useColorModeValue` is only called at the top level of the function
   const lightGradient = useColorModeValue(
-    'radial(orange.600 1px, transparent 1px)',
-    'radial(orange.300 1px, transparent 1px)'
+    "radial(orange.600 1px, transparent 1px)",
+    "radial(orange.300 1px, transparent 1px)"
   );
-  const textColor = useColorModeValue('gray.700', 'gray.200');
+  const textColor = useColorModeValue("gray.700", "gray.200");
 
-  const fetchPlants = useCallback(async () => {
-  try {
-    const response = await api.get("/plants/");
-    setPlants(response.data.data);
-  } catch (error) {
-    console.error("Error fetching plants:", error);
-    toast({
-      title: "Error",
-      description: "Could not fetch plants.",
-      status: "error",
-      duration: 5000,
-      isClosable: true,
-    });
-  }
+    const fetchPlants = useCallback(async () => {
+    try {
+      const response = await api.get("/plants/");
+      const plantData = response.data.data;
+
+      console.log("Fetched Plants:", plantData); // Debug: Log fetched plants
+      setPlants(plantData);
+
+      // Fetch owners for all plants
+      const ownerPromises = plantData.map((plant) =>
+        api
+          .get(`/users/${plant.owner_id}`)
+          .then((res) => ({
+            id: plant.owner_id,
+            name: res.data.full_name,
+          }))
+          .catch((err) => {
+            console.error(`Error fetching owner for ID ${plant.owner_id}:`, err);
+            return { id: plant.owner_id, name: "Unknown" }; // Handle errors gracefully
+          })
+      );
+
+      const ownerData = await Promise.all(ownerPromises);
+      console.log("Fetched Owners:", ownerData); // Debug: Log fetched owners
+
+      // Create a map of owner IDs to names
+      const ownerMap = ownerData.reduce(
+        (acc, owner) => ({ ...acc, [owner.id]: owner.name }),
+        {}
+      );
+
+      console.log("Owner Map:", ownerMap); // Debug: Log owner map
+      setOwners(ownerMap);
+    } catch (error) {
+      console.error("Error fetching plants:", error);
+      toast({
+        title: "Error",
+        description: "Could not fetch plants.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   }, [toast]);
 
   useEffect(() => {
@@ -135,7 +164,7 @@ function PlantList() {
             >
               {plant.description}
             </Text>
-            <PlantOwner name="Change This" date="2021-04-06T19:01:27Z" />
+            <PlantOwner name={owners[plant.owner_id] || "Unknown"} date="2021-04-06T19:01:27Z" />
           </Box>
         </Box>
       ))}
