@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 
 from .api.main import api_router
@@ -17,6 +18,16 @@ logger.info(msg="----- ----- APPLICATION STARTING ----- -----")
 
 # Mute module 'bcrypt' has no attribute '__about__' Warning
 logging.getLogger("passlib").setLevel(logging.ERROR)
+
+origins = ["http://localhost:3000"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include the API endpoints specified in /api/routers/...
 app.include_router(api_router)
