@@ -93,6 +93,10 @@ without poe.
 - ⚙️ CI (continuous integration) and CD (continuous deployment) based on [GitHub Actions](https://github.com/features/actions).
 
 
+# Frontend Template Credits
+Blog Article List from [Chakra Templates](https://github.com/hauptrolle/chakra-templates)
+
+
 # General development progress of the app
 
 The following list keeps track of the development progress of the app
