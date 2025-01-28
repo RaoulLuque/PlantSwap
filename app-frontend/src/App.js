@@ -2,7 +2,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import PlantsRouter from './routers/plants/plants_router';
 import NotFoundPage from "./routers/not_found/not_found_router";
 import {Box, ChakraProvider} from "@chakra-ui/react";
-import WithAction from "./pages/top_bar.js"; // Import the WithAction component
+import WithAction from "./pages/top_bar.js";
 
 // Layout component that includes the top bar
 const Layout = ({ children }) => {
@@ -30,7 +30,6 @@ function App() {
               }
             />
 
-            {/* Render NotFoundPage without the Layout */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

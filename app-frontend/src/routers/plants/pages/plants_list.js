@@ -1,3 +1,5 @@
+'use client'
+
 import {
   Box,
   Heading,
@@ -129,8 +131,8 @@ function PlantList() {
                   borderRadius="lg"
                   src={plant.image_url}
                   alt="Image of the Plant"
-                  boxSize="500px" // Set a fixed size for the image
-                  objectFit="cover" // Ensures the image covers the entire box without distorting
+                  boxSize="500px"
+                  objectFit="cover"
                 />
               </Box>
             </Box>

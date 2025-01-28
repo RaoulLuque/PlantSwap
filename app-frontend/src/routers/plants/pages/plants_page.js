@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useEffect } from "react";
 import api from "../../../api";
 import {
@@ -13,7 +15,7 @@ import {
   ListItem,
   VStack,
   useToast,
-} from "@chakra-ui/react"; // Import Chakra UI components
+} from "@chakra-ui/react";
 
 function PlantsPage() {
   const [plants, setPlants] = useState([]);
