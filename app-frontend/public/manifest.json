@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "PlantSwap",
+  "name": "PlantSwap: WebApp to swap plants with other people",
   "icons": [
     {
       "src": "favicon.ico",
