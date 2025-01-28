@@ -17,7 +17,7 @@ jobs:
         run: pipx install poethepoet
 
       - name: Start compose with Poethepoet
-        run: poe compose-test -d
+        run: poe compose-test-run -d
 
       - name: Wait for app-test container to finish
         run: |
