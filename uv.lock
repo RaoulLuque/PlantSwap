@@ -79,6 +79,20 @@ wheels = [
 ]
 
 [[package]]
+name = "cloudinary"
+version = "1.42.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "certifi" },
+    { name = "six" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/57/37/ac2b85e8e595b28cbd9e13824cef5cb7b04513045c8d92d121eb72e382bf/cloudinary-1.42.1.tar.gz", hash = "sha256:d99129031ed818bbf21d7a0c63fc94ad4f93f0d7f1b047e54d4ac0d2f91b3c35", size = 179515 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f5/83/9d14d116662ff0d81512593115d8a634c7b26254499c037fdef571d918fb/cloudinary-1.42.1-py3-none-any.whl", hash = "sha256:b68ed8d9b879165a84f3c0f7eb1989e21014910edfaea35265faf170097f7baa", size = 141434 },
+]
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 source = { registry = "https://pypi.org/simple" }
@@ -509,6 +523,7 @@ dependencies = [
     { name = "bcrypt" },
     { name = "certifi" },
     { name = "click" },
+    { name = "cloudinary" },
     { name = "coverage" },
     { name = "dnspython" },
     { name = "email-validator" },
@@ -572,6 +587,7 @@ requires-dist = [
     { name = "bcrypt", specifier = "==4.2.0" },
     { name = "certifi", specifier = "==2024.8.30" },
     { name = "click", specifier = "==8.1.7" },
+    { name = "cloudinary", specifier = ">=1.42.1" },
     { name = "coverage", specifier = "==7.6.4" },
     { name = "dnspython", specifier = "==2.7.0" },
     { name = "email-validator", specifier = "==2.2.0" },
@@ -935,6 +951,15 @@ wheels = [
 ]
 
 [[package]]
+name = "six"
+version = "1.17.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81", size = 34031 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274", size = 11050 },
+]
+
+[[package]]
 name = "sniffio"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1046,6 +1071,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e1/34/943888654477a574a86a98e9896bae89c7aa15078ec29f490fef2f1e5384/tzdata-2024.2.tar.gz", hash = "sha256:7d85cc416e9382e69095b7bdf4afd9e3880418a2413feec7069d533d6b4e31cc", size = 193282 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/ab/7e5f53c3b9d14972843a647d8d7a853969a58aecc7559cb3267302c94774/tzdata-2024.2-py2.py3-none-any.whl", hash = "sha256:a48093786cdcde33cad18c2555e8532f34422074448fbc874186f0abd79565cd", size = 346586 },
+]
+
+[[package]]
+name = "urllib3"
+version = "2.3.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/aa/63/e53da845320b757bf29ef6a9062f5c669fe997973f966045cb019c3f4b66/urllib3-2.3.0.tar.gz", hash = "sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d", size = 307268 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c8/19/4ec628951a74043532ca2cf5d97b7b14863931476d117c471e8e2b1eb39f/urllib3-2.3.0-py3-none-any.whl", hash = "sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df", size = 128369 },
 ]
 
 [[package]]

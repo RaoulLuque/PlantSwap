@@ -42,8 +42,10 @@ def test_create_trade_request_check_if_request_is_deleted_when_plant_is_deleted(
             )
             data = {"name": random_lower_string(), "description": random_lower_string()}
             response = client.post(
-                "/plants/create", json=data, headers=user_two_headers
+                "/plants/create", data=data, headers=user_two_headers
             )
+            print(response)
+            print(response.json())
             plant_two: Plant | None = db.get(Plant, response.json()["id"])
             assert plant_two
             user_one_headers = get_user_token_headers(

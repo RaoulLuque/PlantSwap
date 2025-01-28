@@ -1,8 +1,11 @@
+import io
 import uuid
 
+import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
+from app.core.config import settings
 from app.tests.utils.utils import (
     random_lower_string,
 )
@@ -16,8 +19,14 @@ from app.tests.utils.users import create_random_user, get_user_token_headers
 def test_create_plant_new_plant(client: TestClient, db: Session) -> None:
     with create_random_user(db) as (user, password):
         user_headers = get_user_token_headers(client, user.email, password)
-        data = {"name": random_lower_string(), "description": random_lower_string()}
-        response = client.post("/plants/create", json=data, headers=user_headers)
+        data = {
+            "name": random_lower_string(),
+            "description": random_lower_string(),
+        }
+        response = client.post(
+            "/plants/create", data=data, files=None, headers=user_headers
+        )
+        print(response)
         assert 200 == response.status_code
         response_json = response.json()
         assert response_json["name"] == data["name"]
@@ -42,6 +51,29 @@ def test_create_plant_not_logged_in(client: TestClient) -> None:
     response = client.post("/plants/create", json=data)
     assert 401 == response.status_code
     assert response.json() == {"detail": "Not authenticated"}
+
+
+@pytest.mark.usefixtures("settings_override")
+def test_create_plant_no_image(client: TestClient, db: Session) -> None:
+    with create_random_user(db) as (user, password):
+        assert not settings.USE_IMAGE_UPLOAD
+        user_headers = get_user_token_headers(client, user.email, password)
+
+        # Simulate a file upload
+        file_content = b"This is a test image file"
+        file = ("image", ("test_image.png", io.BytesIO(file_content), "image/png"))
+
+        data = {
+            "name": random_lower_string(),
+            "description": random_lower_string(),
+        }
+        response = client.post(
+            "/plants/create", data=data, files=[file], headers=user_headers
+        )
+        assert 500 == response.status_code
+        assert response.json() == {
+            "detail": "Image upload is not configured for the app."
+        }
 
 
 def test_read_plants(client: TestClient, db: Session) -> None:

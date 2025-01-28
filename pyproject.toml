@@ -55,6 +55,7 @@ dependencies = [
     "websockets==13.1",
     "types-passlib>=1.7.7.20240819",
     "sqlalchemy>=2.0.35",
+    "cloudinary>=1.42.1",
     "fastapi-cors>=0.0.6",
 ]
 
