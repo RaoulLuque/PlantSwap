@@ -22,7 +22,6 @@ function PlantsPage() {
   const [newPlant, setNewPlant] = useState({ name: "", description: "", price: 0, quantity: 0 });
   const toast = useToast(); // For showing notifications
 
-  // Fetch plants from the backend
   useEffect(() => {
     fetchPlants();
   }, []);
