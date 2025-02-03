@@ -2,9 +2,11 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session
 
 from .api.main import api_router
+from .core.config import settings
 from .core.db import init_db, engine
 
 # Initialize the FastAPI app
@@ -16,6 +18,17 @@ logger.info(msg="----- ----- APPLICATION STARTING ----- -----")
 
 # Mute module 'bcrypt' has no attribute '__about__' Warning
 logging.getLogger("passlib").setLevel(logging.ERROR)
+
+# Setup CORS for frontend
+origins: list[str] = [settings.FRONTEND_URL]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Include the API endpoints specified in /api/routers/...
 app.include_router(api_router)
