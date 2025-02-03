@@ -33,6 +33,7 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - FIRST_SUPERUSER=${FIRST_SUPERUSER}
       - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD}
+      - FRONTEND_URL=${FRONTEND_URL}
     ports:
       - "8000:8000"
     volumes:
