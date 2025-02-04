@@ -36,6 +36,7 @@ export const handleCreatePlant = async (name, description, image, toast, onPlant
       isClosable: true,
     });
     onPlantModalClose();
+    window.location.reload();
   } catch (error) {
     if (error.status === 401) {
       toast({

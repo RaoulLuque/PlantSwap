@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Flex,
@@ -30,7 +30,7 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
-import {handleLogin, handleLogout} from "../handlers/auth_handler";
+import {checkUserLoggedIn, handleLogin, handleLogout} from "../handlers/auth_handler";
 import { handleCreatePlant } from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
 
@@ -77,6 +77,17 @@ export default function TopBar() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const loggedIn = await checkUserLoggedIn();
+      setIsLoggedIn(loggedIn);
+    };
+
+    checkLoginStatus().then();
+  }, []);
 
   return (
     <>
@@ -138,10 +149,10 @@ export default function TopBar() {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={onLoginOpen}>Login</MenuItem>
-                <MenuItem onClick={() => handleLogout(toast)}>Logout</MenuItem>
+                {!isLoggedIn && <MenuItem onClick={onLoginOpen}>Login</MenuItem>}
+                {isLoggedIn && <MenuItem onClick={() => handleLogout(toast)}>Logout</MenuItem>}
                 <MenuDivider />
-                <MenuItem onClick={onRegisterOpen}>Register</MenuItem>
+                {!isLoggedIn && <MenuItem onClick={onRegisterOpen}>Register</MenuItem>}
               </MenuList>
             </Menu>
           </Flex>

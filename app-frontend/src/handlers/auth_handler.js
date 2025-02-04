@@ -26,6 +26,7 @@ export const handleLogin = async (event, onLoginClose, toast) => {
         isClosable: true,
       });
       onLoginClose();
+      window.location.reload();
     } else {
       toast({
         title: 'Login failed',
@@ -57,6 +58,7 @@ export const handleLogout = async (toast) => {
         duration: 5000,
         isClosable: true,
       });
+      window.location.reload();
     }
   } catch (error) {
     toast({
@@ -66,5 +68,20 @@ export const handleLogout = async (toast) => {
       duration: 5000,
       isClosable: true,
     });
+  }
+};
+
+export const checkUserLoggedIn = async () => {
+  try {
+    const response = await api.get('/users/me', { withCredentials: true });
+
+    if (response.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error('Error checking user login status:', error);
+    return false;
   }
 };
