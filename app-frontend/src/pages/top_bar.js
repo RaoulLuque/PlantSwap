@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Box,
   Flex,
@@ -24,9 +25,13 @@ import {
   ModalFooter,
   Input,
   useToast,
+  FormControl,
+  FormLabel,
+  Textarea,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
-import handleLogin from "./security";
+import {handleLogin} from "../handlers/auth_handler";
+import {handleCreatePlant} from "../handlers/plant_handlers";
 
 const Links = [];
 
@@ -49,14 +54,23 @@ const NavLink = (props) => {
 };
 
 export default function TopBar() {
+  const toast = useToast();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isLoginOpen,
     onOpen: onLoginOpen,
     onClose: onLoginClose,
   } = useDisclosure();
+  const {
+    isOpen: isPlantModalOpen,
+    onOpen: onPlantModalOpen,
+    onClose: onPlantModalClose,
+  } = useDisclosure();
 
-  const toast = useToast();
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState(null);
 
   return (
     <>
@@ -93,8 +107,9 @@ export default function TopBar() {
               colorScheme={'teal'}
               size={'sm'}
               mr={4}
-              leftIcon={<AddIcon />}>
-              Action
+              leftIcon={<AddIcon />}
+              onClick={onPlantModalOpen}>
+              Create a Plant Ad
             </Button>
             <Menu>
               <MenuButton
@@ -134,7 +149,7 @@ export default function TopBar() {
           <ModalHeader>Login</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <form id="login-form" onSubmit={handleLogin}>
+            <form id="login-form" onSubmit={(e) => handleLogin(e, onLoginClose, toast)}>
               <Stack spacing={4}>
                 <Input name="username" placeholder="Username" required />
                 <Input name="password" type="password" placeholder="Password" required />
@@ -146,6 +161,48 @@ export default function TopBar() {
               Login
             </Button>
             <Button variant="ghost" onClick={onLoginClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isPlantModalOpen} onClose={onPlantModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create a New Plant</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Stack spacing={4}>
+              <FormControl isRequired>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  placeholder="Plant name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Description</FormLabel>
+                <Textarea
+                  placeholder="Description of the plant"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Image</FormLabel>
+                <Input
+                  type="file"
+                  onChange={(e) => setImage(e.target.files[0])}
+                />
+              </FormControl>
+            </Stack>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" mr={3} onClick={() => handleCreatePlant(name, description, image, toast, onPlantModalClose)}>
+              Create
+            </Button>
+            <Button variant="ghost" onClick={onPlantModalClose}>
               Cancel
             </Button>
           </ModalFooter>
