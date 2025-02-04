@@ -2,7 +2,7 @@ from collections.abc import Generator
 from typing import Annotated
 
 import jwt
-from fastapi import Depends, HTTPException, status, Cookie
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from sqlmodel import Session
@@ -31,8 +31,16 @@ SessionDep = Annotated[Session, Depends(get_db)]
 # Define the name of the cookie that will store the token
 ACCESS_TOKEN_COOKIE_NAME = "access_token"
 
+
 # Dependency to extract the token from the cookie
-TokenDep = Annotated[str | None, Cookie(alias=ACCESS_TOKEN_COOKIE_NAME)]
+async def get_token(request: Request) -> str | None:
+    """
+    Get the access token from the cookie, or return None if it's missing.
+    """
+    return request.cookies.get(ACCESS_TOKEN_COOKIE_NAME)
+
+
+TokenDep = Annotated[str | None, Depends(get_token)]
 
 
 async def get_current_user(token: TokenDep, session: SessionDep) -> User:
