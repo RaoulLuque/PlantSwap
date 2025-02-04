@@ -34,26 +34,6 @@ import {checkUserLoggedIn, handleLogin, handleLogout} from "../handlers/auth_han
 import { handleCreatePlant } from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
 
-const Links = [];
-
-const NavLink = (props) => {
-  const { children } = props;
-  return (
-    <Box
-      as="a"
-      px={2}
-      py={1}
-      rounded={'md'}
-      _hover={{
-        textDecoration: 'none',
-        bg: useColorModeValue('gray.200', 'gray.700'),
-      }}
-      href={'#'}>
-      {children}
-    </Box>
-  );
-};
-
 export default function TopBar() {
   const toast = useToast();
 
@@ -120,11 +100,6 @@ export default function TopBar() {
                 PlantSwap
               </Text>
             </Flex>
-            <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
-            </HStack>
           </HStack>
           <Flex alignItems={'center'}>
             <Button
@@ -157,16 +132,6 @@ export default function TopBar() {
             </Menu>
           </Flex>
         </Flex>
-
-        {isOpen ? (
-          <Box pb={4} display={{ md: 'none' }}>
-            <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
-            </Stack>
-          </Box>
-        ) : null}
       </Box>
       <Modal isOpen={isLoginOpen} onClose={onLoginClose}>
         <ModalOverlay />
