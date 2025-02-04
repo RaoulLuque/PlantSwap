@@ -33,7 +33,13 @@ import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 import {checkUserLoggedIn, handleLogin, handleLogout} from "../handlers/auth_handler";
 import { handleCreatePlant } from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
-import {handleDragEnter, handleDragLeave, handleDragOver, handleDrop} from "../handlers/image_upload_handlers";
+import {
+  handleDragEnter,
+  handleDragLeave,
+  handleDragOver,
+  handleDrop,
+  handleImageChange
+} from "../handlers/image_upload_handlers";
 
 export default function TopBar() {
   const toast = useToast();
@@ -60,31 +66,6 @@ export default function TopBar() {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
-
-  const handleImageChange = (eventOrFile, toast) => {
-    let file;
-    if (eventOrFile.target) {
-      // If it's an event object (from file input)
-      file = eventOrFile.target.files[0];
-    } else {
-      // If it's a File object (from drag-and-drop)
-      file = eventOrFile;
-    }
-
-    if (file && file.type.startsWith('image/')) {
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
-    } else {
-      toast({
-        title: 'Invalid file type',
-        description: 'Please upload an image file.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -242,12 +223,12 @@ export default function TopBar() {
                   onDragOver={(e) => handleDragOver(e, setIsDragging)}
                   onDragEnter={(e) => handleDragEnter(e, setIsDragging)}
                   onDragLeave={(e) => handleDragLeave(e, setIsDragging)}
-                  onDrop={(e) => handleDrop(e, setIsDragging, handleImageChange, toast)}
+                  onDrop={(e) => handleDrop(e, setIsDragging, toast, setImage, setImagePreview)}
                   _hover={{ borderColor: 'teal.500' }}
                 >
                   <input
                     type="file"
-                    onChange={(e) => handleImageChange(e.target.files[0])}
+                    onChange={(e) => handleImageChange(e.target.files[0], toast, setImage, setImagePreview)}
                     accept="image/*"
                     style={{ display: 'none' }}
                     id="file-input"
