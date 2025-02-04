@@ -30,8 +30,8 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
-import {handleLogin} from "../handlers/auth_handler";
-import {handleCreatePlant} from "../handlers/plant_handlers";
+import { handleLogin } from "../handlers/auth_handler";
+import { handleCreatePlant } from "../handlers/plant_handlers";
 
 const Links = [];
 
@@ -74,7 +74,15 @@ export default function TopBar() {
 
   return (
     <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+      <Box
+        bg={useColorModeValue('gray.100', 'gray.900')}
+        px={4}
+        position="fixed"
+        top={0}
+        left={0}
+        right={0}
+        zIndex={1000}
+      >
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
