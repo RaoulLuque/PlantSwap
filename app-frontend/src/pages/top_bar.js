@@ -33,6 +33,7 @@ import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 import {checkUserLoggedIn, handleLogin, handleLogout} from "../handlers/auth_handler";
 import { handleCreatePlant } from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
+import {handleDragEnter, handleDragLeave, handleDragOver, handleDrop} from "../handlers/image_upload_handlers";
 
 export default function TopBar() {
   const toast = useToast();
@@ -58,12 +59,29 @@ export default function TopBar() {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+  const handleImageChange = (eventOrFile, toast) => {
+    let file;
+    if (eventOrFile.target) {
+      // If it's an event object (from file input)
+      file = eventOrFile.target.files[0];
+    } else {
+      // If it's a File object (from drag-and-drop)
+      file = eventOrFile;
+    }
+
+    if (file && file.type.startsWith('image/')) {
       setImage(file);
       setImagePreview(URL.createObjectURL(file));
+    } else {
+      toast({
+        title: 'Invalid file type',
+        description: 'Please upload an image file.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
@@ -217,15 +235,19 @@ export default function TopBar() {
                 <FormLabel>Image</FormLabel>
                 <Box
                   border="2px dashed"
-                  borderColor="gray.200"
+                  borderColor={isDragging ? 'teal.500' : 'gray.200'}
                   borderRadius="md"
                   p={4}
                   textAlign="center"
+                  onDragOver={(e) => handleDragOver(e, setIsDragging)}
+                  onDragEnter={(e) => handleDragEnter(e, setIsDragging)}
+                  onDragLeave={(e) => handleDragLeave(e, setIsDragging)}
+                  onDrop={(e) => handleDrop(e, setIsDragging, handleImageChange, toast)}
                   _hover={{ borderColor: 'teal.500' }}
                 >
                   <input
                     type="file"
-                    onChange={handleImageChange}
+                    onChange={(e) => handleImageChange(e.target.files[0])}
                     accept="image/*"
                     style={{ display: 'none' }}
                     id="file-input"
@@ -235,11 +257,14 @@ export default function TopBar() {
                       Upload Image
                     </Button>
                   </label>
+                  <Text mt={2} fontSize="sm" color="gray.500">
+                    or drag and drop an image here
+                  </Text>
                   {imagePreview && (
                     <Flex
                       mt={4}
-                      justifyContent="center" // Center horizontally
-                      alignItems="center" // Center vertically
+                      justifyContent="center"
+                      alignItems="center"
                     >
                       <Image
                         src={imagePreview}
