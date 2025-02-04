@@ -28,13 +28,13 @@ export const handleCreatePlant = async (name, description, image, toast, onPlant
     }
 
     const data = response.data;
-    toast({
-      title: 'Plant created',
-      description: `Plant "${data.name}" has been successfully created`,
-      status: 'success',
-      duration: 5000,
-      isClosable: true,
-    });
+    localStorage.setItem('toast', JSON.stringify({
+        title: 'Plant created',
+        description: `Plant "${data.name}" has been successfully created`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      }));
     onPlantModalClose();
     window.location.reload();
   } catch (error) {

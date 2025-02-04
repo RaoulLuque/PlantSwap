@@ -19,12 +19,12 @@ export const handleLogin = async (event, onLoginClose, toast) => {
     console.log(response)
 
     if (response.data.message === 'Login successful') {
-      toast({
+      localStorage.setItem('toast', JSON.stringify({
         title: 'Login successful',
         status: 'success',
         duration: 5000,
         isClosable: true,
-      });
+      }));
       onLoginClose();
       window.location.reload();
     } else {
@@ -52,12 +52,12 @@ export const handleLogout = async (toast) => {
     const response = await api.post("/logout", {}, { withCredentials: true });
 
     if (response.data.message === "Logout successful") {
-      toast({
+      localStorage.setItem('toast', JSON.stringify({
         title: "Logout successful",
         status: "success",
         duration: 5000,
         isClosable: true,
-      });
+      }));
       window.location.reload();
     }
   } catch (error) {

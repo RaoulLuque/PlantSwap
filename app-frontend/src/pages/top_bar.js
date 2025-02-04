@@ -68,6 +68,26 @@ export default function TopBar() {
   const [isDragging, setIsDragging] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Show toasts after reloading page
+  window.onload = function () {
+    const toastData = localStorage.getItem('toast');
+
+    if (toastData) {
+      const { title, status, duration, isClosable } = JSON.parse(toastData);
+
+      // Display the toast
+      toast({
+        title,
+        status,
+        duration,
+        isClosable,
+      });
+
+      // Clear the stored toast information
+      localStorage.removeItem('toast');
+    }
+  };
+
   useEffect(() => {
     const checkLoginStatus = async () => {
       const loggedIn = await checkUserLoggedIn();
