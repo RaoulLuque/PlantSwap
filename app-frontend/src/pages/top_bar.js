@@ -57,6 +57,15 @@ export default function TopBar() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -180,6 +189,7 @@ export default function TopBar() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
       <Modal isOpen={isPlantModalOpen} onClose={onPlantModalClose}>
         <ModalOverlay />
         <ModalContent>
@@ -205,15 +215,49 @@ export default function TopBar() {
               </FormControl>
               <FormControl>
                 <FormLabel>Image</FormLabel>
-                <Input
-                  type="file"
-                  onChange={(e) => setImage(e.target.files[0])}
-                />
+                <Box
+                  border="2px dashed"
+                  borderColor="gray.200"
+                  borderRadius="md"
+                  p={4}
+                  textAlign="center"
+                  _hover={{ borderColor: 'teal.500' }}
+                >
+                  <input
+                    type="file"
+                    onChange={handleImageChange}
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="file-input"
+                  />
+                  <label htmlFor="file-input">
+                    <Button as="span" colorScheme="teal" variant="outline">
+                      Upload Image
+                    </Button>
+                  </label>
+                  {imagePreview && (
+                    <Box mt={4}>
+                      <Image
+                        src={imagePreview}
+                        alt="Plant Preview"
+                        borderRadius="md"
+                        boxSize="150px"
+                        objectFit="cover"
+                      />
+                    </Box>
+                  )}
+                </Box>
               </FormControl>
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="teal" mr={3} onClick={() => handleCreatePlant(name, description, image, toast, onPlantModalClose)}>
+            <Button
+              colorScheme="teal"
+              mr={3}
+              onClick={() => {
+                handleCreatePlant(name, description, image, toast, onPlantModalClose).then();
+              }}
+            >
               Create
             </Button>
             <Button variant="ghost" onClick={onPlantModalClose}>
