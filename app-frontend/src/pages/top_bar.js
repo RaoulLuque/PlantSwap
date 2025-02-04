@@ -1,5 +1,3 @@
-'use client'
-
 import {
   Box,
   Flex,
@@ -17,8 +15,18 @@ import {
   Stack,
   Image,
   Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Input,
+  useToast,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
+import handleLogin from "./security";
 
 const Links = [];
 
@@ -42,6 +50,13 @@ const NavLink = (props) => {
 
 export default function TopBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isLoginOpen,
+    onOpen: onLoginOpen,
+    onClose: onLoginClose,
+  } = useDisclosure();
+
+  const toast = useToast();
 
   return (
     <>
@@ -62,11 +77,7 @@ export default function TopBar() {
                 boxSize="40px"
                 objectFit="contain"
               />
-              <Text
-                fontWeight="bold"
-                ml={2}
-                fontSize="lg"
-              >
+              <Text fontWeight="bold" ml={2} fontSize="lg">
                 PlantSwap
               </Text>
             </Flex>
@@ -98,7 +109,7 @@ export default function TopBar() {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
+                <MenuItem onClick={onLoginOpen}>Login</MenuItem> {/* Open login modal */}
                 <MenuItem>Link 2</MenuItem>
                 <MenuDivider />
                 <MenuItem>Link 3</MenuItem>
@@ -117,6 +128,29 @@ export default function TopBar() {
           </Box>
         ) : null}
       </Box>
+      <Modal isOpen={isLoginOpen} onClose={onLoginClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Login</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <form id="login-form" onSubmit={handleLogin}>
+              <Stack spacing={4}>
+                <Input name="username" placeholder="Username" required />
+                <Input name="password" type="password" placeholder="Password" required />
+              </Stack>
+            </form>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" mr={3} type="submit" form="login-form">
+              Login
+            </Button>
+            <Button variant="ghost" onClick={onLoginClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
