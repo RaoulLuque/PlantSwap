@@ -236,7 +236,11 @@ export default function TopBar() {
                     </Button>
                   </label>
                   {imagePreview && (
-                    <Box mt={4}>
+                    <Flex
+                      mt={4}
+                      justifyContent="center" // Center horizontally
+                      alignItems="center" // Center vertically
+                    >
                       <Image
                         src={imagePreview}
                         alt="Plant Preview"
@@ -244,7 +248,7 @@ export default function TopBar() {
                         boxSize="150px"
                         objectFit="cover"
                       />
-                    </Box>
+                    </Flex>
                   )}
                 </Box>
               </FormControl>
