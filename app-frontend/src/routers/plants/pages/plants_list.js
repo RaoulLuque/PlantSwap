@@ -71,12 +71,12 @@ function PlantList() {
           }))
           .catch((err) => {
             console.error(`Error fetching owner for ID ${plant.owner_id}:`, err);
-            return { id: plant.owner_id, name: "Unknown" }; // Handle errors gracefully
+            return { id: plant.owner_id, name: "Unknown" };
           })
       );
 
       const ownerData = await Promise.all(ownerPromises);
-      console.log("Fetched Owners:", ownerData); // Debug: Log fetched owners
+      console.log("Fetched Owners:", ownerData);
 
       // Create a map of owner IDs to names
       const ownerMap = ownerData.reduce(
