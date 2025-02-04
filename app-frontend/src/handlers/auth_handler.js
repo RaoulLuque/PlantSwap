@@ -45,3 +45,26 @@ export const handleLogin = async (event, onLoginClose, toast) => {
     });
   }
 };
+
+export const handleLogout = async (toast) => {
+  try {
+    const response = await api.post("/logout", {}, { withCredentials: true });
+
+    if (response.data.message === "Logout successful") {
+      toast({
+        title: "Logout successful",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  } catch (error) {
+    toast({
+      title: "Logout failed",
+      description: error.response?.data?.detail || "An error occurred",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+  }
+};

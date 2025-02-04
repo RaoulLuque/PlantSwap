@@ -30,7 +30,7 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
-import { handleLogin } from "../handlers/auth_handler";
+import {handleLogin, handleLogout} from "../handlers/auth_handler";
 import { handleCreatePlant } from "../handlers/plant_handlers";
 
 const Links = [];
@@ -132,8 +132,8 @@ export default function TopBar() {
                 />
               </MenuButton>
               <MenuList>
-                <MenuItem onClick={onLoginOpen}>Login</MenuItem> {/* Open login modal */}
-                <MenuItem>Link 2</MenuItem>
+                <MenuItem onClick={onLoginOpen}>Login</MenuItem>
+                <MenuItem onClick={() => handleLogout(toast)}>Logout</MenuItem>
                 <MenuDivider />
                 <MenuItem>Link 3</MenuItem>
               </MenuList>
