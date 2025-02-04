@@ -15,31 +15,11 @@ export const handleCreatePlant = async (name, description, image, toast, onPlant
       withCredentials: true
     });
     console.log(response)
-    if (response.status === 401) {
-      toast({
-        title: 'Unauthorized.',
-        description: 'You are not authorized to perform this action.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
-    if (response.status === 500) {
-      toast({
-        title: 'Image upload not configured.',
-        description: 'The image upload has not been configured. Please remove the image from the ad.',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
 
     if (!response.status === 200) {
       toast({
         title: 'Plant creation unsuccessful',
-        description: 'We have no idea what happened. Please try logging in again or reloading the webpage.',
+        description: 'We have no idea what happened. Please try logging in again or reloading the webpage',
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -49,16 +29,36 @@ export const handleCreatePlant = async (name, description, image, toast, onPlant
 
     const data = response.data;
     toast({
-      title: 'Plant created.',
-      description: `Plant "${data.name}" has been successfully created.`,
+      title: 'Plant created',
+      description: `Plant "${data.name}" has been successfully created`,
       status: 'success',
       duration: 5000,
       isClosable: true,
     });
     onPlantModalClose();
   } catch (error) {
+    if (error.status === 401) {
+      toast({
+        title: 'Unauthorized',
+        description: 'You are not logged in',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+    if (error.status === 500) {
+      toast({
+        title: 'Image upload not configured',
+        description: 'The image upload has not been configured for this web app. Please remove the image from the ad',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
     toast({
-      title: 'Error creating plant.',
+      title: 'Error creating plant',
       description: error.message,
       status: 'error',
       duration: 5000,
