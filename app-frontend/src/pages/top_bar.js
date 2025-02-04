@@ -32,6 +32,7 @@ import {
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 import {handleLogin, handleLogout} from "../handlers/auth_handler";
 import { handleCreatePlant } from "../handlers/plant_handlers";
+import {handleRegistration} from "../handlers/user_handler";
 
 const Links = [];
 
@@ -66,6 +67,11 @@ export default function TopBar() {
     isOpen: isPlantModalOpen,
     onOpen: onPlantModalOpen,
     onClose: onPlantModalClose,
+  } = useDisclosure();
+  const {
+    isOpen: isRegisterOpen,
+    onOpen: onRegisterOpen,
+    onClose: onRegisterClose,
   } = useDisclosure();
 
   const [name, setName] = useState('');
@@ -135,7 +141,7 @@ export default function TopBar() {
                 <MenuItem onClick={onLoginOpen}>Login</MenuItem>
                 <MenuItem onClick={() => handleLogout(toast)}>Logout</MenuItem>
                 <MenuDivider />
-                <MenuItem>Link 3</MenuItem>
+                <MenuItem onClick={onRegisterOpen}>Register</MenuItem>
               </MenuList>
             </Menu>
           </Flex>
@@ -169,6 +175,30 @@ export default function TopBar() {
               Login
             </Button>
             <Button variant="ghost" onClick={onLoginClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isRegisterOpen} onClose={onRegisterClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Register</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <form id="register-form" onSubmit={(e) => handleRegistration(e, onRegisterClose, toast)}>
+              <Stack spacing={4}>
+                <Input name="full_name" placeholder="Full Name" required />
+                <Input name="email" type="email" placeholder="Email" required />
+                <Input name="password" type="password" placeholder="Password" required />
+              </Stack>
+            </form>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" mr={3} type="submit" form="register-form">
+              Register
+            </Button>
+            <Button variant="ghost" onClick={onRegisterClose}>
               Cancel
             </Button>
           </ModalFooter>
