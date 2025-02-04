@@ -75,13 +75,11 @@ export const checkUserLoggedIn = async () => {
   try {
     const response = await api.get('/users/me', { withCredentials: true });
 
-    if (response.status === 200) {
-      return true;
-    } else {
-      return false;
-    }
+    return response.status === 200;
   } catch (error) {
-    console.error('Error checking user login status:', error);
+    if (!error.response?.status === 401) {
+      console.error('Error checking user login status:', error);
+    }
     return false;
   }
 };
