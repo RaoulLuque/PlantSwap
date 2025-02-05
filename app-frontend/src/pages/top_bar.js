@@ -92,7 +92,11 @@ export default function TopBar() {
       >
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <HStack spacing={8} alignItems={'center'}>
-            <Flex alignItems="center">
+            <Flex
+              alignItems="center"
+              cursor="pointer"
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            >
               <Image
                 src="/logo512.png"
                 alt="PlantSwap Logo"
