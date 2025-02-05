@@ -311,8 +311,9 @@ export default function TopBar() {
                       p={4}
                       alignItems="center"
                       justifyContent="space-between"
+                      width="100%"
                     >
-                      <Flex alignItems="center">
+                      <Flex alignItems="center" flex={1} overflow="hidden" mr={4}>
                         <Image
                           src={plant.image_url}
                           alt={plant.name}
@@ -321,11 +322,18 @@ export default function TopBar() {
                           objectFit="cover"
                           mr={4}
                         />
-                        <Box>
+                        <Box flex={1} overflow="hidden">
                           <Text fontWeight="bold" fontSize="lg">
                             {plant.name}
                           </Text>
-                          <Text fontSize="md" color="gray.600">
+                          <Text
+                            fontSize="md"
+                            color="gray.600"
+                            noOfLines={2}
+                            overflow="hidden"
+                            textOverflow="ellipsis"
+                            whiteSpace="nowrap"
+                          >
                             {plant.description}
                           </Text>
                         </Box>
