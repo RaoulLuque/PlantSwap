@@ -18,18 +18,20 @@ def create_plant_ad(
     current_user: CurrentUserDep,
     name: str = Form(...),
     description: str | None = Form(None),
+    tags: list[str] = Form([]),
     image: UploadFile | str | None = None,
 ):
     """
-    Create new plant ad.
-    :param current_user: Currently logged-in user
+    Create a new plant ad.
+    :param current_user: Currently logged-in user.
     :param session: Current database session.
-    :param name: Name of the plant
-    :param description: Description of the plant
-    :return: Name, description, owner_id and id of the created plant.
+    :param name: Name of the plant.
+    :param description: Description of the plant.
+    :param tags: Tags of the plant.
     :param image: Optional image of the plant.
+    :return: Name, description, owner_id and id of the created plant.
     """
-    plant_in = PlantCreate(name=name, description=description)
+    plant_in = PlantCreate(name=name, description=description, tags=list(set(tags)))
     print(not settings.USE_IMAGE_UPLOAD)
     if isinstance(image, str) or image is None:
         image = None

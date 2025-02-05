@@ -2,8 +2,10 @@ import uuid
 from datetime import datetime
 
 from pydantic import BaseModel, EmailStr
+from sqlalchemy import String
 from sqlalchemy.orm import RelationshipProperty
-from sqlmodel import SQLModel, Field, Relationship
+from sqlalchemy.dialects.postgresql import ARRAY
+from sqlmodel import SQLModel, Field, Relationship, Column
 
 
 # Shared user properties in Database
@@ -57,6 +59,7 @@ class User(UserBase, table=True):
 class PlantBase(SQLModel):
     name: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=255)
+    tags: list[str] = Field(sa_column=Column(ARRAY(String()), nullable=True))
 
 
 # Properties to receive on plant creation
@@ -78,6 +81,7 @@ class Plant(PlantBase, table=True):
     image_url: str | None = Field(default=None, max_length=255)
     # This attribute is of no real use, it simply takes care of deleting the corresponding
     # trade requests of a plant when the respective plant is deleted
+    tags: list[str] = Field(sa_column=Column(ARRAY(String()), nullable=True))
     outgoing_trade_requests: list["TradeRequest"] = Relationship(
         sa_relationship=RelationshipProperty(
             "TradeRequest",
@@ -101,7 +105,8 @@ class PlantPublic(PlantBase):
     id: uuid.UUID
     owner_id: uuid.UUID
     creation_date: datetime
-    image_url: str | None = Field(default=None, max_length=255)
+    image_url: str | None
+    tags: list[str]
 
 
 # Class to return multiple PlantPublic instances at the same time
