@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import PlantList from "./pages/plants_list";
+import PlantList from "./pages/plants";
 
 const MainRouter = () => {
   return (
