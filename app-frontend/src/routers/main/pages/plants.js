@@ -60,7 +60,6 @@ function PlantList() {
 
   const { plants, owners } = ListAllPlantsHook();
   const isLoggedIn = IsLoggedInHook();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isTradeRequestOpen, onOpen: onTradeRequestOpen, onClose: onTradeRequestClose } = useDisclosure();
   const [selectedPlantId, setSelectedPlantId] = useState(null);
   const [myPlants, setMyPlants] = useState([]);

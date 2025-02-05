@@ -46,7 +46,6 @@ import {showStoredToastAfterWindowReload} from "../utils";
 export default function TopBar() {
   const toast = useToast();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isLoginOpen,
     onOpen: onLoginOpen,
@@ -93,13 +92,6 @@ export default function TopBar() {
         zIndex={1000}
       >
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <IconButton // Remove this icon button?
-            size={'md'}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={'Open Menu'}
-            display={{ md: 'none' }}
-            onClick={isOpen ? onClose : onOpen}
-          />
           <HStack spacing={8} alignItems={'center'}>
             <Flex alignItems="center">
               <Image
