@@ -8,7 +8,7 @@ import WithAction from "./pages/top_bar.js";
 const theme = extendTheme({
   colors: {
     customGreen: {
-      500: "#5d832e",
+      500: "#426c2c",
     },
   },
 });
