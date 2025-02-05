@@ -97,7 +97,7 @@ const fetchMyPlants = async (toast, setMyPlants) => {
         isClosable: true,
       });
     }
-  };
+};
 
 export const handleListMyPlants = (onMyPlantsOpen, toast, setMyPlants) => {
   onMyPlantsOpen();
