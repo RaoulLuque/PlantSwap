@@ -37,7 +37,6 @@ export const handleLogin = async (event, onLoginClose, toast, setIsLoggingIn) =>
         isClosable: true,
       });
     }
-    setIsLoggingIn(false);
   } catch (error) {
     toast({
       title: 'Login failed',
@@ -46,8 +45,9 @@ export const handleLogin = async (event, onLoginClose, toast, setIsLoggingIn) =>
       duration: 5000,
       isClosable: true,
     });
-    setIsLoggingIn(false);
-  }
+  } finally {
+      setIsLoggingIn(false);
+    }
 };
 
 export const handleLogout = async (toast) => {
