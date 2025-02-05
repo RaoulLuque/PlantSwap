@@ -73,6 +73,7 @@ export default function TopBar() {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isCreatingPlant, setIsCreatingPlant] = useState(false);
   const isLoggedIn = IsLoggedInHook();
   const [myPlants, setMyPlants] = useState([]);
 
@@ -268,8 +269,10 @@ export default function TopBar() {
               colorScheme="teal"
               mr={3}
               onClick={() => {
-                handleCreatePlant(name, description, image, toast, onPlantModalClose).then();
+                handleCreatePlant(name, description, image, toast, onPlantModalClose, setIsCreatingPlant).then();
               }}
+              isLoading={isCreatingPlant}
+              disabled={isCreatingPlant}
             >
               Create
             </Button>

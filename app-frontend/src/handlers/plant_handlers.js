@@ -1,6 +1,7 @@
 import api from "../api";
 
-export const handleCreatePlant = async (name, description, image, toast, onPlantModalClose) => {
+export const handleCreatePlant = async (name, description, image, toast, onPlantModalClose, setIsCreatingPlant) => {
+  setIsCreatingPlant(true);
   const formData = new FormData();
   formData.append('name', name);
   formData.append('description', description);
@@ -65,6 +66,8 @@ export const handleCreatePlant = async (name, description, image, toast, onPlant
       duration: 5000,
       isClosable: true,
     });
+  } finally {
+    setIsCreatingPlant(false);
   }
 };
 
