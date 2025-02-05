@@ -116,7 +116,7 @@ export default function TopBar() {
           <Flex alignItems={'center'}>
             <Button
               variant={'solid'}
-              colorScheme={'teal'}
+              colorScheme={'customGreen'}
               size={'sm'}
               mr={4}
               leftIcon={<AddIcon />}
@@ -161,7 +161,7 @@ export default function TopBar() {
           </ModalBody>
           <ModalFooter>
             <Button
-              colorScheme="teal"
+              colorScheme="customGreen"
               mr={3}
               type="submit"
               form="login-form"
@@ -191,7 +191,7 @@ export default function TopBar() {
             </form>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="teal" mr={3} type="submit" form="register-form">
+            <Button colorScheme="customGreen" mr={3} type="submit" form="register-form">
               Register
             </Button>
             <Button variant="ghost" onClick={onRegisterClose}>
@@ -228,7 +228,7 @@ export default function TopBar() {
                 <FormLabel>Image</FormLabel>
                 <Box
                   border="2px dashed"
-                  borderColor={isDragging ? 'teal.500' : 'gray.200'}
+                  borderColor={isDragging ? 'customGreen.500' : 'gray.200'}
                   borderRadius="md"
                   p={4}
                   textAlign="center"
@@ -236,7 +236,7 @@ export default function TopBar() {
                   onDragEnter={(e) => handleDragEnter(e, setIsDragging)}
                   onDragLeave={(e) => handleDragLeave(e, setIsDragging)}
                   onDrop={(e) => handleDrop(e, setIsDragging, toast, setImage, setImagePreview)}
-                  _hover={{ borderColor: 'teal.500' }}
+                  _hover={{ borderColor: 'customGreen.500' }}
                 >
                   <input
                     type="file"
@@ -246,7 +246,7 @@ export default function TopBar() {
                     id="file-input"
                   />
                   <label htmlFor="file-input">
-                    <Button as="span" colorScheme="teal" variant="outline">
+                    <Button as="span" colorScheme="customGreen" variant="outline">
                       Upload Image
                     </Button>
                   </label>
@@ -274,7 +274,7 @@ export default function TopBar() {
           </ModalBody>
           <ModalFooter>
             <Button
-              colorScheme="teal"
+              colorScheme="customGreen"
               mr={3}
               onClick={() => {
                 handleCreatePlant(name, description, image, toast, onPlantModalClose, setIsCreatingPlant).then();
@@ -332,7 +332,7 @@ export default function TopBar() {
               </>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="teal" onClick={onMyPlantsClose}>
+            <Button colorScheme="customGreen" onClick={onMyPlantsClose}>
               Close
             </Button>
           </ModalFooter>

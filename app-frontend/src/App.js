@@ -1,8 +1,17 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import MainRouter from './routers/main/main_router';
 import NotFoundPage from "./routers/not_found/not_found_router";
-import {Box, ChakraProvider} from "@chakra-ui/react";
+import {Box, ChakraProvider, extendTheme} from "@chakra-ui/react";
 import WithAction from "./pages/top_bar.js";
+
+// Add custom green color to theme
+const theme = extendTheme({
+  colors: {
+    customGreen: {
+      500: "#5d832e",
+    },
+  },
+});
 
 // Layout component that includes the top bar
 const Layout = ({ children }) => {
@@ -16,7 +25,7 @@ const Layout = ({ children }) => {
 
 function App() {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <BrowserRouter>
         <div className="App">
           <Routes>
