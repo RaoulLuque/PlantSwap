@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Box,
   Flex,
@@ -29,8 +29,8 @@ import {
   FormLabel,
   Textarea,
 } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
-import {checkUserLoggedIn, handleLogin, handleLogout} from "../handlers/auth_handler";
+import {HamburgerIcon, CloseIcon, AddIcon} from '@chakra-ui/icons';
+import {handleLogin, handleLogout} from "../handlers/auth_handler";
 import {handleCreatePlant, handleListMyPlants} from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
 import {
@@ -40,6 +40,8 @@ import {
   handleDrop,
   handleImageChange
 } from "../handlers/image_upload_handlers";
+import {IsLoggedInHook} from "../hooks/is_logged_in_hook";
+import {showStoredToastAfterWindowReload} from "../utils";
 
 export default function TopBar() {
   const toast = useToast();
@@ -71,36 +73,11 @@ export default function TopBar() {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isLoggedIn = IsLoggedInHook();
   const [myPlants, setMyPlants] = useState([]);
 
   // Show toasts after reloading page
-  window.onload = function () {
-    const toastData = localStorage.getItem('toast');
-
-    if (toastData) {
-      const { title, status, duration, isClosable } = JSON.parse(toastData);
-
-      toast({
-        title,
-        status,
-        duration,
-        isClosable,
-      });
-
-      // Clear the stored toast information
-      localStorage.removeItem('toast');
-    }
-  };
-
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      const loggedIn = await checkUserLoggedIn();
-      setIsLoggedIn(loggedIn);
-    };
-
-    checkLoginStatus().then();
-  }, []);
+  showStoredToastAfterWindowReload(toast);
 
   return (
     <>
