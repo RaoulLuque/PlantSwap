@@ -164,7 +164,7 @@ function PlantList() {
           <ModalBody>
             <VStack spacing={4}>
               <Select
-                placeholder="Select your plant to trade"
+                placeholder="Select your plant to offer"
                 onChange={(e) => setSelectedPlantId(e.target.value)}
               >
                 {myPlants.map((plant) => (
