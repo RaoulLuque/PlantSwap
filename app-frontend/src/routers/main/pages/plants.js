@@ -47,7 +47,7 @@ const PlantOwner = ({ date, name }) => {
       <Image
         borderRadius="full"
         boxSize="40px"
-        src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png"
+        src="/images/default_avatar.png"
         alt={`Avatar of ${name}`}
       />
       <Text fontWeight="medium">{name}</Text>

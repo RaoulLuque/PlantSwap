@@ -98,7 +98,7 @@ export default function TopBar() {
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
               <Image
-                src="/logo512.png"
+                src="images/logo512.png"
                 alt="PlantSwap Logo"
                 boxSize="40px"
                 objectFit="contain"
@@ -127,7 +127,7 @@ export default function TopBar() {
                 minW={0}>
                 <Avatar
                   size={'sm'}
-                  src="https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png"
+                  src="/images/default_avatar.png"
                 />
               </MenuButton>
               <MenuList>
