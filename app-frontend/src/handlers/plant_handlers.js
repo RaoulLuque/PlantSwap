@@ -121,7 +121,13 @@ export const handleDeletePlant = async (plantId, toast, onDeletionSuccess) => {
       });
       onDeletionSuccess();
     } else {
-      throw new Error('Failed to delete the plant');
+        toast({
+            title: 'Plant deletion unsuccessful',
+            description: 'We have no idea what happened. Please try logging in again or reloading the webpage',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+        });
     }
   } catch (error) {
     toast({
