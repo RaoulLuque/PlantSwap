@@ -101,7 +101,7 @@ function PlantList() {
               <Box textDecoration="none" _hover={{ textDecoration: 'none' }}>
                 <Image
                   borderRadius="lg"
-                  src={plant.image_url}
+                  src={plant.image_url ? plant.image_url : "/images/default_plant.jpg"}
                   alt="Image of the Plant"
                   boxSize="500px"
                   objectFit="cover"
