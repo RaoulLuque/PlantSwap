@@ -31,7 +31,7 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon, AddIcon } from '@chakra-ui/icons';
 import {checkUserLoggedIn, handleLogin, handleLogout} from "../handlers/auth_handler";
-import { handleCreatePlant } from "../handlers/plant_handlers";
+import {handleCreatePlant, handleListMyPlants} from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
 import {
   handleDragEnter,
@@ -60,6 +60,11 @@ export default function TopBar() {
     onOpen: onRegisterOpen,
     onClose: onRegisterClose,
   } = useDisclosure();
+  const {
+    isOpen: isMyPlantsOpen,
+    onOpen: onMyPlantsOpen,
+    onClose: onMyPlantsClose,
+  } = useDisclosure();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -67,6 +72,7 @@ export default function TopBar() {
   const [imagePreview, setImagePreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [myPlants, setMyPlants] = useState([]);
 
   // Show toasts after reloading page
   window.onload = function () {
@@ -75,7 +81,6 @@ export default function TopBar() {
     if (toastData) {
       const { title, status, duration, isClosable } = JSON.parse(toastData);
 
-      // Display the toast
       toast({
         title,
         status,
@@ -156,6 +161,7 @@ export default function TopBar() {
                 {isLoggedIn && <MenuItem onClick={() => handleLogout(toast)}>Logout</MenuItem>}
                 <MenuDivider />
                 {!isLoggedIn && <MenuItem onClick={onRegisterOpen}>Register</MenuItem>}
+                {isLoggedIn && <MenuItem onClick={() => handleListMyPlants(onMyPlantsOpen, toast, setMyPlants)}>My Plants</MenuItem>}
               </MenuList>
             </Menu>
           </Flex>
@@ -292,6 +298,54 @@ export default function TopBar() {
             </Button>
             <Button variant="ghost" onClick={onPlantModalClose}>
               Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isMyPlantsOpen} onClose={onMyPlantsClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>My Plants</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+              <>
+                {myPlants.length === 0 ? (
+                  <Text>You have not listed any plants yet.</Text>
+                ) : (
+                  <Stack spacing={4}>
+                    {myPlants.map((plant, index) => (
+                      <Flex
+                        key={index}
+                        borderWidth="1px"
+                        borderRadius="lg"
+                        p={4}
+                        alignItems="center"
+                      >
+                        <Image
+                          src={plant.image_url}
+                          alt={plant.name}
+                          borderRadius="md"
+                          boxSize="150px"
+                          objectFit="cover"
+                          mr={4}
+                        />
+                        <Box>
+                          <Text fontWeight="bold" fontSize="lg">
+                            {plant.name}
+                          </Text>
+                          <Text fontSize="md" color="gray.600">
+                            {plant.description}
+                          </Text>
+                        </Box>
+                      </Flex>
+                    ))}
+                  </Stack>
+                )}
+              </>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" onClick={onMyPlantsClose}>
+              Close
             </Button>
           </ModalFooter>
         </ModalContent>

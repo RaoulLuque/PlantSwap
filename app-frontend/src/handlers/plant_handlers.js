@@ -67,3 +67,36 @@ export const handleCreatePlant = async (name, description, image, toast, onPlant
     });
   }
 };
+
+const fetchMyPlants = async (toast, setMyPlants) => {
+    try {
+      // To do use endpoint that fetches all own plants
+      const response = await api.get('/plants/');
+      const filteredPlants = response.data.data;
+      setMyPlants(filteredPlants);
+
+      if (filteredPlants.length === 0) {
+        toast({
+          title: 'No Plants Found',
+          description: 'You have not listed any plants yet.',
+          status: 'info',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching plants:', error);
+      toast({
+        title: 'Error',
+        description: 'Could not fetch your plants.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+
+export const handleListMyPlants = (onMyPlantsOpen, toast, setMyPlants) => {
+  onMyPlantsOpen();
+  fetchMyPlants(toast, setMyPlants).then();
+};
