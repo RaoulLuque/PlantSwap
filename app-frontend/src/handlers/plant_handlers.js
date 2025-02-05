@@ -71,7 +71,7 @@ export const handleCreatePlant = async (name, description, image, toast, onPlant
   }
 };
 
-const fetchMyPlants = async (toast, setMyPlants) => {
+export const fetchMyPlants = async (toast, setMyPlants) => {
     try {
       // To do use endpoint that fetches all own plants
       const response = await api.get('/plants/');

@@ -93,7 +93,7 @@ export default function TopBar() {
         zIndex={1000}
       >
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <IconButton
+          <IconButton // Remove this icon button?
             size={'md'}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={'Open Menu'}

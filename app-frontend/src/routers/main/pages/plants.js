@@ -9,8 +9,23 @@ import {
   Tag,
   Container,
   useColorModeValue,
+  Button,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Select,
+  Textarea,
+  VStack, useToast,
 } from '@chakra-ui/react';
-import {ListAllPlantsHook} from "../../../hooks/list_all_plants_hook";
+import { ListAllPlantsHook } from "../../../hooks/list_all_plants_hook";
+import { IsLoggedInHook } from "../../../hooks/is_logged_in_hook";
+import { useState } from 'react';
+import {handleCreateTradeRequest, handleTradeRequestClick} from "../../../handlers/trade_request_handler";
 
 const PlantTags = ({ marginTop = 0, tags }) => {
   return (
@@ -41,15 +56,24 @@ const PlantOwner = ({ date, name }) => {
 };
 
 function PlantList() {
-    const { plants, owners } = ListAllPlantsHook()
+  const toast = useToast();
 
-    const lightGradient = useColorModeValue(
-        "radial(orange.600 1px, transparent 1px)",
-        "radial(orange.300 1px, transparent 1px)"
-    );
-    const textColor = useColorModeValue("gray.700", "gray.200");
+  const { plants, owners } = ListAllPlantsHook();
+  const isLoggedIn = IsLoggedInHook();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isTradeRequestOpen, onOpen: onTradeRequestOpen, onClose: onTradeRequestClose } = useDisclosure();
+  const [selectedPlantId, setSelectedPlantId] = useState(null);
+  const [myPlants, setMyPlants] = useState([]);
+  const [message, setMessage] = useState('');
+  const [incomingPlantId, setIncomingPlantId] = useState(null);
 
-    return (
+  const lightGradient = useColorModeValue(
+    "radial(orange.600 1px, transparent 1px)",
+    "radial(orange.300 1px, transparent 1px)"
+  );
+  const textColor = useColorModeValue("gray.700", "gray.200");
+
+  return (
     <Container maxW="7xl" p="12">
       <Heading as="h1">Plants for Swapping</Heading>
       {plants.map((plant, index) => (
@@ -114,9 +138,51 @@ function PlantList() {
               {plant.description}
             </Text>
             <PlantOwner name={owners[plant.owner_id] || "Unknown"} date="2021-04-06T19:01:27Z" />
+            {isLoggedIn && (
+              <Button
+                colorScheme="customGreen"
+                mt={4}
+                onClick={() => handleTradeRequestClick(plant.id, setIncomingPlantId, toast, setMyPlants, onTradeRequestOpen)}
+              >
+                Request Trade
+              </Button>
+            )}
           </Box>
         </Box>
       ))}
+
+      <Modal isOpen={isTradeRequestOpen} onClose={onTradeRequestClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create Trade Request</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={4}>
+              <Select
+                placeholder="Select your plant to trade"
+                onChange={(e) => setSelectedPlantId(e.target.value)}
+              >
+                {myPlants.map((plant) => (
+                  <option key={plant.id} value={plant.id}>
+                    {plant.name}
+                  </option>
+                ))}
+              </Select>
+              <Textarea
+                placeholder="Optional message to the plant owner"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={() => handleCreateTradeRequest(selectedPlantId, incomingPlantId, message, onTradeRequestClose)}>
+              Submit Request
+            </Button>
+            <Button variant="ghost" onClick={onTradeRequestClose}>Cancel</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Container>
   );
 }
