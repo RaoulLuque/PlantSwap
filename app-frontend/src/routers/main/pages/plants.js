@@ -9,10 +9,8 @@ import {
   Tag,
   Container,
   useColorModeValue,
-  useToast,
 } from '@chakra-ui/react';
-import {useCallback, useEffect, useState} from "react";
-import api from "../../../api";
+import {ListAllPlantsHook} from "../../../hooks/list_all_plants_hook";
 
 const PlantTags = ({ marginTop = 0, tags }) => {
   return (
@@ -43,66 +41,15 @@ const PlantOwner = ({ date, name }) => {
 };
 
 function PlantList() {
-  const [plants, setPlants] = useState([]);
-  const [owners, setOwners] = useState({});
-  const toast = useToast();
+    const { plants, owners } = ListAllPlantsHook()
 
-  const lightGradient = useColorModeValue(
-    "radial(orange.600 1px, transparent 1px)",
-    "radial(orange.300 1px, transparent 1px)"
-  );
-  const textColor = useColorModeValue("gray.700", "gray.200");
+    const lightGradient = useColorModeValue(
+        "radial(orange.600 1px, transparent 1px)",
+        "radial(orange.300 1px, transparent 1px)"
+    );
+    const textColor = useColorModeValue("gray.700", "gray.200");
 
-    const fetchPlants = useCallback(async () => {
-    try {
-      const response = await api.get("/plants/");
-      const plantData = response.data.data;
-
-      console.log("Fetched Plants:", plantData); // Debug: Log fetched plants
-      setPlants(plantData);
-
-      // Fetch owners for all plants
-      const ownerPromises = plantData.map((plant) =>
-        api
-          .get(`/users/${plant.owner_id}`)
-          .then((res) => ({
-            id: plant.owner_id,
-            name: res.data.full_name,
-          }))
-          .catch((err) => {
-            console.error(`Error fetching owner for ID ${plant.owner_id}:`, err);
-            return { id: plant.owner_id, name: "Unknown" };
-          })
-      );
-
-      const ownerData = await Promise.all(ownerPromises);
-      console.log("Fetched Owners:", ownerData);
-
-      // Create a map of owner IDs to names
-      const ownerMap = ownerData.reduce(
-        (acc, owner) => ({ ...acc, [owner.id]: owner.name }),
-        {}
-      );
-
-      console.log("Owner Map:", ownerMap); // Debug: Log owner map
-      setOwners(ownerMap);
-    } catch (error) {
-      console.error("Error fetching plants:", error);
-      toast({
-        title: "Error",
-        description: "Could not fetch plants.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  }, [toast]);
-
-  useEffect(() => {
-    fetchPlants();
-  }, [fetchPlants]);
-
-  return (
+    return (
     <Container maxW="7xl" p="12">
       <Heading as="h1">Plants for Swapping</Heading>
       {plants.map((plant, index) => (
