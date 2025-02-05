@@ -29,9 +29,10 @@ import { useState } from 'react';
 import { handleCreateTradeRequest, handleTradeRequestClick } from "../../../handlers/trade_request_handler";
 
 const PlantTags = ({ marginTop = 0, tags }) => {
+  const tagArray = typeof tags[0] === 'string' ? tags[0].split(',') : tags;
   return (
     <HStack spacing={2} marginTop={marginTop}>
-      {tags.map((tag) => (
+      {tagArray.map((tag) => (
         <Tag size="md" variant="solid" colorScheme="orange" key={tag}>
           {tag}
         </Tag>
@@ -123,7 +124,7 @@ function PlantList() {
             justifyContent="center"
             marginTop={{ base: '3', sm: '0' }}
           >
-            <PlantTags tags={['Plant', 'Testing']} />
+            <PlantTags tags={plant.tags} />
             <Heading marginTop="1">
               <Text textDecoration="none" _hover={{ textDecoration: 'none' }}>
                 {plant.name}
@@ -137,7 +138,7 @@ function PlantList() {
             >
               {plant.description}
             </Text>
-            <PlantOwner name={owners[plant.owner_id] || "Unknown"} date="2021-04-06T19:01:27Z" />
+            <PlantOwner name={owners[plant.owner_id] || "Unknown"} date={plant.creation_date} />
             {isLoggedIn && (
               <Button
                 colorScheme="customGreen"
