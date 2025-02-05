@@ -100,6 +100,7 @@ class Plant(PlantBase, table=True):
 class PlantPublic(PlantBase):
     id: uuid.UUID
     owner_id: uuid.UUID
+    creation_date: datetime
     image_url: str | None = Field(default=None, max_length=255)
 
 
