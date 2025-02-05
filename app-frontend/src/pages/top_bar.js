@@ -74,6 +74,7 @@ export default function TopBar() {
   const [imagePreview, setImagePreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isCreatingPlant, setIsCreatingPlant] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const isLoggedIn = IsLoggedInHook();
   const [myPlants, setMyPlants] = useState([]);
 
@@ -151,7 +152,7 @@ export default function TopBar() {
           <ModalHeader>Login</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <form id="login-form" onSubmit={(e) => handleLogin(e, onLoginClose, toast)}>
+            <form id="login-form" onSubmit={(e) => handleLogin(e, onLoginClose, toast, setIsLoggingIn)}>
               <Stack spacing={4}>
                 <Input name="username" placeholder="Username" required />
                 <Input name="password" type="password" placeholder="Password" required />
@@ -159,8 +160,15 @@ export default function TopBar() {
             </form>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="teal" mr={3} type="submit" form="login-form">
-              Login
+            <Button
+              colorScheme="teal"
+              mr={3}
+              type="submit"
+              form="login-form"
+              isLoading={isLoggingIn}
+              disabled={isLoggingIn}
+            >
+              Create
             </Button>
             <Button variant="ghost" onClick={onLoginClose}>
               Cancel

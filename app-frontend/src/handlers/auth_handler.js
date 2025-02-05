@@ -1,7 +1,8 @@
 import api from "../api";
 
-export const handleLogin = async (event, onLoginClose, toast) => {
+export const handleLogin = async (event, onLoginClose, toast, setIsLoggingIn) => {
   event.preventDefault();
+  setIsLoggingIn(true);
 
   const formData = new FormData(event.target);
 
@@ -36,6 +37,7 @@ export const handleLogin = async (event, onLoginClose, toast) => {
         isClosable: true,
       });
     }
+    setIsLoggingIn(false);
   } catch (error) {
     toast({
       title: 'Login failed',
@@ -44,6 +46,7 @@ export const handleLogin = async (event, onLoginClose, toast) => {
       duration: 5000,
       isClosable: true,
     });
+    setIsLoggingIn(false);
   }
 };
 
