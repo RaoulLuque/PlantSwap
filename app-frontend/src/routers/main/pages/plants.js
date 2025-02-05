@@ -141,7 +141,9 @@ function PlantList() {
             {isLoggedIn && (
               <Button
                 colorScheme="customGreen"
-                size="sm"
+                size="sm" // Smaller button size
+                width="50%" // Button width set to 50% of its container
+                alignSelf="flex-start" // Align button to the left
                 mt={4}
                 onClick={() => handleTradeRequestClick(plant.id, setIncomingPlantId, toast, setMyPlants, onTradeRequestOpen)}
               >
@@ -179,16 +181,16 @@ function PlantList() {
           </ModalBody>
           <ModalFooter>
             <Button
-              colorScheme="customGreen"
-              size="sm"
+              colorScheme="blue"
+              size="sm" // Smaller button size
               mr={3}
-              onClick={() => handleCreateTradeRequest(selectedPlantId, incomingPlantId, message, onTradeRequestClose, toast)}
+              onClick={() => handleCreateTradeRequest(selectedPlantId, incomingPlantId, message, onTradeRequestClose)}
             >
               Submit Request
             </Button>
             <Button
               variant="ghost"
-              size="sm"
+              size="sm" // Smaller button size
               onClick={onTradeRequestClose}
             >
               Cancel
