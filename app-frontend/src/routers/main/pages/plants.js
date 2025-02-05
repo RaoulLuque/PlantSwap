@@ -20,12 +20,13 @@ import {
   ModalCloseButton,
   Select,
   Textarea,
-  VStack, useToast,
+  VStack,
+  useToast,
 } from '@chakra-ui/react';
 import { ListAllPlantsHook } from "../../../hooks/list_all_plants_hook";
 import { IsLoggedInHook } from "../../../hooks/is_logged_in_hook";
 import { useState } from 'react';
-import {handleCreateTradeRequest, handleTradeRequestClick} from "../../../handlers/trade_request_handler";
+import { handleCreateTradeRequest, handleTradeRequestClick } from "../../../handlers/trade_request_handler";
 
 const PlantTags = ({ marginTop = 0, tags }) => {
   return (
@@ -140,6 +141,7 @@ function PlantList() {
             {isLoggedIn && (
               <Button
                 colorScheme="customGreen"
+                size="sm"
                 mt={4}
                 onClick={() => handleTradeRequestClick(plant.id, setIncomingPlantId, toast, setMyPlants, onTradeRequestOpen)}
               >
@@ -150,6 +152,7 @@ function PlantList() {
         </Box>
       ))}
 
+      {/* Trade Request Modal */}
       <Modal isOpen={isTradeRequestOpen} onClose={onTradeRequestClose}>
         <ModalOverlay />
         <ModalContent>
@@ -175,10 +178,21 @@ function PlantList() {
             </VStack>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={() => handleCreateTradeRequest(selectedPlantId, incomingPlantId, message, onTradeRequestClose)}>
+            <Button
+              colorScheme="customGreen"
+              size="sm"
+              mr={3}
+              onClick={() => handleCreateTradeRequest(selectedPlantId, incomingPlantId, message, onTradeRequestClose)}
+            >
               Submit Request
             </Button>
-            <Button variant="ghost" onClick={onTradeRequestClose}>Cancel</Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onTradeRequestClose}
+            >
+              Cancel
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

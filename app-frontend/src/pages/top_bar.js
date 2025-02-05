@@ -4,7 +4,6 @@ import {
   Flex,
   Avatar,
   HStack,
-  IconButton,
   Button,
   Menu,
   MenuButton,
@@ -29,7 +28,7 @@ import {
   FormLabel,
   Textarea,
 } from '@chakra-ui/react';
-import {HamburgerIcon, CloseIcon, AddIcon} from '@chakra-ui/icons';
+import {AddIcon} from '@chakra-ui/icons';
 import {handleLogin, handleLogout} from "../handlers/auth_handler";
 import {handleCreatePlant, handleListMyPlants} from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
