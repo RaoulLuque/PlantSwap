@@ -69,8 +69,9 @@ class Plant(PlantBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str = Field(max_length=255)
     creation_date: datetime = Field(default=datetime.now())
+    # Foreign key to owner of plant. Indexed to be able to search all plants of a specific user more efficiently
     owner_id: uuid.UUID = Field(
-        foreign_key="user.id", nullable=False, ondelete="CASCADE"
+        foreign_key="user.id", nullable=False, ondelete="CASCADE", index=True
     )
     owner: User = Relationship(back_populates="plants")
     # URL to image of plant if it exists, otherwise None

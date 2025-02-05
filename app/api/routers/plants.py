@@ -57,6 +57,24 @@ def read_plants(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     return plants_public
 
 
+@router.get("/plants/own", response_model=PlantsPublic)
+def read_my_plants(
+    session: SessionDep, current_user: CurrentUserDep, skip: int = 0, limit: int = 100
+) -> Any:
+    """
+    Retrieve all existing plant ads.
+    :param session: Current database session.
+    :param current_user: Currently logged-in user.
+    :param skip: Number of plant ads to skip.
+    :param limit: Limit of plant ads to retrieve.
+    :return: List of plants with number of plants as a PlantsPublic instance.
+    """
+    plants_public = plants_crud.get_all_plant_ads_from_one_user(
+        session, current_user.id, skip, limit
+    )
+    return plants_public
+
+
 @router.get("/plants/{id}", response_model=PlantPublic)
 def read_plant(session: SessionDep, id: uuid.UUID) -> Any:
     """

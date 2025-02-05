@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import UploadFile
 from sqlmodel import Session, select
 
@@ -47,6 +49,26 @@ def get_all_plant_ads(
     :return: List of plant ads with number of ads as a PlantsPublic instance
     """
     statement = select(Plant).offset(skip).limit(limit)
+    plants = session.exec(statement).all()
+    count = len(plants)
+    return PlantsPublic(data=plants, count=count)  # type: ignore
+
+
+def get_all_plant_ads_from_one_user(
+    session: Session,
+    user_id: uuid.UUID,
+    skip: int = 0,
+    limit: int = 100,
+) -> PlantsPublic:
+    """
+    Retrieve all existing plant ads up to the given limit with the given offset from a specific user.
+    :param session: Current database session
+    :param user_id: User id to retrieve plant ads from
+    :param skip: Number of ads to skip
+    :param limit: Limit of ads to retrieve
+    :return: List of plant ads with number of ads as a PlantsPublic instance
+    """
+    statement = select(Plant).where(Plant.owner_id == user_id).offset(skip).limit(limit)
     plants = session.exec(statement).all()
     count = len(plants)
     return PlantsPublic(data=plants, count=count)  # type: ignore
