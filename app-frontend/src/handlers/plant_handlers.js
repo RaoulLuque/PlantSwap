@@ -104,3 +104,32 @@ export const handleListMyPlants = (onMyPlantsOpen, toast, setMyPlants) => {
   onMyPlantsOpen();
   fetchMyPlants(toast, setMyPlants).then();
 };
+
+export const handleDeletePlant = async (plantId, toast, onDeletionSuccess) => {
+  try {
+    const response = await api.post(`/plants/${plantId}`, {},{
+      withCredentials: true
+    });
+
+    if (response.status === 200) {
+      toast({
+        title: 'Plant deleted',
+        description: 'The plant has been successfully deleted.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+      onDeletionSuccess();
+    } else {
+      throw new Error('Failed to delete the plant');
+    }
+  } catch (error) {
+    toast({
+      title: 'Error deleting plant',
+      description: error.response?.data?.detail || error.message,
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+  }
+};

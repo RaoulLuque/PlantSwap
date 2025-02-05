@@ -30,7 +30,7 @@ import {
 } from '@chakra-ui/react';
 import {AddIcon} from '@chakra-ui/icons';
 import {handleLogin, handleLogout} from "../handlers/auth_handler";
-import {handleCreatePlant, handleListMyPlants} from "../handlers/plant_handlers";
+import {handleCreatePlant, handleDeletePlant, handleListMyPlants} from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
 import {
   handleDragEnter,
@@ -141,6 +141,8 @@ export default function TopBar() {
           </Flex>
         </Flex>
       </Box>
+
+      {/* Login Modal */}
       <Modal isOpen={isLoginOpen} onClose={onLoginClose}>
         <ModalOverlay />
         <ModalContent>
@@ -171,6 +173,8 @@ export default function TopBar() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/* Register Modal */}
       <Modal isOpen={isRegisterOpen} onClose={onRegisterClose}>
         <ModalOverlay />
         <ModalContent>
@@ -196,6 +200,7 @@ export default function TopBar() {
         </ModalContent>
       </Modal>
 
+      {/* Create Plant Modal */}
       <Modal isOpen={isPlantModalOpen} onClose={onPlantModalClose}>
         <ModalOverlay />
         <ModalContent>
@@ -285,25 +290,29 @@ export default function TopBar() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/* My Plants Modal */}
       <Modal isOpen={isMyPlantsOpen} onClose={onMyPlantsClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>My Plants</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-              <>
-                {myPlants.length === 0 ? (
-                  <Text>You have not listed any plants yet.</Text>
-                ) : (
-                  <Stack spacing={4}>
-                    {myPlants.map((plant, index) => (
-                      <Flex
-                        key={index}
-                        borderWidth="1px"
-                        borderRadius="lg"
-                        p={4}
-                        alignItems="center"
-                      >
+            <>
+              {myPlants.length === 0 ? (
+                <Text>You have not listed any plants yet.</Text>
+              ) : (
+                <Stack spacing={4}>
+                  {myPlants.map((plant, index) => (
+                    <Flex
+                      key={index}
+                      borderWidth="1px"
+                      borderRadius="lg"
+                      p={4}
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <Flex alignItems="center">
                         <Image
                           src={plant.image_url}
                           alt={plant.name}
@@ -321,10 +330,24 @@ export default function TopBar() {
                           </Text>
                         </Box>
                       </Flex>
-                    ))}
-                  </Stack>
-                )}
-              </>
+                      <Button
+                        colorScheme="red"
+                        size="sm"
+                        onClick={() =>
+                          handleDeletePlant(plant.id, toast, () => {
+                            setMyPlants((prevPlants) =>
+                              prevPlants.filter((p) => p.id !== plant.id)
+                            );
+                          })
+                        }
+                      >
+                        Delete
+                      </Button>
+                    </Flex>
+                  ))}
+                </Stack>
+              )}
+            </>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="customGreen" onClick={onMyPlantsClose}>
