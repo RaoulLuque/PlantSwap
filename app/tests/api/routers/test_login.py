@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
+from app.api.dependencies import ACCESS_TOKEN_COOKIE_NAME
 from app.core.config import settings
 from app.core.security import get_password_hash
 from app.models import User, UserCreate
@@ -13,10 +14,11 @@ def test_get_access_token_superuser(client: TestClient) -> None:
         "password": settings.FIRST_SUPERUSER_PASSWORD,
     }
     response = client.post("/login/token", data=login_data)
-    tokens = response.json()
+    cookies = response.cookies
+    response_json = response.json()
     assert response.status_code == 200
-    assert "access_token" in tokens
-    assert tokens["access_token"]
+    assert response_json == {"message": "Login successful"}
+    assert cookies[ACCESS_TOKEN_COOKIE_NAME]
 
 
 def test_get_access_token_incorrect_username(client: TestClient) -> None:
@@ -26,6 +28,7 @@ def test_get_access_token_incorrect_username(client: TestClient) -> None:
     }
     response = client.post("/login/token", data=login_data)
     assert response.status_code == 400
+    assert response.cookies == {}
 
 
 def test_get_access_token_incorrect_password(client: TestClient) -> None:
@@ -35,6 +38,7 @@ def test_get_access_token_incorrect_password(client: TestClient) -> None:
     }
     response = client.post("/login/token", data=login_data)
     assert response.status_code == 400
+    assert response.cookies == {}
 
 
 def test_get_access_token_inactive_user(client: TestClient, db: Session) -> None:
@@ -56,5 +60,6 @@ def test_get_access_token_inactive_user(client: TestClient, db: Session) -> None
     response = client.post("/login/token", data=login_data)
     assert response.status_code == 400
     assert response.json() == {"detail": "Inactive user"}
+    assert response.cookies == {}
     db.delete(user_in_db)
     db.commit()
