@@ -1,5 +1,5 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import PlantsRouter from './routers/plants/plants_router';
+import MainRouter from './routers/main/main_router';
 import NotFoundPage from "./routers/not_found/not_found_router";
 import {Box, ChakraProvider} from "@chakra-ui/react";
 import WithAction from "./pages/top_bar.js";
@@ -22,10 +22,10 @@ function App() {
           <Routes>
             {/* Wrap the PlantsRouter with the Layout component */}
             <Route
-              path="/plants/*"
+              path="/*"
               element={
                 <Layout>
-                  <PlantsRouter />
+                  <MainRouter />
                 </Layout>
               }
             />
