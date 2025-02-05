@@ -201,7 +201,7 @@ export default function TopBar() {
       </Modal>
 
       {/* Create Plant Modal */}
-      <Modal isOpen={isPlantModalOpen} onClose={onPlantModalClose}>
+      <Modal isOpen={isPlantModalOpen} onClose={onPlantModalClose} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create a New Plant</ModalHeader>
@@ -292,7 +292,7 @@ export default function TopBar() {
       </Modal>
 
       {/* My Plants Modal */}
-      <Modal isOpen={isMyPlantsOpen} onClose={onMyPlantsClose}>
+      <Modal isOpen={isMyPlantsOpen} onClose={onMyPlantsClose} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>My Plants</ModalHeader>
