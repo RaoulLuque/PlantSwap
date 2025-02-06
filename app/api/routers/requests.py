@@ -6,14 +6,20 @@ from sqlmodel import select
 
 from app.api.dependencies import SessionDep, CurrentUserDep
 from app.core.crud import requests_crud
-from app.models import TradeRequest, Plant, TradeRequestsPublic
+from app.models import (
+    TradeRequest,
+    Plant,
+    TradeRequestsPublic,
+    Message,
+    TradeRequestPublic,
+)
 
 router = APIRouter()
 
 
 @router.post(
     "/requests/create/{outgoing_plant_id}/{incoming_plant_id}",
-    response_model=TradeRequest,
+    response_model=TradeRequestPublic,
 )
 def create_trade_request(
     current_user: CurrentUserDep,
@@ -63,12 +69,22 @@ def create_trade_request(
             status_code=409,
             detail="You already have a trade request for these two plants.",
         )
+    messages = []
+    if message is not None:
+        messages.append(
+            Message(
+                sender_id=current_user.id,
+                content=message,
+                incoming_plant_id=incoming_plant_id,
+                outgoing_plant_id=outgoing_plant_id,
+            )
+        )
     trade_request: TradeRequest = TradeRequest(
         outgoing_plant_id=outgoing_plant_id,
         incoming_plant_id=incoming_plant_id,
         outgoing_user_id=current_user.id,
         incoming_user_id=incoming_plant.owner_id,
-        message=message,
+        messages=messages,
     )
     trade_request = requests_crud.create_trade_request(session, trade_request)
     return trade_request

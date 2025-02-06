@@ -176,9 +176,19 @@ class TradeRequest(SQLModel, table=True):
     )
 
 
+# Public facing trade request class
+class TradeRequestPublic(SQLModel):
+    outgoing_user_id: uuid.UUID
+    incoming_user_id: uuid.UUID
+    outgoing_plant_id: uuid.UUID
+    incoming_plant_id: uuid.UUID
+    accepted: bool
+    messages: list["Message"]
+
+
 # Class to return multiple TradeRequest instances at the same time
 class TradeRequestsPublic(SQLModel):
-    data: list[TradeRequest]
+    data: list[TradeRequestPublic]
     count: int
 
 
