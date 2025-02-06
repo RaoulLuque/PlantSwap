@@ -92,7 +92,7 @@ def create_trade_request(
 
 @router.get(
     "/requests/outgoing/{outgoing_plant_id}/{incoming_plant_id}",
-    response_model=TradeRequest,
+    response_model=TradeRequestPublic,
 )
 def read_specific_outgoing_trade_request(
     current_user: CurrentUserDep,
@@ -129,7 +129,7 @@ def read_specific_outgoing_trade_request(
 
 @router.get(
     "/requests/incoming/{outgoing_plant_id}/{incoming_plant_id}",
-    response_model=TradeRequest,
+    response_model=TradeRequestPublic,
 )
 def read_specific_incoming_trade_request(
     current_user: CurrentUserDep,
@@ -220,7 +220,7 @@ def read_own_trade_requests(
 
 @router.post(
     "/requests/accept/{outgoing_plant_id}/{incoming_plant_id}",
-    response_model=TradeRequest,
+    response_model=TradeRequestPublic,
 )
 def accept_trade_request(
     current_user: CurrentUserDep,
@@ -258,7 +258,7 @@ def accept_trade_request(
 
 @router.post(
     "/requests/delete/{outgoing_plant_id}/{incoming_plant_id}",
-    response_model=TradeRequest,
+    response_model=TradeRequestPublic,
 )
 def delete_trade_request(
     current_user: CurrentUserDep,
