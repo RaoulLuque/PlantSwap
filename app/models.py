@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from pydantic import BaseModel, EmailStr
-from sqlalchemy import String
+from sqlalchemy import String, ForeignKeyConstraint
 from sqlalchemy.orm import RelationshipProperty
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlmodel import SQLModel, Field, Relationship, Column
@@ -170,7 +170,10 @@ class TradeRequest(SQLModel, table=True):
         )
     )
     accepted: bool = Field(default=False)
-    message: str | None = Field(default=None, max_length=255)
+    messages: list["Message"] = Relationship(
+        back_populates="trade_request",
+        cascade_delete=True,
+    )
 
 
 # Class to return multiple TradeRequest instances at the same time
@@ -188,3 +191,27 @@ class TokenData(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class Message(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    sender_id: uuid.UUID = Field(foreign_key="user.id", index=True)
+    content: str = Field(max_length=255)
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+    incoming_plant_id: uuid.UUID = Field(nullable=False)
+    outgoing_plant_id: uuid.UUID = Field(nullable=False)
+
+    # Define the composite foreign key using SQLAlchemy because SQLModel does not support composite foreign keys
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["incoming_plant_id", "outgoing_plant_id"],
+            ["traderequest.incoming_plant_id", "traderequest.outgoing_plant_id"],
+            ondelete="CASCADE",
+        ),
+    )
+
+    # Relationship to TradeRequest with cascade behavior
+    trade_request: "TradeRequest" = Relationship(
+        back_populates="messages",
+    )
