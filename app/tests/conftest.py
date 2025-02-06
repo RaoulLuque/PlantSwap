@@ -2,6 +2,9 @@ import os
 
 # Set the environment variable before any other imports
 os.environ["USE_IMAGE_UPLOAD"] = "False"
+os.environ["CLOUDINARY_CLOUD_NAME"] = "Test"
+os.environ["CLOUDINARY_API_KEY"] = "Test"
+os.environ["CLOUDINARY_API_SECRET"] = "Test"
 
 from collections.abc import Generator
 

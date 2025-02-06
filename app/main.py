@@ -48,7 +48,8 @@ app.include_router(api_router)
 # Initialize the database
 init_db(Session(engine))
 # Set cloudinary config
-set_cloudinary_config()
+if settings.USE_IMAGE_UPLOAD:
+    set_cloudinary_config()
 
 
 @app.get("/", response_class=RedirectResponse)

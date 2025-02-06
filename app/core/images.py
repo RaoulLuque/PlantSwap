@@ -1,19 +1,21 @@
 import cloudinary  # type: ignore
-from cloudinary.uploader import upload  # type: ignore
+from cloudinary.uploader import upload, destroy  # type: ignore
 from cloudinary.exceptions import Error as CloudinaryError  # type: ignore
 from fastapi import UploadFile
 
 from app.core.config import settings
 
 
-def set_cloudinary_config():
-    if settings.USE_IMAGE_UPLOAD:
-        cloudinary.config(
-            cloud_name=settings.CLOUDINARY_CLOUD_NAME,
-            api_key=settings.CLOUDINARY_API_KEY,
-            api_secret=settings.CLOUDINARY_API_SECRET,
-            secure=True,
-        )
+def set_cloudinary_config() -> None:
+    """
+    Set the Cloudinary configuration.
+    """
+    cloudinary.config(
+        cloud_name=settings.CLOUDINARY_CLOUD_NAME,
+        api_key=settings.CLOUDINARY_API_KEY,
+        api_secret=settings.CLOUDINARY_API_SECRET,
+        secure=True,
+    )
 
 
 def upload_image_to_cloudinary(image: UploadFile, plant_uuid: str) -> str:
@@ -30,7 +32,6 @@ def upload_image_to_cloudinary(image: UploadFile, plant_uuid: str) -> str:
             folder="plantswap_plants",
             public_id=f"{plant_uuid}",
         )
-        print(result["secure_url"])
         return result["secure_url"]
     except CloudinaryError as e:
         raise ValueError(f"Failed to upload image: {e}")
@@ -42,6 +43,6 @@ def delete_image_from_cloudinary(public_id: str) -> None:
     :param public_id: Public id of the image to delete. It is the uuid of the plant.
     """
     try:
-        cloudinary.uploader.destroy(public_id)
+        destroy(public_id)
     except CloudinaryError as e:
         raise ValueError(f"Failed to delete image: {e}")

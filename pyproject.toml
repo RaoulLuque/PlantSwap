@@ -76,7 +76,7 @@ testpaths = [
 data_file = 'reports/.coverage'
 omit = [
     # omit anything in a "tests" directory anywhere
-    "*/tests/*",
+    "*/tests/*", "app/main.py"
 ]
 
 [tool.uv]
