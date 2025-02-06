@@ -15,7 +15,7 @@ async def test_get_current_user():
 
     with patch("jwt.decode", return_value=mocked_jwt_payload):
         with pytest.raises(HTTPException) as exception_info:
-            await get_current_user(None, None)
+            await get_current_user("None", None)
         response = exception_info.value
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
         assert response.detail == "Could not validate credentials"
