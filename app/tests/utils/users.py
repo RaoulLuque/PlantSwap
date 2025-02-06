@@ -36,7 +36,8 @@ def get_user_authentication_cookie(
     client: TestClient, email: str, password: str
 ) -> tuple[str, str]:
     """
-    Returns the cookie for oauth authentication for the given user(data) (tuple with name : value)
+    Returns the cookie for oauth authentication for the given user(data) (tuple with name : value). If the login is wrong
+    an empty string is returned as the value of the cookie.
     :param client: TestClient
     :param email: Email of user
     :param password: (Non-hashed) Password of user
@@ -47,7 +48,9 @@ def get_user_authentication_cookie(
         "password": password,
     }
     response = client.post("/login/token", data=login_data)
-    access_token_cookie_value = response.cookies[ACCESS_TOKEN_COOKIE_NAME]
+    access_token_cookie_value = ""
+    if ACCESS_TOKEN_COOKIE_NAME in response.cookies:
+        access_token_cookie_value = response.cookies[ACCESS_TOKEN_COOKIE_NAME]
     return ACCESS_TOKEN_COOKIE_NAME, access_token_cookie_value
 
 

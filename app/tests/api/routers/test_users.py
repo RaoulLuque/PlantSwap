@@ -18,9 +18,9 @@ from app.tests.utils.users import (
 
 
 def test_read_users_me_superuser(
-    client: TestClient, db: Session, superuser_auth_cookie
+    client: TestClient, db: Session, superuser_auth_cookie: tuple[str, str]
 ) -> None:
-    response = client.get("/users/me", headers=superuser_auth_cookie)
+    response = client.get("/users/me", cookies=[superuser_auth_cookie])
     current_user = response.json()
     superuser = users_crud.get_user_by_email(db, settings.FIRST_SUPERUSER)
     assert superuser
@@ -28,9 +28,8 @@ def test_read_users_me_superuser(
 
 
 def test_read_users_me_random_user(client: TestClient, db: Session) -> None:
-    with create_random_user(db) as (user, password):
-        user_headers = get_user_authentication_cookie(client, user.email, password)
-        response = client.get("/users/me", headers=user_headers)
+    with create_random_user(client, db) as (user, password, auth_cookie):
+        response = client.get("/users/me", cookies=[auth_cookie])
         json_user = response.json()
         db_user = users_crud.get_user_by_email(db, user.email)
         assert db_user
@@ -38,16 +37,18 @@ def test_read_users_me_random_user(client: TestClient, db: Session) -> None:
 
 
 def test_read_users_me_invalid_token(client: TestClient) -> None:
-    user_headers = get_user_authentication_cookie(client, "", "")
-    response = client.get("/users/me", headers=user_headers)
+    auth_cookie = get_user_authentication_cookie(client, "", "")
+    response = client.get("/users/me", cookies=[auth_cookie])
     detail = response.json()
     assert detail == {"detail": "Could not validate credentials"}
     headers = response.headers
     assert headers.get("www-authenticate") == "Bearer"
 
 
-def test_read_user_superuser(client: TestClient, superuser_auth_cookie) -> None:
-    response = client.get("/users/me", headers=superuser_auth_cookie)
+def test_read_user_superuser(
+    client: TestClient, superuser_auth_cookie: tuple[str, str]
+) -> None:
+    response = client.get("/users/me", cookies=[superuser_auth_cookie])
     current_user = response.json()
     id = current_user["id"]
     response_two = client.get(f"/users/{id}")
@@ -56,7 +57,7 @@ def test_read_user_superuser(client: TestClient, superuser_auth_cookie) -> None:
 
 
 def test_read_user_random_user(client: TestClient, db: Session) -> None:
-    with create_random_user(db) as (user, _):
+    with create_random_user(client, db) as (user, _, _):
         id = user.id
         response = client.get(f"/users/{id}")
         user_two = response.json()
@@ -72,8 +73,8 @@ def test_read_user_not_found(client: TestClient) -> None:
 
 
 def test_read_users(client: TestClient, db: Session) -> None:
-    with create_random_user(db) as (user_one, _):
-        with create_random_user(db) as (user_two, _):
+    with create_random_user(client, db) as (user_one, _, _):
+        with create_random_user(client, db) as (user_two, _, _):
             response = client.get("/users/")
             response_json = response.json()
             print(response_json)
@@ -87,9 +88,9 @@ def test_read_users(client: TestClient, db: Session) -> None:
 
 
 def test_read_plants_limit(client: TestClient, db: Session) -> None:
-    with create_random_user(db) as (user_one, _):
-        with create_random_user(db) as (user_two, _):
-            with create_random_user(db) as (user_three, _):
+    with create_random_user(client, db) as (user_one, _, _):
+        with create_random_user(client, db) as (user_two, _, _):
+            with create_random_user(client, db) as (user_three, _, _):
                 limit = 2
                 response = client.get(f"/users/?limit={limit}")
                 response_json = response.json()
@@ -126,39 +127,40 @@ def test_delete_user_existing_user(client: TestClient, db: Session):
     password = random_lower_string()
     user_create = UserCreate(email=username, password=password)
     user = users_crud.create_user(db, user_create)
-    headers = get_user_authentication_cookie(client, str(username), password)
-    response = client.post(f"/users/{user.id}", headers=headers)
+    auth_cookie = get_user_authentication_cookie(client, str(username), password)
+    response = client.post(f"/users/{user.id}", cookies=[auth_cookie])
     assert response.status_code == 200
     assert_if_user_and_json_response_user_match(user, response.json())
 
 
 def test_delete_user_existing_user_superuser(
-    client: TestClient, db: Session, superuser_auth_cookie
+    client: TestClient, db: Session, superuser_auth_cookie: tuple[str, str]
 ) -> None:
     username = random_email()
     password = random_lower_string()
     user_create = UserCreate(email=username, password=password)
     user = users_crud.create_user(db, user_create)
-    response = client.post(f"/users/{user.id}", headers=superuser_auth_cookie)
+    response = client.post(f"/users/{user.id}", cookies=[superuser_auth_cookie])
     assert response.status_code == 200
     assert_if_user_and_json_response_user_match(user, response.json())
 
 
-def test_delete_user_not_found(client: TestClient, superuser_auth_cookie) -> None:
+def test_delete_user_not_found(
+    client: TestClient, superuser_auth_cookie: tuple[str, str]
+) -> None:
     non_existing_id: uuid.UUID = uuid.uuid4()
-    response = client.post(f"/users/{non_existing_id}", headers=superuser_auth_cookie)
+    response = client.post(f"/users/{non_existing_id}", cookies=[superuser_auth_cookie])
     assert response.status_code == 404
 
 
 def test_delete_user_not_enough_permissions(
-    client: TestClient, db: Session, superuser_auth_cookie
+    client: TestClient, db: Session, superuser_auth_cookie: tuple[str, str]
 ) -> None:
-    with create_random_user(db) as (user, password):
-        headers = get_user_authentication_cookie(client, user.email, password)
-        superuser_id = client.get("/users/me", headers=superuser_auth_cookie).json()[
+    with create_random_user(client, db) as (user, password, auth_cookie):
+        superuser_id = client.get("/users/me", cookies=[superuser_auth_cookie]).json()[
             "id"
         ]
-        response = client.post(f"/users/{superuser_id}", headers=headers)
+        response = client.post(f"/users/{superuser_id}", cookies=[auth_cookie])
         assert response.status_code == 401
         assert response.json() == {
             "detail": "You are not allowed to delete other users."
@@ -180,8 +182,8 @@ def test_create_user_read_user_and_delete_user(client: TestClient, db: Session) 
     response_read_user = client.get(f"/users/{id}")
     user_two = response_read_user.json()
     assert_if_user_and_json_response_user_match(user, user_two)
-    headers = get_user_authentication_cookie(client, str(user.email), password)
-    response_delete_user = client.post(f"/users/{id}", headers=headers)
+    auth_cookie = get_user_authentication_cookie(client, str(user.email), password)
+    response_delete_user = client.post(f"/users/{id}", cookies=[auth_cookie])
     assert response_delete_user.status_code == 200
     user_two = response_delete_user.json()
     assert_if_user_and_json_response_user_match(user, user_two)
