@@ -4,7 +4,7 @@ from fastapi.testclient import TestClient
 from sqlmodel import Session, select
 
 from app.core.crud import requests_crud
-from app.models import TradeRequest, Plant
+from app.models import TradeRequest, Message, Plant
 from app.tests.utils.plants import create_random_plant
 from app.tests.utils.requests import (
     assert_if_trade_request_json_and_trade_request_data_match,
@@ -74,6 +74,63 @@ def test_create_trade_request_check_if_request_is_deleted_when_plant_is_deleted(
             assert response.status_code == 200
             trade_request = db.get(TradeRequest, (plant_one.id, plant_two.id))
             assert trade_request is None
+
+
+def test_create_trade_request_with_message(client: TestClient, db: Session):
+    with create_random_plant(client, db) as (
+        user_one,
+        _,
+        auth_cookie_one,
+        plant_one,
+    ):
+        with create_random_plant(client, db) as (
+            _,
+            _,
+            _,
+            plant_two,
+        ):
+            message_content = random_lower_string()
+            response = client.post(
+                f"/requests/create/{plant_one.id}/{plant_two.id}",
+                data={"message": message_content},
+                cookies=[auth_cookie_one],
+            )
+            assert response.status_code == 200
+            messages = [
+                Message(
+                    sender_id=user_one.id,
+                    content=message_content,
+                    outgoing_plant_id=plant_one.id,
+                    incoming_plant_id=plant_two.id,
+                )
+            ]
+            assert_if_trade_request_json_and_trade_request_data_match(
+                plant_one, plant_two, response.json(), messages
+            )
+
+
+def test_check_if_messages_are_being_deleted_when_trade_request_is_deleted(
+    client: TestClient, db: Session
+):
+    with create_random_plant(client, db) as (
+        user_one,
+        _,
+        auth_cookie_one,
+        plant_one,
+    ):
+        with create_random_plant(client, db) as (
+            _,
+            _,
+            _,
+            plant_two,
+        ):
+            message_content = random_lower_string()
+            trade_request = requests_crud.create_trade_request_from_plant_ids(
+                db, plant_one.id, plant_two.id, message_content
+            )
+            message_id = trade_request.messages[0].id
+    assert db.get(TradeRequest, (plant_one.id, message_id)) is None
+    assert db.get(Message, message_id) is None
 
 
 def test_create_trade_request_plant_not_owned(client: TestClient, db: Session):

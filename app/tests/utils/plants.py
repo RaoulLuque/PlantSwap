@@ -34,6 +34,25 @@ def create_random_plant(
         users_crud.delete_user(database, user)
 
 
+@contextmanager
+def create_random_plant_for_given_user(
+    database: Session,
+    user: User,
+) -> Generator[Plant, None, None]:
+    """
+    Context manager for creating a random plant for a given user.
+    :param database: Database session.
+    :param user: User to create plant ad for.
+    :return: Plant that was just created.
+    """
+    plant_in = PlantCreate(name="Monstera", description="Nice", tags=[])
+    plant = plants_crud.create_plant(database, user, plant_in)
+    try:
+        yield plant
+    finally:
+        plants_crud.delete_plant_ad(database, plant)
+
+
 def assert_if_plant_and_json_response_plant_match(
     plant: Plant, json_plant: dict[str, str]
 ) -> None:

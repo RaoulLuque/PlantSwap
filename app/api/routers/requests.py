@@ -1,7 +1,7 @@
 # Router for api endpoints regarding sending trade requests
 import uuid
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Form
 from sqlmodel import select
 
 from app.api.dependencies import SessionDep, CurrentUserDep
@@ -26,7 +26,7 @@ def create_trade_request(
     session: SessionDep,
     outgoing_plant_id: uuid.UUID,
     incoming_plant_id: uuid.UUID,
-    message: str | None = None,
+    message: str | None = Form(None),
 ):
     """
     Create a new trade request.

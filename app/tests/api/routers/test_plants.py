@@ -11,6 +11,7 @@ from app.tests.utils.utils import (
 from app.tests.utils.plants import (
     create_random_plant,
     assert_if_plant_and_json_response_plant_match,
+    create_random_plant_for_given_user,
 )
 from app.tests.utils.users import create_random_user
 
@@ -91,6 +92,39 @@ def test_read_plants_limit(client: TestClient, db: Session) -> None:
             with create_random_plant(client, db) as (_, _, _, plant_three):
                 limit = 2
                 response = client.get(f"/plants/?limit={limit}")
+                response_json = response.json()
+                assert len(response_json["data"]) == 2
+
+
+def test_read_own_plants(client: TestClient, db: Session) -> None:
+    with create_random_plant(client, db) as (_, _, auth_cookie, plant_one):
+        response = client.get("/plants/own", cookies=[auth_cookie])
+        response_json = response.json()
+        print(response_json)
+        assert_if_plant_and_json_response_plant_match(
+            plant_one, response_json["data"][0]
+        )
+        assert len(response_json["data"]) == 1
+
+
+def test_read_plants_own_with_others_existing(client: TestClient, db: Session) -> None:
+    with create_random_plant(client, db) as (_, _, auth_cookie, plant_one):
+        with create_random_plant(client, db) as (_, _, _, plant_two):
+            with create_random_plant(client, db) as (_, _, _, plant_three):
+                response = client.get("/plants/own", cookies=[auth_cookie])
+                response_json = response.json()
+                assert_if_plant_and_json_response_plant_match(
+                    plant_one, response_json["data"][0]
+                )
+                assert len(response_json["data"]) == 1
+
+
+def test_read_own_plants_limit(client: TestClient, db: Session) -> None:
+    with create_random_plant(client, db) as (user, _, auth_cookie, _):
+        with create_random_plant_for_given_user(db, user) as _:
+            with create_random_plant_for_given_user(db, user) as _:
+                limit = 2
+                response = client.get(f"/plants/?limit={limit}", cookies=[auth_cookie])
                 response_json = response.json()
                 assert len(response_json["data"]) == 2
 

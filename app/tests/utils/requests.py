@@ -96,6 +96,7 @@ def assert_if_trade_request_json_and_trade_request_data_match(
     :return: None
     """
     print(json_trade_request)
+    print(messages)
     assert json_trade_request
     assert str(outgoing_plant.id) == json_trade_request["outgoing_plant_id"]
     assert str(incoming_plant.id) == json_trade_request["incoming_plant_id"]
@@ -103,6 +104,8 @@ def assert_if_trade_request_json_and_trade_request_data_match(
     assert str(incoming_plant.owner_id) == json_trade_request["incoming_user_id"]
     assert len(messages) == len(json_trade_request["messages"])
     for i in range(len(messages)):
-        assert messages[i].sender_id == json_trade_request["messages"][i]["sender_id"]
+        assert (
+            str(messages[i].sender_id) == json_trade_request["messages"][i]["sender_id"]
+        )
         assert messages[i].content == json_trade_request["messages"][i]["content"]
     assert accepted == json_trade_request["accepted"]

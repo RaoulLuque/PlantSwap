@@ -5,6 +5,7 @@ from app.api.dependencies import ACCESS_TOKEN_COOKIE_NAME
 from app.core.config import settings
 from app.core.security import get_password_hash
 from app.models import User, UserCreate
+from app.tests.utils.users import create_random_user
 from app.tests.utils.utils import random_email, random_lower_string
 
 
@@ -63,3 +64,11 @@ def test_get_access_token_inactive_user(client: TestClient, db: Session) -> None
     assert response.cookies == {}
     db.delete(user_in_db)
     db.commit()
+
+
+def test_logout(client: TestClient, db: Session) -> None:
+    with create_random_user(client, db) as (_, _, auth_cookie):
+        response = client.post("/logout", cookies=[auth_cookie])
+        assert ACCESS_TOKEN_COOKIE_NAME not in response.cookies
+        assert response.status_code == 200
+        assert response.json() == {"message": "Logout successful"}
