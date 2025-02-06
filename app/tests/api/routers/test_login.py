@@ -8,7 +8,7 @@ from app.models import User, UserCreate
 from app.tests.utils.utils import random_email, random_lower_string
 
 
-def test_get_access_token_superuser(client: TestClient) -> None:
+def test_get_oauth_cookie_superuser(client: TestClient) -> None:
     login_data = {
         "username": settings.FIRST_SUPERUSER,
         "password": settings.FIRST_SUPERUSER_PASSWORD,
@@ -21,7 +21,7 @@ def test_get_access_token_superuser(client: TestClient) -> None:
     assert cookies[ACCESS_TOKEN_COOKIE_NAME]
 
 
-def test_get_access_token_incorrect_username(client: TestClient) -> None:
+def test_get_ouath_cookie_incorrect_username(client: TestClient) -> None:
     login_data = {
         "username": "",
         "password": "incorrect",

@@ -1,19 +1,23 @@
 from contextlib import contextmanager
 from typing import Generator, Tuple
 
+from fastapi.testclient import TestClient
 from sqlmodel import Session
 
 from app.core.crud import users_crud, plants_crud
 from app.models import User, Plant, UserCreate, PlantCreate
+from app.tests.utils.users import get_user_authentication_cookie
 from app.tests.utils.utils import random_email, random_lower_string
 
 
 @contextmanager
 def create_random_plant(
+    client: TestClient,
     database: Session,
-) -> Generator[Tuple[User, str, Plant], None, None]:
+) -> Generator[Tuple[User, str, tuple[str, str], Plant], None, None]:
     """
     Context manager for creating a random plant with random email and password.
+    :param client: TestClient.
     :param database: Database session.
     :return: User, (un-hashed) password and plant.
     """
@@ -21,10 +25,11 @@ def create_random_plant(
     password = random_lower_string()
     user_create = UserCreate(email=username, password=password)
     user = users_crud.create_user(database, user_create)
-    plant_in = PlantCreate(name="Monstera", description="Nice")
+    auth_cookie = get_user_authentication_cookie(client, str(username), password)
+    plant_in = PlantCreate(name="Monstera", description="Nice", tags=[])
     plant = plants_crud.create_plant(database, user, plant_in)
     try:
-        yield user, password, plant
+        yield user, password, auth_cookie, plant
     finally:
         users_crud.delete_user(database, user)
 

@@ -1,15 +1,18 @@
+import os
+
+# Set the environment variable before any other imports
+os.environ["USE_IMAGE_UPLOAD"] = "False"
+
 from collections.abc import Generator
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session, delete
-from pathlib import Path
-from dotenv import load_dotenv
 
 from app.core.db import engine, init_db
 from app.main import app
 from app.models import User, Plant, TradeRequest
-from app.tests.utils.users import get_superuser_token_headers
+from app.tests.utils.users import get_superuser_authentication_cookie
 
 
 @pytest.fixture(scope="module")
@@ -19,8 +22,8 @@ def client() -> Generator[TestClient, None, None]:
 
 
 @pytest.fixture(scope="module")
-def superuser_token_headers(client: TestClient) -> dict[str, str]:
-    return get_superuser_token_headers(client)
+def superuser_auth_cookie(client: TestClient) -> tuple[str, str]:
+    return get_superuser_authentication_cookie(client)
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -37,16 +40,3 @@ def db() -> Generator[Session, None, None]:
         statement = delete(TradeRequest)
         session.execute(statement)
         session.commit()
-
-
-@pytest.fixture(scope="session", autouse=True)
-def settings_override():
-    print("Test")
-    # This is run before any imports allowing us to inject
-    # dependencies via environment variables into Settings
-    # This just affects the variables in this process's environment
-
-    # Find the .env file for the test environment
-    test_env = str(Path(__file__).parent / "test.env")
-    # Load the environment variables and overwrite any existing ones
-    load_dotenv(test_env, override=True)
