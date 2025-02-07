@@ -1,3 +1,11 @@
+import os
+
+# Set the environment variable before any other imports
+os.environ["USE_IMAGE_UPLOAD"] = "False"
+os.environ["CLOUDINARY_CLOUD_NAME"] = "Test"
+os.environ["CLOUDINARY_API_KEY"] = "Test"
+os.environ["CLOUDINARY_API_SECRET"] = "Test"
+
 from collections.abc import Generator
 
 import pytest
@@ -7,7 +15,7 @@ from sqlmodel import Session, delete
 from app.core.db import engine, init_db
 from app.main import app
 from app.models import User, Plant, TradeRequest
-from app.tests.utils.users import get_superuser_token_headers
+from app.tests.utils.users import get_superuser_authentication_cookie
 
 
 @pytest.fixture(scope="module")
@@ -17,8 +25,8 @@ def client() -> Generator[TestClient, None, None]:
 
 
 @pytest.fixture(scope="module")
-def superuser_token_headers(client: TestClient) -> dict[str, str]:
-    return get_superuser_token_headers(client)
+def superuser_auth_cookie(client: TestClient) -> tuple[str, str]:
+    return get_superuser_authentication_cookie(client)
 
 
 @pytest.fixture(scope="session", autouse=True)

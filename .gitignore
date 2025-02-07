@@ -6,3 +6,6 @@
 /dist
 /reports
 poetry.lock
+/app-frontend/node_modules
+/app-frontend/build
+/app-frontend/.env

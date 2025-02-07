@@ -22,6 +22,12 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
+   
+    # Cloudify
+    USE_IMAGE_UPLOAD: bool
+    CLOUDINARY_CLOUD_NAME: str
+    CLOUDINARY_API_KEY: str
+    CLOUDINARY_API_SECRET: str
 
     # Frontend
     FRONTEND_URL: str

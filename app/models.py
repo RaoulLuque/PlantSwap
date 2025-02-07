@@ -2,8 +2,10 @@ import uuid
 from datetime import datetime
 
 from pydantic import BaseModel, EmailStr
+from sqlalchemy import String, ForeignKeyConstraint
 from sqlalchemy.orm import RelationshipProperty
-from sqlmodel import SQLModel, Field, Relationship
+from sqlalchemy.dialects.postgresql import ARRAY
+from sqlmodel import SQLModel, Field, Relationship, Column
 
 
 # Shared user properties in Database
@@ -57,6 +59,7 @@ class User(UserBase, table=True):
 class PlantBase(SQLModel):
     name: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=255)
+    tags: list[str] = Field(sa_column=Column(ARRAY(String()), nullable=True))
 
 
 # Properties to receive on plant creation
@@ -69,12 +72,16 @@ class Plant(PlantBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str = Field(max_length=255)
     creation_date: datetime = Field(default=datetime.now())
+    # Foreign key to owner of plant. Indexed to be able to search all plants of a specific user more efficiently
     owner_id: uuid.UUID = Field(
-        foreign_key="user.id", nullable=False, ondelete="CASCADE"
+        foreign_key="user.id", nullable=False, ondelete="CASCADE", index=True
     )
     owner: User = Relationship(back_populates="plants")
+    # URL to image of plant if it exists, otherwise None
+    image_url: str | None = Field(default=None, max_length=255)
     # This attribute is of no real use, it simply takes care of deleting the corresponding
     # trade requests of a plant when the respective plant is deleted
+    tags: list[str] = Field(sa_column=Column(ARRAY(String()), nullable=True))
     outgoing_trade_requests: list["TradeRequest"] = Relationship(
         sa_relationship=RelationshipProperty(
             "TradeRequest",
@@ -97,6 +104,9 @@ class Plant(PlantBase, table=True):
 class PlantPublic(PlantBase):
     id: uuid.UUID
     owner_id: uuid.UUID
+    creation_date: datetime
+    image_url: str | None
+    tags: list[str]
 
 
 # Class to return multiple PlantPublic instances at the same time
@@ -160,12 +170,25 @@ class TradeRequest(SQLModel, table=True):
         )
     )
     accepted: bool = Field(default=False)
-    message: str | None = Field(default=None, max_length=255)
+    messages: list["Message"] = Relationship(
+        back_populates="trade_request",
+        cascade_delete=True,
+    )
+
+
+# Public facing trade request class
+class TradeRequestPublic(SQLModel):
+    outgoing_user_id: uuid.UUID
+    incoming_user_id: uuid.UUID
+    outgoing_plant_id: uuid.UUID
+    incoming_plant_id: uuid.UUID
+    accepted: bool
+    messages: list["Message"]
 
 
 # Class to return multiple TradeRequest instances at the same time
 class TradeRequestsPublic(SQLModel):
-    data: list[TradeRequest]
+    data: list[TradeRequestPublic]
     count: int
 
 
@@ -178,3 +201,27 @@ class TokenData(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class Message(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    sender_id: uuid.UUID = Field(foreign_key="user.id", index=True)
+    content: str = Field(max_length=255)
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+    incoming_plant_id: uuid.UUID = Field(nullable=False)
+    outgoing_plant_id: uuid.UUID = Field(nullable=False)
+
+    # Define the composite foreign key using SQLAlchemy because SQLModel does not support composite foreign keys
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["incoming_plant_id", "outgoing_plant_id"],
+            ["traderequest.incoming_plant_id", "traderequest.outgoing_plant_id"],
+            ondelete="CASCADE",
+        ),
+    )
+
+    # Relationship to TradeRequest with cascade behavior
+    trade_request: "TradeRequest" = Relationship(
+        back_populates="messages",
+    )

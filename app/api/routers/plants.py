@@ -1,11 +1,12 @@
 import uuid
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile, Form
 
+from app.core.config import settings
 from app.core.crud import plants_crud
 from app.api.dependencies import SessionDep, CurrentUserDep
-from app.models import PlantPublic, PlantCreate, Plant, PlantsPublic
+from app.models import PlantPublic, Plant, PlantsPublic, PlantCreate
 
 # Router for api endpoints regarding plants/creation of ad functionality
 router = APIRouter()
@@ -13,16 +14,35 @@ router = APIRouter()
 
 @router.post("/plants/create", response_model=PlantPublic)
 def create_plant_ad(
-    session: SessionDep, current_user: CurrentUserDep, plant_in: PlantCreate
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    name: str = Form(...),
+    description: str | None = Form(None),
+    tags: list[str] = Form([]),
+    image: UploadFile | str | None = None,
 ):
     """
-    Create new plant ad.
-    :param current_user: Currently logged-in user
+    Create a new plant ad.
+    :param current_user: Currently logged-in user.
     :param session: Current database session.
-    :param plant_in: Plant data for the to-be-created plant ad.
+    :param name: Name of the plant.
+    :param description: Description of the plant.
+    :param tags: Tags of the plant.
+    :param image: Optional image of the plant.
     :return: Name, description, owner_id and id of the created plant.
     """
-    plant: Plant = plants_crud.create_plant(session, current_user, plant_in)
+    plant_in = PlantCreate(name=name, description=description, tags=list(set(tags)))
+    print(not settings.USE_IMAGE_UPLOAD)
+    if isinstance(image, str) or image is None:
+        image = None
+    else:
+        if not settings.USE_IMAGE_UPLOAD:
+            raise HTTPException(
+                status_code=500,
+                detail="Image upload is not configured for the app.",
+            )
+
+    plant: Plant = plants_crud.create_plant(session, current_user, plant_in, image)
     return plant
 
 
@@ -36,6 +56,24 @@ def read_plants(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
     :return: List of plants with number of plants as a PlantsPublic instance.
     """
     plants_public = plants_crud.get_all_plant_ads(session, skip, limit)
+    return plants_public
+
+
+@router.get("/plants/own", response_model=PlantsPublic)
+def read_my_plants(
+    session: SessionDep, current_user: CurrentUserDep, skip: int = 0, limit: int = 100
+) -> Any:
+    """
+    Retrieve all existing plant ads.
+    :param session: Current database session.
+    :param current_user: Currently logged-in user.
+    :param skip: Number of plant ads to skip.
+    :param limit: Limit of plant ads to retrieve.
+    :return: List of plants with number of plants as a PlantsPublic instance.
+    """
+    plants_public = plants_crud.get_all_plant_ads_from_one_user(
+        session, current_user.id, skip, limit
+    )
     return plants_public
 
 

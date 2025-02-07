@@ -2,7 +2,7 @@ import uuid
 
 from sqlmodel import Session, select, or_
 
-from app.models import TradeRequest, TradeRequestsPublic, User, Plant
+from app.models import TradeRequest, TradeRequestsPublic, User, Plant, Message
 
 
 def create_trade_request(session: Session, trade_request: TradeRequest) -> TradeRequest:
@@ -38,12 +38,23 @@ def create_trade_request_from_plant_ids(
     incoming_plant: Plant | None = session.get(Plant, incoming_plant_id)
     if outgoing_plant is None or incoming_plant is None:
         raise ValueError("One of the plants does not exist.")
+    messages = []
+    if message is not None:
+        messages.append(
+            Message(
+                sender_id=outgoing_plant.owner_id,
+                content=message,
+                incoming_plant_id=incoming_plant_id,
+                outgoing_plant_id=outgoing_plant_id,
+            )
+        )
+
     trade_request = TradeRequest(
         outgoing_plant_id=outgoing_plant_id,
         incoming_plant_id=incoming_plant_id,
         outgoing_user_id=outgoing_plant.owner_id,
         incoming_user_id=incoming_plant.owner_id,
-        message=message,
+        messages=messages,
     )
     session.add(trade_request)
     session.commit()

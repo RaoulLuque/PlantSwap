@@ -36,7 +36,7 @@ poe db
 
 
 ## Using uv
-To start up the application, one will have to install the dependencies first. [uv](https://github.com/astral-sh/uv) is recommended to be installed. An installation guide can be found [here](https://docs.astral.sh/uv/getting-started/). If [pipx](https://pipx.pypa.io/stable/) is already installed on the machine, it is as easy as
+To start up the application, one will have to install the dependencies first. [uv](https://github.com/astral-sh/uv) is recommended to be installed. An installation guide can be found [here](https://docs.astral.sh/uv/getting-started/). If [pipx](https://pipx.pypa.io/stable/) is already installed on the machine, it is as easy as:
 ````commandline
 pipx install uv
 ````
@@ -90,6 +90,10 @@ without poe.
 - 🪄 [Poethepoet](https://github.com/nat-n/poethepoet) as task runner.
 - 📦 Package management with [uv](https://github.com/astral-sh/uv).
 - ⚙️ CI (continuous integration) and CD (continuous deployment) based on [GitHub Actions](https://github.com/features/actions).
+
+
+# Frontend Template Credits
+Blog Article List from [Chakra Templates](https://github.com/hauptrolle/chakra-templates)
 
 
 # General development progress of the app

@@ -2,7 +2,7 @@ from collections.abc import Generator
 from typing import Annotated
 
 import jwt
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from sqlmodel import Session
@@ -27,8 +27,20 @@ def get_db() -> Generator[Session, None, None]:
 
 # Dependency for when database wants to be accessed
 SessionDep = Annotated[Session, Depends(get_db)]
-# Dependency for when user has to identify that their logged in
-TokenDep = Annotated[str, Depends(reusable_oauth2)]
+
+# Define the name of the cookie that will store the token
+ACCESS_TOKEN_COOKIE_NAME = "access_token"
+
+
+# Dependency to extract the token from the cookie
+async def get_token(request: Request) -> str | None:
+    """
+    Get the access token from the cookie, or return None if it's missing.
+    """
+    return request.cookies.get(ACCESS_TOKEN_COOKIE_NAME)
+
+
+TokenDep = Annotated[str | None, Depends(get_token)]
 
 
 async def get_current_user(token: TokenDep, session: SessionDep) -> User:
@@ -38,6 +50,11 @@ async def get_current_user(token: TokenDep, session: SessionDep) -> User:
     :param session: Database session
     :return: User data including hashed password
     """
+    if token is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+        )
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
