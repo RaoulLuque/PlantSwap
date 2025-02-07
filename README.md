@@ -99,7 +99,7 @@ Blog Article List from [Chakra Templates](https://github.com/hauptrolle/chakra-t
 # General development progress of the app
 
 The following list keeps track of the development progress of the app
-and its backend/API.
+and its backend/API. Note that the documentation might not be completely up-to-date. For example the authentication setup has changed from a token/bearer system to html-only cookies. Therefore, please refer to commit [12ddcf8](https://github.com/RaoulLuque/PlantSwap/tree/12ddcf866a850121a83acc81eec2763dbc98ac19) or previous for code snippets that match to what is described in the documentation.
 
 ## [Basic functionality](https://github.com/RaoulLuque/PlantSwap/milestone/2)
 
