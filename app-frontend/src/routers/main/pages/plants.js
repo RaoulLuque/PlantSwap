@@ -22,6 +22,8 @@ import {
   Textarea,
   VStack,
   useToast,
+  Flex,
+  Spinner,
 } from '@chakra-ui/react';
 import { ListAllPlantsHook } from "../../../hooks/list_all_plants_hook";
 import { IsLoggedInHook } from "../../../hooks/is_logged_in_hook";
@@ -60,7 +62,7 @@ const PlantOwner = ({ date, name }) => {
 function PlantList() {
   const toast = useToast();
 
-  const { plants, owners } = ListAllPlantsHook();
+  const { plants, owners, isLoading } = ListAllPlantsHook();
   const isLoggedIn = IsLoggedInHook();
   const { isOpen: isTradeRequestOpen, onOpen: onTradeRequestOpen, onClose: onTradeRequestClose } = useDisclosure();
   const [selectedPlantId, setSelectedPlantId] = useState(null);
@@ -77,83 +79,98 @@ function PlantList() {
   return (
     <Container maxW="7xl" p="12">
       <Heading as="h1">Plants for Swapping</Heading>
-      {plants.map((plant, index) => (
-        <Box
-          key={index}
-          marginTop={{ base: '1', sm: '5' }}
-          display="flex"
-          flexDirection={{ base: 'column', sm: 'row' }}
-          justifyContent="space-between"
-        >
-          <Box
-            display="flex"
-            flex="1"
-            marginRight="3"
-            position="relative"
-            alignItems="center"
-          >
-            <Box
-              width={{ base: '100%', sm: '85%' }}
-              zIndex="2"
-              marginLeft={{ base: '0', sm: '5%' }}
-              marginTop="5%"
-            >
-              <Box textDecoration="none" _hover={{ textDecoration: 'none' }}>
-                <Image
-                  borderRadius="lg"
-                  src={plant.image_url ? plant.image_url : "/images/default_plant.jpg"}
-                  alt="Image of the Plant"
-                  boxSize="500px"
-                  objectFit="cover"
-                />
+      {/* Loading Indicator */}
+      {isLoading ? (
+        <Flex justify="center" align="center" minH="200px">
+          <Spinner
+            size="xl"
+            thickness="4px"
+            speed="0.65s"
+            color="orange.500"
+            emptyColor="gray.200"
+          />
+        </Flex>
+          ) : (
+            <>
+              {plants.map((plant, index) => (
+                <Box
+                  key={index}
+                  marginTop={{ base: '1', sm: '5' }}
+                  display="flex"
+                  flexDirection={{ base: 'column', sm: 'row' }}
+                  justifyContent="space-between"
+                >
+              <Box
+                display="flex"
+                flex="1"
+                marginRight="3"
+                position="relative"
+                alignItems="center"
+              >
+                <Box
+                  width={{ base: '100%', sm: '85%' }}
+                  zIndex="2"
+                  marginLeft={{ base: '0', sm: '5%' }}
+                  marginTop="5%"
+                >
+                  <Box textDecoration="none" _hover={{ textDecoration: 'none' }}>
+                    <Image
+                      borderRadius="lg"
+                      src={plant.image_url ? plant.image_url : "/images/default_plant.jpg"}
+                      alt="Image of the Plant"
+                      boxSize="500px"
+                      objectFit="cover"
+                    />
+                  </Box>
+                </Box>
+                <Box zIndex="1" width="100%" position="absolute" height="100%">
+                  <Box
+                    bgGradient={lightGradient}
+                    backgroundSize="20px 20px"
+                    opacity="0.4"
+                    height="100%"
+                  />
+                </Box>
+              </Box>
+              <Box
+                display="flex"
+                flex="1"
+                flexDirection="column"
+                justifyContent="center"
+                marginTop={{ base: '3', sm: '0' }}
+              >
+                <PlantTags tags={plant.tags} />
+                <Heading marginTop="1">
+                  <Text textDecoration="none" _hover={{ textDecoration: 'none' }}>
+                    {plant.name}
+                  </Text>
+                </Heading>
+                <Text
+                  as="p"
+                  marginTop="2"
+                  color={textColor}
+                  fontSize="lg"
+                >
+                  {plant.description}
+                </Text>
+                <PlantOwner name={owners[plant.owner_id] || "Unknown"} date={plant.creation_date} />
+                {isLoggedIn && (
+                  <Button
+                    colorScheme="customGreen"
+                    size="sm"
+                    width="50%"
+                    alignSelf="flex-start"
+                    mt={4}
+                    onClick={() => handleTradeRequestClick(plant.id, setIncomingPlantId, toast, setMyPlants, onTradeRequestOpen)}
+                  >
+                    Request Trade
+                  </Button>
+                )}
               </Box>
             </Box>
-            <Box zIndex="1" width="100%" position="absolute" height="100%">
-              <Box
-                bgGradient={lightGradient}
-                backgroundSize="20px 20px"
-                opacity="0.4"
-                height="100%"
-              />
-            </Box>
-          </Box>
-          <Box
-            display="flex"
-            flex="1"
-            flexDirection="column"
-            justifyContent="center"
-            marginTop={{ base: '3', sm: '0' }}
-          >
-            <PlantTags tags={plant.tags} />
-            <Heading marginTop="1">
-              <Text textDecoration="none" _hover={{ textDecoration: 'none' }}>
-                {plant.name}
-              </Text>
-            </Heading>
-            <Text
-              as="p"
-              marginTop="2"
-              color={textColor}
-              fontSize="lg"
-            >
-              {plant.description}
-            </Text>
-            <PlantOwner name={owners[plant.owner_id] || "Unknown"} date={plant.creation_date} />
-            {isLoggedIn && (
-              <Button
-                colorScheme="customGreen"
-                size="sm"
-                width="50%"
-                alignSelf="flex-start"
-                mt={4}
-                onClick={() => handleTradeRequestClick(plant.id, setIncomingPlantId, toast, setMyPlants, onTradeRequestOpen)}
-              >
-                Request Trade
-              </Button>
-            )}
-          </Box>
-        </Box>
-      ))}
+          ))}
+        </>
+      )}
 
       {/* Trade Request Modal */}
       <Modal isOpen={isTradeRequestOpen} onClose={onTradeRequestClose}>

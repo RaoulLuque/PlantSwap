@@ -5,17 +5,17 @@ import {useToast} from "@chakra-ui/react";
 export const ListAllPlantsHook = () => {
   const [plants, setPlants] = useState([]);
   const [owners, setOwners] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const toast = useToast();
 
   const fetchPlants = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await api.get("/plants/");
       const plantData = response.data.data;
 
-      console.log("Fetched Plants:", plantData);
       setPlants(plantData);
 
-      // Fetch owners for all plants
       const ownerPromises = plantData.map((plant) =>
         api
           .get(`/users/${plant.owner_id}`)
@@ -30,15 +30,11 @@ export const ListAllPlantsHook = () => {
       );
 
       const ownerData = await Promise.all(ownerPromises);
-      console.log("Fetched Owners:", ownerData);
-
-      // Create a map of owner IDs to names
       const ownerMap = ownerData.reduce(
         (acc, owner) => ({ ...acc, [owner.id]: owner.name }),
         {}
       );
 
-      console.log("Owner Map:", ownerMap);
       setOwners(ownerMap);
     } catch (error) {
       console.error("Error fetching plants:", error);
@@ -49,12 +45,14 @@ export const ListAllPlantsHook = () => {
         duration: 5000,
         isClosable: true,
       });
+    } finally {
+      setIsLoading(false);
     }
   }, [toast]);
 
   useEffect(() => {
-    fetchPlants().then();
+    fetchPlants();
   }, [fetchPlants]);
 
-  return { plants, owners };
+  return { plants, owners, isLoading };
 };
