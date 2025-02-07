@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     CLOUDINARY_API_SECRET: str
 
     # Frontend
-    FRONTEND_URL: str
+    FRONTEND_URLS: list[str]
 
     @computed_field  # type: ignore[prop-decorator]
     @property

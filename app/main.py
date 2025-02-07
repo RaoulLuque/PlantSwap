@@ -33,7 +33,7 @@ logger.info(msg="----- ----- APPLICATION STARTING ----- -----")
 logging.getLogger("passlib").setLevel(logging.ERROR)
 
 # Setup CORS for frontend
-origins: list[str] = [settings.FRONTEND_URL]
+origins: list[str] = settings.FRONTEND_URLS
 
 app.add_middleware(
     CORSMiddleware,
