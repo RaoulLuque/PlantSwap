@@ -11,7 +11,7 @@ const theme = extendTheme({
       500: "#426c2c",
     },
       customLightGreen: {
-        500: "#90b74d",
+        500: "#bc9162",
       }
   },
 });
