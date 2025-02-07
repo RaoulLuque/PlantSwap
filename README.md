@@ -7,8 +7,7 @@
 [![coverage](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FRaoulLuque%2F5d6fa85dbeff94c59c734a06a656267f%2Fraw%2FPlantSwap-cobertura-coverage.json&style=flat
 )](https://github.com/RaoulLuque/PlantSwap/actions)
 
-PlantSwap is an application which enables you to trade your plant
-offsets for other plants of your liking.
+PlantSwap is an application which enables you to trade your plant offsets for other plants of your liking.
 
 You can either find a person which wants to trade their plant for your
 plant directly or sell your plants on the platform

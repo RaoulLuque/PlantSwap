@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
     POSTGRES_DB: str
-
+   
     # Cloudify
     USE_IMAGE_UPLOAD: bool
     CLOUDINARY_CLOUD_NAME: str
