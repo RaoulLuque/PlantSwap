@@ -35,7 +35,7 @@ const PlantTags = ({ marginTop = 0, tags }) => {
   return (
     <HStack spacing={2} marginTop={marginTop}>
       {tagArray.map((tag) => (
-        <Tag size="md" variant="solid" colorScheme="orange" key={tag}>
+        <Tag size="md" variant="solid" colorScheme="customLightGreen" key={tag}>
           {tag}
         </Tag>
       ))}
