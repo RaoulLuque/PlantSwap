@@ -93,7 +93,7 @@ without poe.
 
 
 # Frontend Template Credits
-Blog Article List from [Chakra Templates](https://github.com/hauptrolle/chakra-templates)
+Blog Article List and With action button & user dropdown from [Chakra Templates](https://github.com/hauptrolle/chakra-templates).
 
 
 # General development progress of the app
