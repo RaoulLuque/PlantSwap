@@ -115,8 +115,10 @@ export default function TopBar() {
               size={'sm'}
               mr={4}
               leftIcon={<AddIcon />}
-              onClick={onPlantModalOpen}>
-              Create a Plant Ad
+              onClick={onPlantModalOpen}
+              w={{ base: '140px', md: 'auto' }}
+            >
+              Add a Plant Ad
             </Button>
             <Menu>
               <MenuButton
