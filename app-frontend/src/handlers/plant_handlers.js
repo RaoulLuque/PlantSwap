@@ -1,5 +1,4 @@
 import api from "../api";
-import {useState} from "react";
 import {Image} from "@chakra-ui/react";
 
 export const handleCreatePlant = async (
@@ -168,8 +167,20 @@ export const handleDeletePlant = async (plantId, toast, onDeletionSuccess) => {
   }
 };
 
-export const PlantImageHandler = ({ imageUrl, ...props }) => {
-  const [defaultImage] = useState(() => `/images/default_plant${Math.floor(Math.random() * 5) + 1}.png`);
+const hashUUIDToNumber = (uuid) => {
+  let hash = 0;
+  for (let i = 0; i < uuid.length; i++) {
+    hash = (hash << 5) - hash + uuid.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+};
+
+export const PlantImageHandler = ({ imageUrl, plantId, alt = "Plant image", ...props }) => {
+  // Deterministic default image based on hashed UUID
+  const defaultImage = plantId
+    ? `/images/default_plant${(hashUUIDToNumber(plantId) % 5) + 1}.png`
+    : `/images/default_plant${Math.floor(Math.random() * 5) + 1}.png`;
 
   const src = imageUrl || defaultImage;
 
@@ -177,8 +188,8 @@ export const PlantImageHandler = ({ imageUrl, ...props }) => {
     <Image
       {...props}
       src={src}
+      alt={alt}
       fallbackSrc={defaultImage}
-      alt="Plant image"
     />
   );
 };

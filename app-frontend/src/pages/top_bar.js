@@ -40,7 +40,7 @@ import {
   handleCreatePlant,
   handleDeletePlant,
   handleListMyPlants,
-  handleMyPlantsClose
+  handleMyPlantsClose, PlantImageHandler
 } from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
 import {
@@ -344,8 +344,9 @@ export default function TopBar() {
                       width="100%"
                     >
                       <Flex alignItems="center" flex={1} overflow="hidden" mr={4}>
-                        <Image
-                          src={plant.image_url}
+                        <PlantImageHandler
+                          imageUrl={plant.image_url}
+                          plantId={plant.id}
                           alt={plant.name}
                           borderRadius="md"
                           boxSize="150px"

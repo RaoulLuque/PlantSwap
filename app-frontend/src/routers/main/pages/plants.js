@@ -117,8 +117,9 @@ function PlantList() {
                   width={{ base: "100%", md: "400px" }}
                 >
                   <PlantImageHandler
-                    borderRadius="lg"
                     imageUrl={plant.image_url}
+                    plantId={plant.id}
+                    borderRadius="lg"
                     width="100%"
                     height={{ base: "300px", md: "400px" }}
                     objectFit="cover"
