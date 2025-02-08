@@ -111,7 +111,7 @@ function PlantList() {
                 direction={{ base: "column", md: "row" }}
                 gap={{ base: 4, md: 6 }}
               >
-                {/* Image Section - Modified */}
+                {/* Image Section */}
                 <Box
                   flexShrink={0}
                   width={{ base: "100%", md: "400px" }}
@@ -127,10 +127,10 @@ function PlantList() {
                   />
                 </Box>
 
-                {/* Content Section - Added padding */}
+                {/* Content Section */}
                 <Box flex={1} pl={{ md: 4 }}>
                   <PlantTags tags={plant.tags} marginTop={0} />
-                  <Heading fontSize={{ base: "xl", md: "2xl" }} mt={{ base: 2, md: 3 }} mb={2}>
+                  <Heading fontSize={{ base: "24px", md: "32px" }} mt={{ base: 2, md: 3 }} mb={2}>
                     {plant.name}
                   </Heading>
                   <Text
