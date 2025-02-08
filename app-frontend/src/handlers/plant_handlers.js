@@ -2,16 +2,34 @@ import api from "../api";
 import {useState} from "react";
 import {Image} from "@chakra-ui/react";
 
-export const handleCreatePlant = async (name, description, image, toast, onPlantModalClose, setIsCreatingPlant) => {
+export const handleCreatePlant = async (
+  name,
+  description,
+  tags,
+  image,
+  toast,
+  onPlantModalClose,
+  setIsCreatingPlant
+) => {
   setIsCreatingPlant(true);
   const formData = new FormData();
   formData.append('name', name);
   formData.append('description', description);
+
+  // Process tags to remove whitespace and empty values
+  const processedTags = tags
+    .split(',')
+    .map(tag => tag.trim())
+    .filter(tag => tag !== '')
+    .join(',');
+  formData.append('tags', processedTags);
+
   if (image) {
     formData.append('image', image);
   } else {
     formData.append('image', "");
   }
+
 
   try {
     const response = await api.post('/plants/create', formData, {

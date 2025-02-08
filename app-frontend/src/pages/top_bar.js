@@ -75,6 +75,7 @@ export default function TopBar() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const isLoggedIn = IsLoggedInHook();
   const [myPlants, setMyPlants] = useState([]);
+  const [tags, setTags] = useState('');
 
   // Show toasts after reloading page
   showStoredToastAfterWindowReload(toast);
@@ -227,6 +228,14 @@ export default function TopBar() {
                 />
               </FormControl>
               <FormControl>
+                <FormLabel>Tags (comma-separated)</FormLabel>
+                <Input
+                  placeholder="e.g., Indoor, Succulent, Grown"
+                  value={tags}
+                  onChange={(e) => setTags(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
                 <FormLabel>Image</FormLabel>
                 <Box
                   border="2px dashed"
@@ -279,7 +288,7 @@ export default function TopBar() {
               colorScheme="customGreen"
               mr={3}
               onClick={() => {
-                handleCreatePlant(name, description, image, toast, onPlantModalClose, setIsCreatingPlant).then();
+                handleCreatePlant(name, description, tags, image, toast, onPlantModalClose, setIsCreatingPlant).then();
               }}
               isLoading={isCreatingPlant}
               disabled={isCreatingPlant}
