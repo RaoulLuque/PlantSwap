@@ -191,7 +191,7 @@ function PlantList() {
               colorScheme="customGreen"
               size="sm"
               mr={3}
-              onClick={() => handleCreateTradeRequest(selectedPlantId, incomingPlantId, message, onTradeRequestClose)}
+              onClick={() => handleCreateTradeRequest(selectedPlantId, incomingPlantId, message, onTradeRequestClose, toast)}
             >
               Submit Request
             </Button>
