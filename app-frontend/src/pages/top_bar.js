@@ -27,10 +27,21 @@ import {
   FormControl,
   FormLabel,
   Textarea,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from '@chakra-ui/react';
 import {AddIcon} from '@chakra-ui/icons';
 import {handleLogin, handleLogout} from "../handlers/auth_handler";
-import {handleCreatePlant, handleDeletePlant, handleListMyPlants} from "../handlers/plant_handlers";
+import {
+  handleCreatePlant,
+  handleDeletePlant,
+  handleListMyPlants,
+  handleMyPlantsClose
+} from "../handlers/plant_handlers";
 import {handleRegistration} from "../handlers/user_handler";
 import {
   handleDragEnter,
@@ -65,6 +76,11 @@ export default function TopBar() {
     onOpen: onMyPlantsOpen,
     onClose: onMyPlantsClose,
   } = useDisclosure();
+  const {
+  isOpen: isDeleteDialogOpen,
+  onOpen: onDeleteDialogOpen,
+  onClose: onDeleteDialogClose,
+  } = useDisclosure();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -76,6 +92,9 @@ export default function TopBar() {
   const isLoggedIn = IsLoggedInHook();
   const [myPlants, setMyPlants] = useState([]);
   const [tags, setTags] = useState('');
+  const [selectedPlantId, setSelectedPlantId] = useState(null);
+  const cancelRef = React.useRef();
+  const [hasDeleted, setHasDeleted] = useState(false);
 
   // Show toasts after reloading page
   showStoredToastAfterWindowReload(toast);
@@ -303,7 +322,7 @@ export default function TopBar() {
       </Modal>
 
       {/* My Plants Modal */}
-      <Modal isOpen={isMyPlantsOpen} onClose={onMyPlantsClose} size="lg">
+      <Modal isOpen={isMyPlantsOpen} onClose={() => {handleMyPlantsClose(onMyPlantsClose, hasDeleted, setHasDeleted)}} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>My Plants</ModalHeader>
@@ -352,13 +371,10 @@ export default function TopBar() {
                       <Button
                         colorScheme="red"
                         size="sm"
-                        onClick={() =>
-                          handleDeletePlant(plant.id, toast, () => {
-                            setMyPlants((prevPlants) =>
-                              prevPlants.filter((p) => p.id !== plant.id)
-                            );
-                          })
-                        }
+                        onClick={() => {
+                          setSelectedPlantId(plant.id);
+                          onDeleteDialogOpen();
+                        }}
                       >
                         Delete
                       </Button>
@@ -375,6 +391,40 @@ export default function TopBar() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <AlertDialog
+        isOpen={isDeleteDialogOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onDeleteDialogClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Plant
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure you want to delete this plant? This action cannot be undone.
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onDeleteDialogClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={async () => {
+                  await handleDeletePlant(selectedPlantId, toast, () => {
+                    setMyPlants(prevPlants => prevPlants.filter(p => p.id !== selectedPlantId));
+                    setHasDeleted(true);
+                  });
+                  onDeleteDialogClose();
+                }}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 }

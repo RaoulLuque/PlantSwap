@@ -125,6 +125,14 @@ export const handleListMyPlants = (onMyPlantsOpen, toast, setMyPlants) => {
   fetchMyPlants(toast, setMyPlants).then();
 };
 
+export const handleMyPlantsClose = (onMyPlantsClose, hasDeleted, setHasDeleted) => {
+  onMyPlantsClose();
+  if (hasDeleted) {
+    window.location.reload();
+  }
+  setHasDeleted(false);
+};
+
 export const handleDeletePlant = async (plantId, toast, onDeletionSuccess) => {
   try {
     const response = await api.post(`/plants/${plantId}`, {},{
