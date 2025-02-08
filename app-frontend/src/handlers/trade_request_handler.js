@@ -42,6 +42,22 @@ export const handleCreateTradeRequest = async (selectedPlantId, incomingPlantId,
             duration: 5000,
             isClosable: true,
           });
+        } else if (error.status === 404) {
+            toast({
+                title: 'Plant not found',
+                description: 'The plant you are trying to trade with does not exist',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
+        } else if (error.status === 409) {
+            toast({
+                title: 'Trade request already exists',
+                description: 'You have already sent a trade request for this plant',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            })
         } else {
             console.error('Error creating trade request:', error);
             toast({
