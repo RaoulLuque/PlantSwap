@@ -42,7 +42,7 @@ async def login_for_access_token(
         httponly=True,
         max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
         secure=True,  # Ensure the cookie is only sent over HTTPS
-        samesite="lax",  # Prevent CSRF attacks
+        samesite="none",  # Prevent CSRF attacks
     )
 
     return {"message": "Login successful"}
