@@ -32,7 +32,7 @@ import { handleCreateTradeRequest, handleTradeRequestClick } from "../../../hand
 import {PlantImageHandler} from "../../../handlers/plant_handlers";
 
 const PlantTags = ({ marginTop = 0, tags }) => {
-  const tagArray = typeof tags[0] === 'string' ? tags[0].split(',') : tags;
+  const tagArray = tags.filter(tag => tag.trim() !== '').sort();
   return (
     <HStack spacing={2} marginTop={marginTop}>
       {tagArray.map((tag) => (
