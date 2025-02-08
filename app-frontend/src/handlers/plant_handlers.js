@@ -1,4 +1,6 @@
 import api from "../api";
+import {useState} from "react";
+import {Image} from "@chakra-ui/react";
 
 export const handleCreatePlant = async (name, description, image, toast, onPlantModalClose, setIsCreatingPlant) => {
   setIsCreatingPlant(true);
@@ -138,4 +140,19 @@ export const handleDeletePlant = async (plantId, toast, onDeletionSuccess) => {
       isClosable: true,
     });
   }
+};
+
+export const PlantImageHandler = ({ imageUrl, ...props }) => {
+  const [defaultImage] = useState(() => `/images/default_plant${Math.floor(Math.random() * 5) + 1}.png`);
+
+  const src = imageUrl || defaultImage;
+
+  return (
+    <Image
+      {...props}
+      src={src}
+      fallbackSrc={defaultImage}
+      alt="Plant image"
+    />
+  );
 };

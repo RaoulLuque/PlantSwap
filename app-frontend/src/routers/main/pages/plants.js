@@ -29,6 +29,7 @@ import { ListAllPlantsHook } from "../../../hooks/list_all_plants_hook";
 import { IsLoggedInHook } from "../../../hooks/is_logged_in_hook";
 import { useState } from 'react';
 import { handleCreateTradeRequest, handleTradeRequestClick } from "../../../handlers/trade_request_handler";
+import {PlantImageHandler} from "../../../handlers/plant_handlers";
 
 const PlantTags = ({ marginTop = 0, tags }) => {
   const tagArray = typeof tags[0] === 'string' ? tags[0].split(',') : tags;
@@ -115,14 +116,12 @@ function PlantList() {
                   flexShrink={0}
                   width={{ base: "100%", md: "400px" }}
                 >
-                  <Image
+                  <PlantImageHandler
                     borderRadius="lg"
-                    src={plant.image_url || `/images/default_plant${Math.floor(Math.random() * 5) + 1}.png`}
-                    alt="Plant image"
+                    imageUrl={plant.image_url}
                     width="100%"
                     height={{ base: "300px", md: "400px" }}
                     objectFit="cover"
-                    fallbackSrc={`/images/default_plant${Math.floor(Math.random() * 5) + 1}.png`}
                     transition="transform 0.2s"
                     _hover={{ transform: "scale(1.02)" }}
                   />
