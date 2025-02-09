@@ -81,7 +81,7 @@ def create_trade_request(
             detail="You already have a trade request for these two plants.",
         )
     messages = []
-    if message is not None:
+    if message is not None and message != "":
         messages.append(
             Message(
                 sender_id=current_user.id,
