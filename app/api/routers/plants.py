@@ -32,10 +32,8 @@ def create_plant_ad(
     :return: Name, description, owner_id and id of the created plant.
     """
     # Remove empty string tags
-    print("Input tags:", tags)
     tags = [tag for tag in tags if tag != ""]
-    print("In python tags:", list(set(tags)))
-    plant_in = PlantCreate(name=name, description=description, tags=list(set(tags)))
+    plant_in = PlantCreate(name=name, description=description, tags=tags)
     if isinstance(image, str) or image is None:
         image = None
     else:
