@@ -1,72 +1,161 @@
 import {fetchMyPlants} from "./plant_handlers";
 import api from "../api";
 
-export const handleTradeRequestClick = (plantId, setIncomingPlantId, toast, setMyPlants, onTradeRequestOpen) => {
-    setIncomingPlantId(plantId);
-    fetchMyPlants(toast, setMyPlants).then();
-    onTradeRequestOpen();
-  };
+const handleTradeError = (error, toast) => {
+  const status = error.response?.status;
+  const defaultMessage = error.response?.data?.detail || 'An unexpected error occurred';
 
-export const handleCreateTradeRequest = async (selectedPlantId, incomingPlantId, message, onTradeRequestClose, toast) => {
-    try {
-      const response = await api.post(`/requests/create/${selectedPlantId}/${incomingPlantId}`, {
-        message: message,
-      }, {
-        withCredentials: true
-      });
-
-      if (response.status === 200) {
-        toast({
-            title: 'Trade request created',
-            description: 'The trade request has been successfully created',
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-        });
-          onTradeRequestClose();
-      }
-    } catch (error) {
-        if (error.status === 401) {
-          toast({
-            title: 'Unauthorized',
-            description: 'You are not logged in or are trying to trade a plant that is not yours',
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          });
-        } else if (error.status === 418) {
-          toast({
-            title: 'You cannot trade with yourself',
-            description: 'You are trying to trade a plant with yourself. The server refuses to brew coffee because it is, permanently, a teapot',
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          });
-        } else if (error.status === 404) {
-            toast({
-                title: 'Plant not found',
-                description: 'The plant you are trying to trade with does not exist',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            })
-        } else if (error.status === 409) {
-            toast({
-                title: 'Trade request already exists',
-                description: 'You have already sent a trade request for this plant',
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            })
-        } else {
-            console.error('Error creating trade request:', error);
-            toast({
-            title: 'Error while creating the request',
-            description: 'An error occurred while creating the trade request. Please try again or try reloading the page/logging in again',
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          });
-        }
+  const errorConfigs = {
+    401: {
+      title: 'Unauthorized',
+      description: 'You need to be logged in to perform this action',
+    },
+    403: {
+      title: 'Forbidden',
+      description: 'You do not have permission for this action',
+    },
+    404: {
+      title: 'Not Found',
+      description: 'The requested resource was not found',
+    },
+    409: {
+      title: 'Conflict',
+      description: 'Trade request already exists',
+    },
+    418: {
+      title: 'Teapot',
+      description: 'Cannot trade with yourself',
+    },
+    default: {
+      title: 'Error',
+      description: defaultMessage,
     }
   };
+
+  const { title, description } = errorConfigs[status] || errorConfigs.default;
+
+  toast({
+    title,
+    description,
+    status: 'error',
+    duration: 5000,
+    isClosable: true,
+  });
+};
+
+export const handleListTradeRequests = async (onOpen, toast, setTradeRequests) => {
+  try {
+    const response = await api.get('/requests/all/', { withCredentials: true });
+
+    if (!response.data?.data) {
+      setTradeRequests([]);
+      onOpen();
+      return;
+    }
+
+    // Enrich with plant data
+    const plantRequests = response.data.data.flatMap(tr => [
+      api.get(`/plants/${tr.outgoing_plant_id}`, { withCredentials: true }),
+      api.get(`/plants/${tr.incoming_plant_id}`, { withCredentials: true })
+    ]);
+
+    const plantResponses = await Promise.all(plantRequests);
+    const plantMap = new Map();
+
+    plantResponses.forEach(response => {
+      if (response.data) {
+        plantMap.set(response.data.id, response.data);
+      }
+    });
+
+    const enrichedRequests = response.data.data.map(tr => ({
+      ...tr,
+      outgoing_plant: plantMap.get(tr.outgoing_plant_id),
+      incoming_plant: plantMap.get(tr.incoming_plant_id),
+      status: tr.accepted ? 'accepted' : 'pending'
+    }));
+
+    setTradeRequests(enrichedRequests);
+    onOpen();
+
+  } catch (error) {
+    handleTradeError(error, toast);
+  }
+};
+
+export const handleDeleteTradeRequest = async (outgoingId, incomingId, toast, onSuccess) => {
+  try {
+    await api.post(
+      `/requests/delete/${outgoingId}/${incomingId}`,
+      {},
+      { withCredentials: true }
+    );
+
+    toast({
+      title: 'Request Deleted',
+      description: 'Trade request has been successfully removed',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+
+    onSuccess();
+
+  } catch (error) {
+    handleTradeError(error, toast);
+  }
+};
+
+export const handleAcceptTradeRequest = async (outgoingId, incomingId, toast, onSuccess) => {
+  try {
+    await api.post(
+      `/requests/accept/${outgoingId}/${incomingId}`,
+      {},
+      { withCredentials: true }
+    );
+
+    toast({
+      title: 'Request Accepted',
+      description: 'Trade request has been successfully accepted',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+
+    onSuccess();
+
+  } catch (error) {
+    handleTradeError(error, toast);
+  }
+};
+
+export const handleTradeRequestClick = (plantId, setIncomingPlantId, toast, setMyPlants, onTradeRequestOpen) => {
+  setIncomingPlantId(plantId);
+  fetchMyPlants(toast, setMyPlants).then();
+  onTradeRequestOpen();
+};
+
+export const handleCreateTradeRequest = async (selectedPlantId, incomingPlantId, message, onTradeRequestClose, toast, setIsSubmittingTradeRequest) => {
+  setIsSubmittingTradeRequest(true);
+  try {
+    await api.post(
+      `/requests/create/${selectedPlantId}/${incomingPlantId}`,
+      { message },
+      { withCredentials: true }
+    );
+
+    toast({
+      title: 'Trade Request Created',
+      description: 'Your trade request has been successfully submitted',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+
+    onTradeRequestClose();
+    setIsSubmittingTradeRequest(false);
+  } catch (error) {
+    handleTradeError(error, toast);
+    setIsSubmittingTradeRequest(false);
+  }
+};

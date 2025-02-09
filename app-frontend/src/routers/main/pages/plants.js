@@ -69,6 +69,7 @@ function PlantList() {
   const [myPlants, setMyPlants] = useState([]);
   const [message, setMessage] = useState('');
   const [incomingPlantId, setIncomingPlantId] = useState(null);
+  const [isSubmittingTradeRequest, setIsSubmittingTradeRequest] = useState(false);
 
   const textColor = useColorModeValue("gray.700", "gray.200");
   const cardBg = useColorModeValue("white", "gray.700");
@@ -191,7 +192,9 @@ function PlantList() {
               colorScheme="customGreen"
               size="sm"
               mr={3}
-              onClick={() => handleCreateTradeRequest(selectedPlantId, incomingPlantId, message, onTradeRequestClose, toast)}
+              onClick={() => handleCreateTradeRequest(selectedPlantId, incomingPlantId, message, onTradeRequestClose, toast, setIsSubmittingTradeRequest)}
+              isLoading={isSubmittingTradeRequest}
+              disabled={isSubmittingTradeRequest}
             >
               Submit Request
             </Button>
