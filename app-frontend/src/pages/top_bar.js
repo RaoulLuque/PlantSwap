@@ -503,11 +503,12 @@ export default function TopBar() {
                           </Box>
                         </Flex>
                         <HStack justify="space-between" mt={2} width="100%">
-                          <Tag colorScheme={tr.status === 'accepted' ? 'green' : 'orange'}>
+                          <Tag colorScheme={tr.status === 'accepted' ? 'green' : 'orange'} size="lg">
                             {tr.status}
                           </Tag>
                           <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
                             <Button
+                              size="sm"
                               colorScheme="red"
                               onClick={() => {
                                 setSelectedTradeRequest(tr);
@@ -517,6 +518,7 @@ export default function TopBar() {
                               Delete Request
                             </Button>
                             <Button
+                              size="sm"
                               colorScheme="blue"
                               onClick={() => {
                                 onTradeRequestsClose();
