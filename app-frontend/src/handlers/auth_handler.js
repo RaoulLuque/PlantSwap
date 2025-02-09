@@ -17,7 +17,6 @@ export const handleLogin = async (event, onLoginClose, toast, setIsLoggingIn) =>
       },
       withCredentials: true,
     });
-    console.log(response)
 
     if (response.data.message === 'Login successful') {
       localStorage.setItem('toast', JSON.stringify({
@@ -84,5 +83,18 @@ export const checkUserLoggedIn = async () => {
       console.error('Error checking user login status:', error);
     }
     return false;
+  }
+};
+
+export const getCurrentUserId = async () => {
+  try {
+    const response = await api.get('/users/me', { withCredentials: true });
+
+    return response.data.user_id;
+  } catch (error) {
+    if (!error.response?.status === 401) {
+      console.error('Error checking user id:', error);
+    }
+    return null;
   }
 };
