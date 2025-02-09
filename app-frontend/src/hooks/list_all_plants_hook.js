@@ -54,5 +54,10 @@ export const ListAllPlantsHook = () => {
     fetchPlants();
   }, [fetchPlants]);
 
-  return { plants, owners, isLoading };
+  return {
+    plants,
+    owners,
+    isLoading,
+    refreshPlants: fetchPlants
+  };
 };

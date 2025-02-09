@@ -27,7 +27,7 @@ import {
 } from '@chakra-ui/react';
 import { ListAllPlantsHook } from "../../../hooks/list_all_plants_hook";
 import { IsLoggedInHook } from "../../../hooks/is_logged_in_hook";
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import { handleCreateTradeRequest, handleTradeRequestClick } from "../../../handlers/trade_request_handler";
 import {PlantImageHandler} from "../../../handlers/plant_handlers";
 
@@ -62,7 +62,7 @@ const PlantOwner = ({ date, name }) => {
 
 function PlantList() {
   const toast = useToast();
-  const { plants, owners, isLoading } = ListAllPlantsHook();
+  const { plants, owners, isLoading, refreshPlants } = ListAllPlantsHook();
   const isLoggedIn = IsLoggedInHook();
   const { isOpen: isTradeRequestOpen, onOpen: onTradeRequestOpen, onClose: onTradeRequestClose } = useDisclosure();
   const [selectedPlantId, setSelectedPlantId] = useState(null);
@@ -70,6 +70,15 @@ function PlantList() {
   const [message, setMessage] = useState('');
   const [incomingPlantId, setIncomingPlantId] = useState(null);
   const [isSubmittingTradeRequest, setIsSubmittingTradeRequest] = useState(false);
+
+  useEffect(() => {
+    const handlePlantChange = () => {
+      refreshPlants();
+    };
+
+    window.addEventListener('plantDeleted', handlePlantChange);
+    return () => window.removeEventListener('plantDeleted', handlePlantChange);
+  }, [refreshPlants]);
 
   const textColor = useColorModeValue("gray.700", "gray.200");
   const cardBg = useColorModeValue("white", "gray.700");

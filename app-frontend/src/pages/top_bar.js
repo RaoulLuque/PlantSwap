@@ -707,6 +707,7 @@ export default function TopBar() {
                   await handleDeletePlant(selectedPlantId, toast, () => {
                     setMyPlants(prevPlants => prevPlants.filter(p => p.id !== selectedPlantId));
                     setHasDeleted(true);
+                    window.dispatchEvent(new Event('plantDeleted'));
                   });
                   onDeleteDialogClose();
                 }}
