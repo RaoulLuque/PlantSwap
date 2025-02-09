@@ -63,7 +63,7 @@ const PlantOwner = ({ date, name }) => {
 function PlantList() {
   const toast = useToast();
   const { plants, owners, isLoading, refreshPlants } = ListAllPlantsHook();
-  const isLoggedIn = IsLoggedInHook();
+  const [isLoggedIn, currentUserId] = IsLoggedInHook();
   const { isOpen: isTradeRequestOpen, onOpen: onTradeRequestOpen, onClose: onTradeRequestClose } = useDisclosure();
   const [selectedPlantId, setSelectedPlantId] = useState(null);
   const [myPlants, setMyPlants] = useState([]);
@@ -153,7 +153,7 @@ function PlantList() {
                   </Text>
                   <PlantOwner name={owners[plant.owner_id] || "Unknown"} date={plant.creation_date} />
 
-                  {isLoggedIn && (
+                  {isLoggedIn && currentUserId != plant.owner_id && (
                     <Button
                       colorScheme="green"
                       size="md"
