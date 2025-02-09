@@ -55,8 +55,8 @@ def create_random_trade_request(
     auth_cookie_two = get_user_authentication_cookie(
         client, str(username_two), password_two
     )
-    plant_in_one = PlantCreate(name="Monstera", description="Nice", tags=[])
-    plant_in_two = PlantCreate(name="Monstera", description="Nice", tags=[])
+    plant_in_one = PlantCreate(name="Monstera", description="Nice", city="Bielefeld", tags=[])
+    plant_in_two = PlantCreate(name="Monstera", description="Nice", city="Bielefeld", tags=[])
     plant_one = plants_crud.create_plant(database, user_one, plant_in_one)
     plant_two = plants_crud.create_plant(database, user_two, plant_in_two)
     trade_request = requests_crud.create_trade_request_from_plant_ids(

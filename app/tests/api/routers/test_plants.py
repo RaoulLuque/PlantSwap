@@ -21,6 +21,7 @@ def test_create_plant_new_plant(client: TestClient, db: Session) -> None:
         data = {
             "name": random_lower_string(),
             "description": random_lower_string(),
+            "city": random_lower_string(),
         }
         response = client.post(
             "/plants/create", data=data, files=None, cookies=[auth_cookie]
@@ -36,6 +37,7 @@ def test_create_plant_new_plant_with_tags(client: TestClient, db: Session) -> No
         data = {
             "name": random_lower_string(),
             "description": random_lower_string(),
+            "city": random_lower_string(),
             "tags": ["", "test", "testing", "testinging", ""]
         }
         response = client.post(
@@ -62,7 +64,11 @@ def test_create_plant_and_check_if_deleted_when_user_is_deleted(
 
 
 def test_create_plant_not_logged_in(client: TestClient) -> None:
-    data = {"name": random_lower_string(), "description": random_lower_string()}
+    data = {
+        "name": random_lower_string(),
+        "description": random_lower_string(),
+        "city": random_lower_string(),
+    }
     response = client.post("/plants/create", json=data)
     assert 401 == response.status_code
     assert response.json() == {"detail": "Not authenticated"}
@@ -79,6 +85,7 @@ def test_create_plant_no_image(client: TestClient, db: Session) -> None:
         data = {
             "name": random_lower_string(),
             "description": random_lower_string(),
+            "city": random_lower_string(),
         }
         response = client.post(
             "/plants/create", data=data, files=[file], cookies=[auth_cookie]

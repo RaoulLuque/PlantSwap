@@ -54,7 +54,7 @@ def test_create_trade_request_check_if_request_is_deleted_when_plant_is_deleted(
             password_two,
             auth_cookie_two,
         ):
-            data = {"name": random_lower_string(), "description": random_lower_string()}
+            data = {"name": random_lower_string(), "description": random_lower_string(), "city": random_lower_string()}
             response = client.post(
                 "/plants/create", data=data, cookies=[auth_cookie_two]
             )

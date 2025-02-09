@@ -26,7 +26,7 @@ def create_random_plant(
     user_create = UserCreate(email=username, password=password)
     user = users_crud.create_user(database, user_create)
     auth_cookie = get_user_authentication_cookie(client, str(username), password)
-    plant_in = PlantCreate(name="Monstera", description="Nice", tags=[])
+    plant_in = PlantCreate(name="Monstera", description="Nice", city="Bielefeld", tags=[])
     plant = plants_crud.create_plant(database, user, plant_in)
     try:
         yield user, password, auth_cookie, plant
@@ -45,7 +45,7 @@ def create_random_plant_for_given_user(
     :param user: User to create plant ad for.
     :return: Plant that was just created.
     """
-    plant_in = PlantCreate(name="Monstera", description="Nice", tags=[])
+    plant_in = PlantCreate(name="Monstera", description="Nice", city="Bielefeld", tags=[])
     plant = plants_crud.create_plant(database, user, plant_in)
     try:
         yield plant
@@ -66,5 +66,6 @@ def assert_if_plant_and_json_response_plant_match(
     assert json_plant
     assert plant.name == json_plant["name"]
     assert plant.description == json_plant["description"]
+    assert plant.city == json_plant["city"]
     assert str(plant.id) == json_plant["id"]
     assert str(plant.owner_id) == json_plant["owner_id"]

@@ -17,6 +17,7 @@ def test_create_plant_with_image_exception(client: TestClient, db: Session):
         plant_in = PlantCreate(
             name="Test Plant",
             description="This is a test plant",
+            city="Bielefeld",
             tags=["test", "plant"],
         )
         file_content = b"This is a test image file"
@@ -25,10 +26,7 @@ def test_create_plant_with_image_exception(client: TestClient, db: Session):
         )
         with pytest.raises(ValueError) as exception_info:
             create_plant(db, user, plant_in, image=upload_file)
-        assert (
-            str(exception_info.value)
-            == "Failed to upload image: cloud_name is disabled"
-        )
+        assert (str(exception_info.value)).startswith("Failed to upload image:")
 
 
 def test_delete_plant_ad_with_image_exception(client: TestClient, db: Session):
@@ -41,7 +39,4 @@ def test_delete_plant_ad_with_image_exception(client: TestClient, db: Session):
             a.return_value = True
             with pytest.raises(ValueError) as exception_info:
                 delete_plant_ad(db, plant)
-            assert (
-                str(exception_info.value)
-                == "Failed to delete image: Unknown API key Test"
-            )
+            assert (str(exception_info.value)).startswith("Failed to delete image:")

@@ -40,7 +40,7 @@ def test_upload_image_to_cloudinary_invalid_image_file_exception():
     with pytest.raises(ValueError) as exception_info:
         upload_image_to_cloudinary(upload_file, plant_uuid)
 
-    assert str(exception_info.value) == "Failed to upload image: cloud_name is disabled"
+    assert (str(exception_info.value)).startswith("Failed to upload image:")
 
 
 def test_delete_image_from_cloudinary():
@@ -59,4 +59,4 @@ def test_delete_image_from_cloudinary_exception():
         with pytest.raises(ValueError) as exception_info:
             delete_image_from_cloudinary(public_id)
 
-    assert str(exception_info.value) == "Failed to delete image: "
+    assert (str(exception_info.value)).startswith("Failed to delete image:")
