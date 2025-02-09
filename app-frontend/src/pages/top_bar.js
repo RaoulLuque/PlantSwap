@@ -500,7 +500,7 @@ export default function TopBar() {
                           <Tag colorScheme={tr.status === 'accepted' ? 'green' : 'orange'}>
                             {tr.status}
                           </Tag>
-                          <HStack spacing={4}>
+                          <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
                             <Button
                               size="sm"
                               colorScheme="red"
@@ -531,7 +531,7 @@ export default function TopBar() {
                             >
                               Open Details
                             </Button>
-                          </HStack>
+                          </Stack>
                         </HStack>
                       </Flex>
                     </Box>
