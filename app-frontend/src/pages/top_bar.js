@@ -94,10 +94,15 @@ export default function TopBar() {
     onClose: onTradeRequestsClose,
   } = useDisclosure();
   const {
-  isOpen: isTradeDetailsOpen,
-  onOpen: onTradeDetailsOpen,
-  onClose: onTradeDetailsClose,
-} = useDisclosure();
+    isOpen: isTradeDetailsOpen,
+    onOpen: onTradeDetailsOpen,
+    onClose: onTradeDetailsClose,
+  } = useDisclosure();
+  const {
+    isOpen: isTradeRequestDeleteDialogOpen,
+    onOpen: onTradeRequestDeleteDialogOpen,
+    onClose: onTradeRequestDeleteDialogClose,
+  } = useDisclosure();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -504,18 +509,8 @@ export default function TopBar() {
                             <Button
                               colorScheme="red"
                               onClick={() => {
-                                handleDeleteTradeRequest(
-                                  tr.outgoing_plant_id,
-                                  tr.incoming_plant_id,
-                                  toast,
-                                  () => {
-                                    // Immediately filter out the deleted request
-                                    setTradeRequests(prev => prev.filter(request =>
-                                      request.outgoing_plant_id !== tr.outgoing_plant_id ||
-                                      request.incoming_plant_id !== tr.incoming_plant_id
-                                    ));
-                                  }
-                                );
+                                setSelectedTradeRequest(tr);
+                                onTradeRequestDeleteDialogOpen();
                               }}
                             >
                               Delete Request
@@ -688,6 +683,7 @@ export default function TopBar() {
         </Modal>
       )}
 
+      {/* Plant Ad Delete Confirmation Dialog */}
       <AlertDialog
         isOpen={isDeleteDialogOpen}
         leastDestructiveRef={cancelRef}
@@ -713,6 +709,49 @@ export default function TopBar() {
                     setHasDeleted(true);
                   });
                   onDeleteDialogClose();
+                }}
+                ml={3}
+              >
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+
+      {/* Trade Request Delete Confirmation Dialog */}
+      <AlertDialog
+        isOpen={isTradeRequestDeleteDialogOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onTradeRequestDeleteDialogClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Trade Request
+            </AlertDialogHeader>
+            <AlertDialogBody>
+              Are you sure you want to delete this trade request? This action cannot be undone.
+            </AlertDialogBody>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onTradeRequestDeleteDialogClose}>
+                Cancel
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={() => {
+                  handleDeleteTradeRequest(
+                    selectedTradeRequest?.outgoing_plant_id,
+                    selectedTradeRequest?.incoming_plant_id,
+                    toast,
+                    () => {
+                      setTradeRequests(prev => prev.filter(request =>
+                        request.outgoing_plant_id !== selectedTradeRequest.outgoing_plant_id ||
+                        request.incoming_plant_id !== selectedTradeRequest.incoming_plant_id
+                      ));
+                      onTradeRequestDeleteDialogClose();
+                    }
+                  );
                 }}
                 ml={3}
               >
