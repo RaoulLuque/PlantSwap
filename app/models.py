@@ -182,6 +182,8 @@ class TradeRequestPublic(SQLModel):
     incoming_user_id: uuid.UUID
     outgoing_plant_id: uuid.UUID
     incoming_plant_id: uuid.UUID
+    outgoing_plant: Plant
+    incoming_plant: Plant
     accepted: bool
     messages: list["Message"]
 
