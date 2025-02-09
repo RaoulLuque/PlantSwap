@@ -84,9 +84,9 @@ without poe.
     - 🔍 [Pydantic](https://docs.pydantic.dev), used by FastAPI, for the data validation and settings management.
     - 💾 [PostgreSQL](https://www.postgresql.org) as the SQL database.
     - 🦄 [Uvicorn](https://github.com/encode/uvicorn) used by FastAPI as ASGI webserver.
-- 🚀 React for the frontend. 
-  - 🎨 Chakra UI for the frontend components.
-  - 🔑 HTML-only cookies for secure authentication.
+- 🚀 [React](https://github.com/facebook/react) for the frontend. 
+  - 🎨 [Chakra UI](https://github.com/chakra-ui/chakra-ui) for the frontend components.
+  - 🔑 [HTML-only cookies](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) for secure authentication.
 - 🔒 Secure password hashing by default.
 - 🔑 JWT (JSON Web Token) authentication.
 - 🧪 Tests with [Pytest](https://pytest.org).
@@ -119,9 +119,9 @@ Basic functionality includes things such as:
 Advanced functionality includes things such as:
 - [x] Users can send other users trade requests for their plants
 - [x] Users can accept trade requests
-- [ ] Users can deny trade requests
-- [ ] Users can answer trade requests with a text message
-- [ ] Basic frontend
+- [x] Users can deny trade requests
+- [x] Users can answer trade requests with a text message
+- [x] Basic frontend
 
 # Milestones
 
