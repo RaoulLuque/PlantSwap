@@ -60,12 +60,22 @@ def create_trade_request(
             detail="You cannot trade with yourself.",
         )
     # noinspection Pydantic
-    possible_existing_entry = session.exec(
+    possible_existing_trade = session.exec(
         select(TradeRequest)
         .where(TradeRequest.incoming_plant_id == incoming_plant_id)
         .where(TradeRequest.outgoing_plant_id == outgoing_plant_id)
     ).first()
-    if possible_existing_entry is not None:
+    if possible_existing_trade is not None:
+        raise HTTPException(
+            status_code=409,
+            detail="You already have a trade request for these two plants.",
+        )
+    possible_inverse_existing_trade = session.exec(
+        select(TradeRequest)
+        .where(TradeRequest.outgoing_plant_id == incoming_plant_id)
+        .where(TradeRequest.incoming_plant_id == outgoing_plant_id)
+    ).first()
+    if possible_inverse_existing_trade is not None:
         raise HTTPException(
             status_code=409,
             detail="You already have a trade request for these two plants.",
