@@ -465,7 +465,7 @@ export default function TopBar() {
                               <PlantImageHandler
                                 plantId={tr.outgoing_plant_id}
                                 imageUrl={tr.outgoing_plant?.image_url}
-                                boxSize="80px"
+                                boxSize="100px"
                                 mr={3}
                               />
                               <Box>
@@ -485,7 +485,7 @@ export default function TopBar() {
                               <PlantImageHandler
                                 plantId={tr.incoming_plant_id}
                                 imageUrl={tr.incoming_plant?.image_url}
-                                boxSize="80px"
+                                boxSize="100px"
                                 mr={3}
                               />
                               <Box>
