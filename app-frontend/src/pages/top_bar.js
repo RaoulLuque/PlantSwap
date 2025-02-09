@@ -295,7 +295,9 @@ export default function TopBar() {
                 >
                   <input
                     type="file"
-                    onChange={(e) => handleImageChange(e.target.files[0], toast, setImage, setImagePreview)}
+                    onChange={(e) =>
+                      handleImageChange(e.target.files[0], toast, setImage, setImagePreview)
+                    }
                     accept="image/*"
                     style={{ display: 'none' }}
                     id="file-input"
@@ -309,11 +311,7 @@ export default function TopBar() {
                     or drag and drop an image here
                   </Text>
                   {imagePreview && (
-                    <Flex
-                      mt={4}
-                      justifyContent="center"
-                      alignItems="center"
-                    >
+                    <Flex mt={4} justifyContent="center" alignItems="center">
                       <Image
                         src={imagePreview}
                         alt="Plant Preview"
@@ -332,7 +330,20 @@ export default function TopBar() {
               colorScheme="customGreen"
               mr={3}
               onClick={() => {
-                handleCreatePlant(name, description, tags, image, toast, onPlantModalClose, setIsCreatingPlant).then();
+                // Convert the comma-separated string into an array of trimmed strings
+                const tagsArray = tags
+                  .split(',')
+                  .map((tag) => tag.trim())
+                  .filter((tag) => tag !== '');
+                handleCreatePlant(
+                  name,
+                  description,
+                  tagsArray, // Pass the array of strings instead of a single string
+                  image,
+                  toast,
+                  onPlantModalClose,
+                  setIsCreatingPlant
+                ).then();
               }}
               isLoading={isCreatingPlant}
               disabled={isCreatingPlant}

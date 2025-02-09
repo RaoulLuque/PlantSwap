@@ -33,9 +33,7 @@ def create_plant_ad(
     """
     # Remove empty string tags
     print("Input tags:", tags)
-    if len(tags) > 0:
-        tags = tags[0].split(",")
-        tags = [tag for tag in tags if tag != ""]
+    tags = [tag for tag in tags if tag != ""]
     print("In python tags:", list(set(tags)))
     plant_in = PlantCreate(name=name, description=description, tags=list(set(tags)))
     if isinstance(image, str) or image is None:

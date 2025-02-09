@@ -31,6 +31,23 @@ def test_create_plant_new_plant(client: TestClient, db: Session) -> None:
         assert response_json["description"] == data["description"]
 
 
+def test_create_plant_new_plant_with_tags(client: TestClient, db: Session) -> None:
+    with create_random_user(client, db) as (user, password, auth_cookie):
+        data = {
+            "name": random_lower_string(),
+            "description": random_lower_string(),
+            "tags": ["", "test", "testing", "testinging", ""]
+        }
+        response = client.post(
+            "/plants/create", data=data, files=None, cookies=[auth_cookie]
+        )
+        assert 200 == response.status_code
+        response_json = response.json()
+        assert response_json["name"] == data["name"]
+        assert response_json["description"] == data["description"]
+        assert response_json["tags"].sort() == ["test", "testing", "testinging"].sort()
+
+
 def test_create_plant_and_check_if_deleted_when_user_is_deleted(
     client: TestClient, db: Session, superuser_auth_cookie: tuple[str, str]
 ) -> None:

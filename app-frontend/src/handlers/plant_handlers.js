@@ -15,31 +15,33 @@ export const handleCreatePlant = async (
   formData.append('name', name);
   formData.append('description', description);
 
-  // Process tags to remove whitespace and empty values
+  // Process tags assuming tags is an array of strings.
+  // Trim each tag and filter out empty strings.
   const processedTags = tags
-    .split(',')
     .map(tag => tag.trim())
-    .filter(tag => tag !== '')
-    .join(',');
-  formData.append('tags', processedTags);
+    .filter(tag => tag !== '');
 
+  // Append each tag individually.
+  processedTags.forEach(tag => formData.append('tags', tag));
+
+  // Append the image if available.
   if (image) {
     formData.append('image', image);
   } else {
     formData.append('image', "");
   }
 
-
   try {
     const response = await api.post('/plants/create', formData, {
-      withCredentials: true
+      withCredentials: true,
     });
-    console.log(response)
+    console.log(response);
 
-    if (!response.status === 200) {
+    if (response.status !== 200) {
       toast({
         title: 'Plant creation unsuccessful',
-        description: 'We have no idea what happened. Please try logging in again or reloading the webpage',
+        description:
+          'We have no idea what happened. Please try logging in again or reloading the webpage',
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -48,13 +50,16 @@ export const handleCreatePlant = async (
     }
 
     const data = response.data;
-    localStorage.setItem('toast', JSON.stringify({
+    localStorage.setItem(
+      'toast',
+      JSON.stringify({
         title: 'Plant created',
         description: `Plant "${data.name}" has been successfully created`,
         status: 'success',
         duration: 5000,
         isClosable: true,
-      }));
+      })
+    );
     onPlantModalClose();
     window.location.reload();
   } catch (error) {
@@ -71,7 +76,8 @@ export const handleCreatePlant = async (
     if (error.status === 500) {
       toast({
         title: 'Image upload not configured',
-        description: 'The image upload has not been configured for this web app. Please remove the image from the ad',
+        description:
+          'The image upload has not been configured for this web app. Please remove the image from the ad',
         status: 'error',
         duration: 5000,
         isClosable: true,
