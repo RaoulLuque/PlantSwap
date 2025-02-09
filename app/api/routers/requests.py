@@ -296,6 +296,52 @@ def reject_trade_request(
 
 
 @router.post(
+    "/requests/message/{outgoing_plant_id}/{incoming_plant_id}",
+    response_model=TradeRequestPublic,
+)
+def add_message_to_trade_request(
+    current_user: CurrentUserDep,
+    session: SessionDep,
+    outgoing_plant_id: uuid.UUID,
+    incoming_plant_id: uuid.UUID,
+    message: str | None = Form(None),
+):
+    """
+    Write a message to the other user involved in the trade.
+    :param current_user: Currently logged-in user.
+    :param session: Current database session
+    :param outgoing_plant_id: id of the plant that is being offered
+    :param incoming_plant_id: id of the plant that is wanted in return
+    :param message: Message to the other user involved in the trade
+    :return: Desired changed trade request if exists as a TradeRequest instance
+    """
+    user_involved_in_trade: bool = False
+    for plant in current_user.plants:
+        if plant.id == incoming_plant_id or plant.id == outgoing_plant_id:
+            user_involved_in_trade = True
+            break
+    if not user_involved_in_trade:
+        raise HTTPException(
+            status_code=404,
+            detail="No trade request with the given plant ids exists.",
+        )
+    trade_request = session.get(TradeRequest, (outgoing_plant_id, incoming_plant_id))
+    if trade_request is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No trade request with the given plant ids exists.",
+        )
+    message_with_metadata = Message(
+        sender_id=current_user.id,
+        content=message,
+        incoming_plant_id=incoming_plant_id,
+        outgoing_plant_id=outgoing_plant_id,
+    )
+    trade_request = requests_crud.add_message_to_trade_request(session, trade_request, message_with_metadata)
+    return trade_request
+
+
+@router.post(
     "/requests/delete/{outgoing_plant_id}/{incoming_plant_id}",
     response_model=TradeRequestPublic,
 )

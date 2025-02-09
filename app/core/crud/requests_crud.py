@@ -158,3 +158,20 @@ def delete_trade_request(session: Session, trade_request: TradeRequest) -> Trade
     session.delete(trade_request)
     session.commit()
     return trade_request
+
+
+def add_message_to_trade_request(
+    session: Session, trade_request: TradeRequest, message: Message
+) -> TradeRequest:
+    """
+    Add a new message to the trade request.
+    :param trade_request: Trade request to which the message should be added
+    :param message: Message to be added to the trade request
+    :param session: Current database session
+    :return: Updated trade request as TradeRequest instance
+    """
+    trade_request.messages.append(message)
+    session.add(trade_request)
+    session.commit()
+    session.refresh(trade_request)
+    return trade_request
