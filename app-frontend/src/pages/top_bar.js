@@ -615,7 +615,9 @@ export default function TopBar() {
                         >
                           <Text fontSize="sm">{message.content}</Text>
                           <Text fontSize="xs" color="gray.500" mt={1}>
-                            {new Date(message.timestamp).toLocaleString()}
+                            {new Date(message.timestamp).toLocaleString('en-GB', {
+                              hour12: false,
+                            })}
                           </Text>
                         </Box>
                       ))
