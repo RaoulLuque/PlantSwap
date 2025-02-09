@@ -76,13 +76,12 @@ export const handleLogout = async (toast) => {
 export const checkUserLoggedIn = async () => {
   try {
     const response = await api.get('/users/me', { withCredentials: true });
-
-    return response.status === 200;
+    return [response.status === 200, response.data.id];
   } catch (error) {
     if (!error.response?.status === 401) {
       console.error('Error checking user login status:', error);
     }
-    return false;
+    return [false, false];
   }
 };
 

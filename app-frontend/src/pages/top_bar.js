@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Flex,
@@ -32,17 +32,19 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogContent,
-  AlertDialogOverlay, Tag,
+  AlertDialogOverlay,
+  Tag,
 } from '@chakra-ui/react';
-import {AddIcon} from '@chakra-ui/icons';
-import {getCurrentUserId, handleLogin, handleLogout} from "../handlers/auth_handler";
+import { AddIcon } from '@chakra-ui/icons';
+import { handleLogin, handleLogout } from "../handlers/auth_handler";
 import {
   handleCreatePlant,
   handleDeletePlant,
   handleListMyPlants,
-  handleMyPlantsClose, PlantImageHandler
+  handleMyPlantsClose,
+  PlantImageHandler
 } from "../handlers/plant_handlers";
-import {handleRegistration} from "../handlers/user_handler";
+import { handleRegistration } from "../handlers/user_handler";
 import {
   handleDragEnter,
   handleDragLeave,
@@ -50,8 +52,8 @@ import {
   handleDrop,
   handleImageChange
 } from "../handlers/image_upload_handlers";
-import {IsLoggedInHook} from "../hooks/is_logged_in_hook";
-import {showStoredToastAfterWindowReload} from "../utils";
+import { IsLoggedInHook } from "../hooks/is_logged_in_hook";
+import { showStoredToastAfterWindowReload } from "../utils";
 import {
   handleAcceptTradeRequest,
   handleDeleteTradeRequest,
@@ -82,14 +84,14 @@ export default function TopBar() {
     onClose: onMyPlantsClose,
   } = useDisclosure();
   const {
-  isOpen: isDeleteDialogOpen,
-  onOpen: onDeleteDialogOpen,
-  onClose: onDeleteDialogClose,
+    isOpen: isDeleteDialogOpen,
+    onOpen: onDeleteDialogOpen,
+    onClose: onDeleteDialogClose,
   } = useDisclosure();
   const {
-  isOpen: isTradeRequestsOpen,
-  onOpen: onTradeRequestsOpen,
-  onClose: onTradeRequestsClose,
+    isOpen: isTradeRequestsOpen,
+    onOpen: onTradeRequestsOpen,
+    onClose: onTradeRequestsClose,
   } = useDisclosure();
 
   const [name, setName] = useState('');
@@ -99,14 +101,13 @@ export default function TopBar() {
   const [isDragging, setIsDragging] = useState(false);
   const [isCreatingPlant, setIsCreatingPlant] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const isLoggedIn = IsLoggedInHook();
+  const [isLoggedIn, currentUserId] = IsLoggedInHook();
   const [myPlants, setMyPlants] = useState([]);
   const [tags, setTags] = useState('');
   const [selectedPlantId, setSelectedPlantId] = useState(null);
   const cancelRef = React.useRef();
   const [hasDeleted, setHasDeleted] = useState(false);
   const [tradeRequests, setTradeRequests] = useState([]);
-  const [currentUserId, setCurrentUserId] = useState(null);
 
   // Show toasts after reloading page
   showStoredToastAfterWindowReload(toast);
@@ -158,7 +159,8 @@ export default function TopBar() {
                 rounded={'full'}
                 variant={'link'}
                 cursor={'pointer'}
-                minW={0}>
+                minW={0}
+              >
                 <Avatar
                   size={'sm'}
                   src="/images/default_avatar.png"
@@ -175,8 +177,6 @@ export default function TopBar() {
                       My Plants
                     </MenuItem>
                     <MenuItem onClick={async () => {
-                      const userId = await getCurrentUserId();
-                      setCurrentUserId(userId);
                       handleListTradeRequests(onTradeRequestsOpen, toast, setTradeRequests);
                     }}>
                       My Trade Requests
@@ -347,7 +347,7 @@ export default function TopBar() {
       </Modal>
 
       {/* My Plants Modal */}
-      <Modal isOpen={isMyPlantsOpen} onClose={() => {handleMyPlantsClose(onMyPlantsClose, hasDeleted, setHasDeleted)}} size="lg">
+      <Modal isOpen={isMyPlantsOpen} onClose={() => { handleMyPlantsClose(onMyPlantsClose, hasDeleted, setHasDeleted) }} size="lg">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>My Plants</ModalHeader>
@@ -429,104 +429,112 @@ export default function TopBar() {
               <Text>No trade requests found.</Text>
             ) : (
               <Stack spacing={4}>
-                {tradeRequests.map((tr, index) => (
-                  <Box key={index} borderWidth="1px" borderRadius="md" p={4}>
-                    <Flex direction="column" gap={3}>
-                      <Flex
-                        direction={{ base: 'column', md: 'row' }}
-                        gap={6}
-                      >
-                        {/* Outgoing Plant (User's Offer) */}
-                        <Box flex={1}>
-                          <Text fontWeight="bold" mb={2} fontSize="lg">
-                            Your Offer:
-                          </Text>
-                          <Flex align="center">
-                            <PlantImageHandler
-                              plantId={tr.outgoing_plant_id}
-                              imageUrl={tr.outgoing_plant?.image_url}
-                              boxSize="80px"
-                              mr={3}
-                            />
-                            <Box>
-                              <Text fontSize="md">
-                                {tr.outgoing_plant?.name || 'Plant not available'}
-                              </Text>
-                            </Box>
-                          </Flex>
-                        </Box>
+                {tradeRequests.map((tr, index) => {
+                  // Determine if the current user is the receiver.
+                  const isReceiver = currentUserId === tr.incoming_user_id;
+                  console.log(isReceiver)
+                  console.log(isLoggedIn)
+                  console.log(currentUserId)
+                  console.log(tr.incoming_user_id)
+                  return (
+                    <Box key={index} borderWidth="1px" borderRadius="md" p={4}>
+                      <Flex direction="column" gap={3}>
+                        <Flex
+                          direction={{ base: 'column', md: 'row' }}
+                          gap={6}
+                        >
+                          {/* Left Box: The plant offered by the trade request creator */}
+                          <Box flex={1}>
+                            <Text fontWeight="bold" mb={2} fontSize="lg">
+                              {isReceiver ? "You were offered:" : "Your Offer:"}
+                            </Text>
+                            <Flex align="center">
+                              <PlantImageHandler
+                                plantId={tr.outgoing_plant_id}
+                                imageUrl={tr.outgoing_plant?.image_url}
+                                boxSize="80px"
+                                mr={3}
+                              />
+                              <Box>
+                                <Text fontSize="md">
+                                  {tr.outgoing_plant?.name || 'Plant not available'}
+                                </Text>
+                              </Box>
+                            </Flex>
+                          </Box>
 
-                        {/* Incoming Plant (Requested Plant) */}
-                        <Box flex={1}>
-                          <Text fontWeight="bold" mb={2} fontSize="lg">
-                            Requested Plant:
-                          </Text>
-                          <Flex align="center">
-                            <PlantImageHandler
-                              plantId={tr.incoming_plant_id}
-                              imageUrl={tr.incoming_plant?.image_url}
-                              boxSize="80px"
-                              mr={3}
-                            />
-                            <Box>
-                              <Text fontSize="md">
-                                {tr.incoming_plant?.name || 'Plant not available'}
-                              </Text>
-                            </Box>
-                          </Flex>
-                        </Box>
-                      </Flex>
-                      <HStack justify="space-between" mt={2}>
-                        <Tag colorScheme={tr.status === 'accepted' ? 'green' : 'orange'}>
-                          {tr.status}
-                        </Tag>
-                        <HStack>
-                          {currentUserId === tr.outgoing_user_id && (
-                            <Button
-                              size="sm"
-                              colorScheme="red"
-                              onClick={() =>
-                                handleDeleteTradeRequest(
-                                  tr.outgoing_plant_id,
-                                  tr.incoming_plant_id,
-                                  toast,
-                                  () =>
-                                    setTradeRequests((prev) =>
-                                      prev.filter((t) => t !== tr)
-                                    )
-                                )
-                              }
-                            >
-                              Delete
-                            </Button>
-                          )}
-                          {currentUserId === tr.incoming_user_id &&
-                            tr.status === 'pending' && (
+                          {/* Right Box: The plant from the current user */}
+                          <Box flex={1}>
+                            <Text fontWeight="bold" mb={2} fontSize="lg">
+                              {isReceiver ? "Your Plant:" : "Requested Plant:"}
+                            </Text>
+                            <Flex align="center">
+                              <PlantImageHandler
+                                plantId={tr.incoming_plant_id}
+                                imageUrl={tr.incoming_plant?.image_url}
+                                boxSize="80px"
+                                mr={3}
+                              />
+                              <Box>
+                                <Text fontSize="md">
+                                  {tr.incoming_plant?.name || 'Plant not available'}
+                                </Text>
+                              </Box>
+                            </Flex>
+                          </Box>
+                        </Flex>
+                        <HStack justify="space-between" mt={2}>
+                          <Tag colorScheme={tr.status === 'accepted' ? 'green' : 'orange'}>
+                            {tr.status}
+                          </Tag>
+                          <HStack>
+                            {currentUserId === tr.outgoing_user_id && (
                               <Button
                                 size="sm"
-                                colorScheme="green"
+                                colorScheme="red"
                                 onClick={() =>
-                                  handleAcceptTradeRequest(
+                                  handleDeleteTradeRequest(
                                     tr.outgoing_plant_id,
                                     tr.incoming_plant_id,
                                     toast,
                                     () =>
                                       setTradeRequests((prev) =>
-                                        prev.map((t) =>
-                                          t === tr ? { ...t, status: 'accepted' } : t
-                                        )
+                                        prev.filter((t) => t !== tr)
                                       )
                                   )
                                 }
                               >
-                                Accept
+                                Delete
                               </Button>
                             )}
+                            {currentUserId === tr.incoming_user_id &&
+                              tr.status === 'pending' && (
+                                <Button
+                                  size="sm"
+                                  colorScheme="green"
+                                  onClick={() =>
+                                    handleAcceptTradeRequest(
+                                      tr.outgoing_plant_id,
+                                      tr.incoming_plant_id,
+                                      toast,
+                                      () =>
+                                        setTradeRequests((prev) =>
+                                          prev.map((t) =>
+                                            t === tr ? { ...t, status: 'accepted' } : t
+                                          )
+                                        )
+                                    )
+                                  }
+                                >
+                                  Accept
+                                </Button>
+                              )}
+                          </HStack>
                         </HStack>
-                      </HStack>
-                    </Flex>
-                  </Box>
-                ))}
+                      </Flex>
+                    </Box>
+                  );
+                })}
               </Stack>
             )}
           </ModalBody>
@@ -535,6 +543,7 @@ export default function TopBar() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
       <AlertDialog
         isOpen={isDeleteDialogOpen}
         leastDestructiveRef={cancelRef}
