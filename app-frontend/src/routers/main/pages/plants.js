@@ -62,6 +62,17 @@ const PlantOwner = ({ date, name }) => {
   );
 };
 
+const PlantLocation = ({ city }) => {
+  if (!city) return null;
+
+  return (
+    <HStack mt={2} spacing={1}>
+      <Text fontSize="sm" color="gray.500">📍</Text>
+      <Text fontSize="sm" color="gray.500">{city}</Text>
+    </HStack>
+  );
+};
+
 function PlantList() {
   const toast = useToast();
   const { plants, owners, isLoading, refreshPlants } = ListAllPlantsHook();
@@ -153,6 +164,7 @@ function PlantList() {
                   >
                     {plant.description}
                   </Text>
+                  <PlantLocation city={plant.city} />
                   <PlantOwner name={owners[plant.owner_id] || "Unknown"} date={plant.creation_date} />
 
                   {isLoggedIn && currentUserId !== plant.owner_id && (

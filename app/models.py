@@ -60,6 +60,7 @@ class PlantBase(SQLModel):
     name: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=255)
     tags: list[str] = Field(sa_column=Column(ARRAY(String()), nullable=True))
+    city: str = Field(min_length=1, max_length=255)
 
 
 # Properties to receive on plant creation
@@ -71,6 +72,8 @@ class PlantCreate(PlantBase):
 class Plant(PlantBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     name: str = Field(max_length=255)
+    description: str = Field(max_length=255)
+    city: str = Field(max_length=255)
     creation_date: datetime = Field(default=datetime.now())
     # Foreign key to owner of plant. Indexed to be able to search all plants of a specific user more efficiently
     owner_id: uuid.UUID = Field(
@@ -106,6 +109,7 @@ class PlantPublic(PlantBase):
     owner_id: uuid.UUID
     creation_date: datetime
     image_url: str | None
+    city: str
     tags: list[str]
 
 

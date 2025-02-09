@@ -18,6 +18,7 @@ def create_plant_ad(
     current_user: CurrentUserDep,
     name: str = Form(...),
     description: str | None = Form(None),
+    city: str = Form(...),
     tags: list[str] = Form([]),
     image: UploadFile | str | None = None,
 ):
@@ -27,13 +28,14 @@ def create_plant_ad(
     :param session: Current database session.
     :param name: Name of the plant.
     :param description: Description of the plant.
+    :param city: City of the plant.
     :param tags: Tags of the plant.
     :param image: Optional image of the plant.
     :return: Name, description, owner_id and id of the created plant.
     """
     # Remove empty string tags
     tags = [tag for tag in tags if tag != ""]
-    plant_in = PlantCreate(name=name, description=description, tags=tags)
+    plant_in = PlantCreate(name=name, description=description, city=city, tags=tags)
     if isinstance(image, str) or image is None:
         image = None
     else:
