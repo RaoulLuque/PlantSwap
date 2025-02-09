@@ -129,6 +129,29 @@ export const handleAcceptTradeRequest = async (outgoingId, incomingId, toast, on
   }
 };
 
+export const handleDeclineTradeRequest = async (outgoingId, incomingId, toast, onSuccess) => {
+  try {
+    await api.post(
+      `/requests/reject/${outgoingId}/${incomingId}`,
+      {},
+      { withCredentials: true }
+    );
+
+    toast({
+      title: 'Request Accepted',
+      description: 'Trade request has been successfully declined',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+
+    onSuccess();
+
+  } catch (error) {
+    handleTradeError(error, toast);
+  }
+};
+
 export const handleTradeRequestClick = (plantId, setIncomingPlantId, toast, setMyPlants, onTradeRequestOpen) => {
   setIncomingPlantId(plantId);
   fetchMyPlants(toast, setMyPlants).then();

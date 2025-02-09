@@ -55,7 +55,7 @@ import {
 import { IsLoggedInHook } from "../hooks/is_logged_in_hook";
 import { showStoredToastAfterWindowReload } from "../utils";
 import {
-  handleAcceptTradeRequest,
+  handleAcceptTradeRequest, handleDeclineTradeRequest,
   handleDeleteTradeRequest,
   handleListTradeRequests
 } from "../handlers/trade_request_handler";
@@ -93,6 +93,11 @@ export default function TopBar() {
     onOpen: onTradeRequestsOpen,
     onClose: onTradeRequestsClose,
   } = useDisclosure();
+  const {
+  isOpen: isTradeDetailsOpen,
+  onOpen: onTradeDetailsOpen,
+  onClose: onTradeDetailsClose,
+} = useDisclosure();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -108,6 +113,7 @@ export default function TopBar() {
   const cancelRef = React.useRef();
   const [hasDeleted, setHasDeleted] = useState(false);
   const [tradeRequests, setTradeRequests] = useState([]);
+  const [selectedTradeRequest, setSelectedTradeRequest] = useState(null);
 
   // Show toasts after reloading page
   showStoredToastAfterWindowReload(toast);
@@ -498,49 +504,17 @@ export default function TopBar() {
                           <Tag colorScheme={tr.status === 'accepted' ? 'green' : 'orange'}>
                             {tr.status}
                           </Tag>
-                          <HStack>
-                            {currentUserId === tr.outgoing_user_id && (
-                              <Button
-                                size="sm"
-                                colorScheme="red"
-                                onClick={() =>
-                                  handleDeleteTradeRequest(
-                                    tr.outgoing_plant_id,
-                                    tr.incoming_plant_id,
-                                    toast,
-                                    () =>
-                                      setTradeRequests((prev) =>
-                                        prev.filter((t) => t !== tr)
-                                      )
-                                  )
-                                }
-                              >
-                                Delete
-                              </Button>
-                            )}
-                            {currentUserId === tr.incoming_user_id &&
-                              tr.status === 'pending' && (
-                                <Button
-                                  size="sm"
-                                  colorScheme="green"
-                                  onClick={() =>
-                                    handleAcceptTradeRequest(
-                                      tr.outgoing_plant_id,
-                                      tr.incoming_plant_id,
-                                      toast,
-                                      () =>
-                                        setTradeRequests((prev) =>
-                                          prev.map((t) =>
-                                            t === tr ? { ...t, status: 'accepted' } : t
-                                          )
-                                        )
-                                    )
-                                  }
-                                >
-                                  Accept
-                                </Button>
-                              )}
-                          </HStack>
+                          <Button
+                            size="sm"
+                            colorScheme="blue"
+                            onClick={() => {
+                              onTradeRequestsClose();
+                              setSelectedTradeRequest(tr);
+                              onTradeDetailsOpen();
+                            }}
+                          >
+                            Open Details
+                          </Button>
                         </HStack>
                       </Flex>
                     </Box>
@@ -554,6 +528,169 @@ export default function TopBar() {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/* Trade Details Modal */}
+      {isTradeDetailsOpen && selectedTradeRequest && (
+        <Modal
+          isOpen={isTradeDetailsOpen}
+          onClose={() => {
+            onTradeDetailsClose();
+            onTradeRequestsOpen();
+          }}
+          size="xl"
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Trade Request Details</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Stack spacing={4}>
+                {/* Plant Information */}
+                <Flex direction={{ base: 'column', md: 'row' }} gap={6}>
+                  <Box flex={1}>
+                    <Text fontWeight="bold" mb={2}>Offered Plant:</Text>
+                    <Flex align="center">
+                      <PlantImageHandler
+                        plantId={selectedTradeRequest.outgoing_plant_id}
+                        imageUrl={selectedTradeRequest.outgoing_plant?.image_url}
+                        boxSize="100px"
+                        mr={3}
+                      />
+                      <Box>
+                        <Text fontSize="lg" fontWeight="semibold">
+                          {selectedTradeRequest.outgoing_plant?.name || 'Plant not available'}
+                        </Text>
+                        <Text fontSize="sm" color="gray.500">
+                          {selectedTradeRequest.outgoing_plant?.description}
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+
+                  <Box flex={1}>
+                    <Text fontWeight="bold" mb={2}>Requested Plant:</Text>
+                    <Flex align="center">
+                      <PlantImageHandler
+                        plantId={selectedTradeRequest.incoming_plant_id}
+                        imageUrl={selectedTradeRequest.incoming_plant?.image_url}
+                        boxSize="100px"
+                        mr={3}
+                      />
+                      <Box>
+                        <Text fontSize="lg" fontWeight="semibold">
+                          {selectedTradeRequest.incoming_plant?.name || 'Plant not available'}
+                        </Text>
+                        <Text fontSize="sm" color="gray.500">
+                          {selectedTradeRequest.incoming_plant?.description}
+                        </Text>
+                      </Box>
+                    </Flex>
+                  </Box>
+                </Flex>
+
+                {/* Messages */}
+                <Box mt={4}>
+                  <Text fontWeight="bold" mb={3}>Conversation:</Text>
+                  <Stack spacing={3}>
+                    {selectedTradeRequest.messages?.length > 0 ? (
+                      selectedTradeRequest.messages.map((message, index) => (
+                        <Box
+                          key={index}
+                          alignSelf={message.sender_id === currentUserId ? 'flex-end' : 'flex-start'}
+                          bg={message.sender_id === currentUserId ? 'blue.50' : 'gray.100'}
+                          p={3}
+                          borderRadius="md"
+                          maxWidth="80%"
+                        >
+                          <Text fontSize="sm">{message.content}</Text>
+                          <Text fontSize="xs" color="gray.500" mt={1}>
+                            {new Date(message.timestamp).toLocaleString()}
+                          </Text>
+                        </Box>
+                      ))
+                    ) : (
+                      <Text color="gray.500">No messages yet</Text>
+                    )}
+                  </Stack>
+                </Box>
+              </Stack>
+            </ModalBody>
+            <ModalFooter>
+              <HStack spacing={3}>
+                {currentUserId === selectedTradeRequest.incoming_user_id && (
+                  <>
+                    <Button
+                      colorScheme="green"
+                      onClick={() => {
+                        handleAcceptTradeRequest(
+                          selectedTradeRequest.outgoing_plant_id,
+                          selectedTradeRequest.incoming_plant_id,
+                          toast,
+                          () => {
+                            setTradeRequests(prev => prev.map(tr =>
+                              tr === selectedTradeRequest ? {...tr, status: 'accepted'} : tr
+                            ));
+                            onTradeDetailsClose();
+                          }
+                        );
+                        onTradeDetailsClose();
+                        onTradeRequestsOpen();
+                      }}
+                      isDisabled={selectedTradeRequest.status === 'accepted'}
+                    >
+                      Accept
+                    </Button>
+                    <Button
+                      colorScheme="red"
+                      variant="outline"
+                      onClick={() => {
+                        handleDeclineTradeRequest(
+                          selectedTradeRequest.outgoing_plant_id,
+                          selectedTradeRequest.incoming_plant_id,
+                          toast,
+                          () => {
+                            setTradeRequests(prev => prev.map(tr =>
+                              tr === selectedTradeRequest ? {...tr, status: 'declined'} : tr
+                            ));
+                            onTradeDetailsClose();
+                          }
+                        );
+                        onTradeDetailsClose();
+                        onTradeRequestsOpen();
+                      }}
+                    >
+                      Decline
+                    </Button>
+                  </>
+                )}
+                {currentUserId === selectedTradeRequest.outgoing_user_id && (
+                  <Button
+                    colorScheme="red"
+                    onClick={() => {
+                      handleDeleteTradeRequest(
+                        selectedTradeRequest.outgoing_plant_id,
+                        selectedTradeRequest.incoming_plant_id,
+                        toast,
+                        () => {
+                          setTradeRequests(prev => prev.filter(tr => tr !== selectedTradeRequest));
+                          onTradeDetailsClose();
+                        }
+                      );
+                      onTradeDetailsClose();
+                      onTradeRequestsOpen();
+                    }}
+                  >
+                    Delete Request
+                  </Button>
+                )}
+                <Button variant="ghost" onClick={() => {onTradeDetailsClose(); onTradeRequestsOpen();}}>
+                  Close
+                </Button>
+              </HStack>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
 
       <AlertDialog
         isOpen={isDeleteDialogOpen}
