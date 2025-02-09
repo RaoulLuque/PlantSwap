@@ -34,13 +34,15 @@ import {PlantImageHandler} from "../../../handlers/plant_handlers";
 const PlantTags = ({ marginTop = 0, tags }) => {
   const tagArray = tags.filter(tag => tag.trim() !== '').sort();
   return (
-    <HStack spacing={2} marginTop={marginTop}>
-      {tagArray.map((tag) => (
-        <Tag size="md" variant="solid" colorScheme="green" key={tag}>
-          {tag}
-        </Tag>
-      ))}
-    </HStack>
+    <Box minHeight={{ base: "0px", md: "32px" }}>
+      <HStack spacing={2} marginTop={marginTop}>
+        {tagArray.map((tag) => (
+          <Tag size="md" variant="solid" colorScheme="green" key={tag}>
+            {tag}
+          </Tag>
+        ))}
+      </HStack>
+    </Box>
   );
 };
 
@@ -153,7 +155,7 @@ function PlantList() {
                   </Text>
                   <PlantOwner name={owners[plant.owner_id] || "Unknown"} date={plant.creation_date} />
 
-                  {isLoggedIn && currentUserId != plant.owner_id && (
+                  {isLoggedIn && currentUserId !== plant.owner_id && (
                     <Button
                       colorScheme="green"
                       size="md"
