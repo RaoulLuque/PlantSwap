@@ -502,26 +502,25 @@ export default function TopBar() {
                           </Tag>
                           <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
                             <Button
-                              size="sm"
                               colorScheme="red"
                               onClick={() => {
                                 handleDeleteTradeRequest(
-                                  selectedTradeRequest.outgoing_plant_id,
-                                  selectedTradeRequest.incoming_plant_id,
+                                  tr.outgoing_plant_id,
+                                  tr.incoming_plant_id,
                                   toast,
                                   () => {
-                                    setTradeRequests(prev => prev.filter(tr => tr !== selectedTradeRequest));
-                                    onTradeDetailsClose();
+                                    // Immediately filter out the deleted request
+                                    setTradeRequests(prev => prev.filter(request =>
+                                      request.outgoing_plant_id !== tr.outgoing_plant_id ||
+                                      request.incoming_plant_id !== tr.incoming_plant_id
+                                    ));
                                   }
                                 );
-                                onTradeDetailsClose();
-                                onTradeRequestsOpen();
                               }}
                             >
                               Delete Request
                             </Button>
                             <Button
-                              size="sm"
                               colorScheme="blue"
                               onClick={() => {
                                 onTradeRequestsClose();
