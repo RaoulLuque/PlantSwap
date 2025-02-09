@@ -168,9 +168,11 @@ export const handleTradeRequestClick = (plantId, setIncomingPlantId, toast, setM
 export const handleCreateTradeRequest = async (selectedPlantId, incomingPlantId, message, onTradeRequestClose, toast, setIsSubmittingTradeRequest) => {
   setIsSubmittingTradeRequest(true);
   try {
+    const formData = new FormData();
+    formData.append('message', message);
     await api.post(
       `/requests/create/${selectedPlantId}/${incomingPlantId}`,
-      { message },
+      formData,
       { withCredentials: true }
     );
 
