@@ -438,7 +438,7 @@ export default function TopBar() {
                       >
                         {/* Outgoing Plant (User's Offer) */}
                         <Box flex={1}>
-                          <Text fontWeight="bold" mb={2}>
+                          <Text fontWeight="bold" mb={2} fontSize="lg">
                             Your Offer:
                           </Text>
                           <Flex align="center">
@@ -449,11 +449,8 @@ export default function TopBar() {
                               mr={3}
                             />
                             <Box>
-                              <Text fontWeight="semibold">
+                              <Text fontSize="md">
                                 {tr.outgoing_plant?.name || 'Plant not available'}
-                              </Text>
-                              <Text fontSize="sm">
-                                {tr.outgoingPlant?.description}
                               </Text>
                             </Box>
                           </Flex>
@@ -461,7 +458,7 @@ export default function TopBar() {
 
                         {/* Incoming Plant (Requested Plant) */}
                         <Box flex={1}>
-                          <Text fontWeight="bold" mb={2}>
+                          <Text fontWeight="bold" mb={2} fontSize="lg">
                             Requested Plant:
                           </Text>
                           <Flex align="center">
@@ -472,7 +469,7 @@ export default function TopBar() {
                               mr={3}
                             />
                             <Box>
-                              <Text fontWeight="semibold">
+                              <Text fontSize="md">
                                 {tr.incoming_plant?.name || 'Plant not available'}
                               </Text>
                             </Box>
