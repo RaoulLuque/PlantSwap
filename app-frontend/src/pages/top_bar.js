@@ -496,21 +496,42 @@ export default function TopBar() {
                             </Flex>
                           </Box>
                         </Flex>
-                        <HStack justify="space-between" mt={2}>
+                        <HStack justify="space-between" mt={2} width="100%">
                           <Tag colorScheme={tr.status === 'accepted' ? 'green' : 'orange'}>
                             {tr.status}
                           </Tag>
-                          <Button
-                            size="sm"
-                            colorScheme="blue"
-                            onClick={() => {
-                              onTradeRequestsClose();
-                              setSelectedTradeRequest(tr);
-                              onTradeDetailsOpen();
-                            }}
-                          >
-                            Open Details
-                          </Button>
+                          <HStack spacing={4}>
+                            <Button
+                              size="sm"
+                              colorScheme="red"
+                              onClick={() => {
+                                handleDeleteTradeRequest(
+                                  selectedTradeRequest.outgoing_plant_id,
+                                  selectedTradeRequest.incoming_plant_id,
+                                  toast,
+                                  () => {
+                                    setTradeRequests(prev => prev.filter(tr => tr !== selectedTradeRequest));
+                                    onTradeDetailsClose();
+                                  }
+                                );
+                                onTradeDetailsClose();
+                                onTradeRequestsOpen();
+                              }}
+                            >
+                              Delete Request
+                            </Button>
+                            <Button
+                              size="sm"
+                              colorScheme="blue"
+                              onClick={() => {
+                                onTradeRequestsClose();
+                                setSelectedTradeRequest(tr);
+                                onTradeDetailsOpen();
+                              }}
+                            >
+                              Open Details
+                            </Button>
+                          </HStack>
                         </HStack>
                       </Flex>
                     </Box>
@@ -658,26 +679,6 @@ export default function TopBar() {
                       Decline
                     </Button>
                   </>
-                )}
-                {currentUserId === selectedTradeRequest.outgoing_user_id && (
-                  <Button
-                    colorScheme="red"
-                    onClick={() => {
-                      handleDeleteTradeRequest(
-                        selectedTradeRequest.outgoing_plant_id,
-                        selectedTradeRequest.incoming_plant_id,
-                        toast,
-                        () => {
-                          setTradeRequests(prev => prev.filter(tr => tr !== selectedTradeRequest));
-                          onTradeDetailsClose();
-                        }
-                      );
-                      onTradeDetailsClose();
-                      onTradeRequestsOpen();
-                    }}
-                  >
-                    Delete Request
-                  </Button>
                 )}
                 <Button variant="ghost" onClick={() => {onTradeDetailsClose(); onTradeRequestsOpen();}}>
                   Close
