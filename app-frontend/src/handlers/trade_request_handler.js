@@ -68,11 +68,18 @@ export const handleListTradeRequests = async (onOpen, toast, setTradeRequests) =
       }
     });
 
+    // Map integer status to its string representation
+    const statusMapping = {
+      0: 'pending',
+      1: 'accepted',
+      2: 'declined'
+    };
+
     const enrichedRequests = response.data.data.map(tr => ({
       ...tr,
       outgoing_plant: plantMap.get(tr.outgoing_plant_id),
       incoming_plant: plantMap.get(tr.incoming_plant_id),
-      status: tr.accepted ? 'accepted' : 'pending'
+      status: statusMapping[tr.status] || 'unknown'
     }));
 
     setTradeRequests(enrichedRequests);

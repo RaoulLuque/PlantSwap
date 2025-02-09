@@ -344,7 +344,7 @@ export default function TopBar() {
                 handleCreatePlant(
                   name,
                   description,
-                  tagsArray, // Pass the array of strings instead of a single string
+                  tagsArray,
                   image,
                   toast,
                   onPlantModalClose,
@@ -449,10 +449,6 @@ export default function TopBar() {
                 {tradeRequests.map((tr, index) => {
                   // Determine if the current user is the receiver.
                   const isReceiver = currentUserId === tr.incoming_user_id;
-                  console.log(isReceiver)
-                  console.log(isLoggedIn)
-                  console.log(currentUserId)
-                  console.log(tr.incoming_user_id)
                   return (
                     <Box key={index} borderWidth="1px" borderRadius="md" p={4}>
                       <Flex direction="column" gap={3}>
