@@ -55,7 +55,7 @@ import {
 import { IsLoggedInHook } from "../hooks/is_logged_in_hook";
 import { showStoredToastAfterWindowReload } from "../utils";
 import {
-  handleAcceptTradeRequest, handleDeclineTradeRequest,
+  handleAcceptTradeRequest, handleAddMessageToTradeRequest, handleDeclineTradeRequest,
   handleDeleteTradeRequest,
   handleListTradeRequests
 } from "../handlers/trade_request_handler";
@@ -119,6 +119,7 @@ export default function TopBar() {
   const [hasDeleted, setHasDeleted] = useState(false);
   const [tradeRequests, setTradeRequests] = useState([]);
   const [selectedTradeRequest, setSelectedTradeRequest] = useState(null);
+  const [newMessage, setNewMessage] = useState('');
 
   // Show toasts after reloading page
   showStoredToastAfterWindowReload(toast);
@@ -625,6 +626,48 @@ export default function TopBar() {
                       <Text color="gray.500">No messages yet</Text>
                     )}
                   </Stack>
+
+                  {/* New Message Input */}
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!newMessage.trim()) return;
+                    handleAddMessageToTradeRequest(
+                      selectedTradeRequest.outgoing_plant_id,
+                      selectedTradeRequest.incoming_plant_id,
+                      newMessage,
+                      toast,
+                      (updatedTradeRequest) => {
+                        setSelectedTradeRequest(updatedTradeRequest);
+                        setTradeRequests(prev => prev.map(tr =>
+                          tr.outgoing_plant_id === updatedTradeRequest.outgoing_plant_id &&
+                          tr.incoming_plant_id === updatedTradeRequest.incoming_plant_id
+                            ? updatedTradeRequest
+                            : tr
+                        ));
+                        setNewMessage('');
+                      }
+                    );
+                  }}>
+                    <FormControl mt={4}>
+                      <FormLabel>New Message</FormLabel>
+                      <Textarea
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        placeholder="Type your message here..."
+                        resize="vertical"
+                      />
+                    </FormControl>
+                    <Flex justifyContent="flex-end" mt={2}>
+                      <Button
+                        type="submit"
+                        colorScheme="customGreen"
+                        isDisabled={!newMessage.trim()}
+                        size="sm"
+                      >
+                        Send Message
+                      </Button>
+                    </Flex>
+                  </form>
                 </Box>
               </Stack>
             </ModalBody>

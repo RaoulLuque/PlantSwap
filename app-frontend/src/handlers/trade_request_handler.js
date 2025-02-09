@@ -191,3 +191,27 @@ export const handleCreateTradeRequest = async (selectedPlantId, incomingPlantId,
     setIsSubmittingTradeRequest(false);
   }
 };
+
+export const handleAddMessageToTradeRequest = async (outgoingId, incomingId, message, toast, onSuccess) => {
+  try {
+    const formData = new FormData();
+    formData.append('message', message);
+    const response = await api.post(
+      `/requests/message/${outgoingId}/${incomingId}`,
+      formData,
+      { withCredentials: true }
+    );
+
+    toast({
+      title: 'Message Sent',
+      description: 'Your message has been added to the trade request',
+      status: 'success',
+      duration: 5000,
+      isClosable: true,
+    });
+
+    onSuccess(response.data);
+  } catch (error) {
+    handleTradeError(error, toast);
+  }
+};
