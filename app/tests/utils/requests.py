@@ -84,7 +84,7 @@ def assert_if_trade_request_json_and_trade_request_data_match(
     incoming_plant: Plant,
     json_trade_request: dict[str, str],
     messages: list[Message],
-    accepted: bool = False,
+    status: int = 0,
 ) -> None:
     """
     Asserts if the request json and the request data match.
@@ -92,7 +92,7 @@ def assert_if_trade_request_json_and_trade_request_data_match(
     :param incoming_plant: Incoming plant instance
     :param json_trade_request: Response trade request as JSON dict
     :param messages: Optional list of messages, defaults to an empty list
-    :param accepted: Optional boolean to indicate if the request was accepted
+    :param status: Optional int to indicate the status of the trade request, defaults to 0 (pending)
     :return: None
     """
     print(json_trade_request)
@@ -108,4 +108,4 @@ def assert_if_trade_request_json_and_trade_request_data_match(
             str(messages[i].sender_id) == json_trade_request["messages"][i]["sender_id"]
         )
         assert messages[i].content == json_trade_request["messages"][i]["content"]
-    assert accepted == json_trade_request["accepted"]
+    assert status == json_trade_request["status"]

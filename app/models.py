@@ -169,7 +169,8 @@ class TradeRequest(SQLModel, table=True):
             foreign_keys="[TradeRequest.incoming_plant_id]",
         )
     )
-    accepted: bool = Field(default=False)
+    # 0 = pending, 1 = accepted, 2 = rejected
+    status: int = Field(default=0)
     messages: list["Message"] = Relationship(
         back_populates="trade_request",
         cascade_delete=True,
@@ -184,7 +185,7 @@ class TradeRequestPublic(SQLModel):
     incoming_plant_id: uuid.UUID
     outgoing_plant: Plant
     incoming_plant: Plant
-    accepted: bool
+    status: int
     messages: list["Message"]
 
 

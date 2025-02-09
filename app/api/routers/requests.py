@@ -2,6 +2,7 @@
 import uuid
 
 from fastapi import APIRouter, HTTPException, Form
+from sqlalchemy.orm import selectinload
 from sqlmodel import select
 
 from app.api.dependencies import SessionDep, CurrentUserDep
@@ -234,7 +235,7 @@ def accept_trade_request(
     :param session: Current database session
     :param outgoing_plant_id: id of the plant that is being offered
     :param incoming_plant_id: id of the plant that is wanted in return
-    :return: Desired trade request if exists as a TradeRequest instance
+    :return: Desired changed trade request if exists as a TradeRequest instance
     """
     plant_owned_by_user: bool = False
     for plant in current_user.plants:
@@ -253,6 +254,44 @@ def accept_trade_request(
             detail="No trade request with the given plant ids exists.",
         )
     trade_request = requests_crud.accept_trade_request(session, trade_request)
+    return trade_request
+
+
+@router.post(
+    "/requests/reject/{outgoing_plant_id}/{incoming_plant_id}",
+    response_model=TradeRequestPublic,
+)
+def reject_trade_request(
+    current_user: CurrentUserDep,
+    session: SessionDep,
+    outgoing_plant_id: uuid.UUID,
+    incoming_plant_id: uuid.UUID,
+):
+    """
+    Reject a trade request, if the user is owner of the incoming plant.
+    :param current_user: Currently logged-in user.
+    :param session: Current database session
+    :param outgoing_plant_id: id of the plant that is being offered
+    :param incoming_plant_id: id of the plant that is wanted in return
+    :return: Desired changed trade request if exists as a TradeRequest instance
+    """
+    plant_owned_by_user: bool = False
+    for plant in current_user.plants:
+        if plant.id == incoming_plant_id:
+            plant_owned_by_user = True
+            break
+    if not plant_owned_by_user:
+        raise HTTPException(
+            status_code=401,
+            detail="You do not own a plant with the provided incoming plant id.",
+        )
+    trade_request = session.get(TradeRequest, (outgoing_plant_id, incoming_plant_id))
+    if trade_request is None:
+        raise HTTPException(
+            status_code=404,
+            detail="No trade request with the given plant ids exists.",
+        )
+    trade_request = requests_crud.reject_trade_request(session, trade_request)
     return trade_request
 
 
@@ -277,6 +316,12 @@ def delete_trade_request(
     # noinspection Pydantic
     trade_request = session.exec(
         select(TradeRequest)
+        .options(
+            # Eagerly load the relationships to avoid lazy loading error: DetachedInstanceError
+            selectinload(TradeRequest.outgoing_plant),
+            selectinload(TradeRequest.incoming_plant),
+            selectinload(TradeRequest.messages),
+        )
         .where(TradeRequest.incoming_plant_id == incoming_plant_id)
         .where(TradeRequest.outgoing_plant_id == outgoing_plant_id)
     ).first()

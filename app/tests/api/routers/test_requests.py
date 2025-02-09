@@ -575,7 +575,7 @@ def test_accept_trade_request_successful(client: TestClient, db: Session):
             plant_two,
             response.json(),
             [],
-            accepted=True,
+            status=1,
         )
 
 
@@ -610,6 +610,71 @@ def test_accept_trade_request_trade_request_not_found(client: TestClient, db: Se
     ):
         response = client.post(
             f"/requests/accept/{uuid.uuid4()}/{plant_one.id}",
+            cookies=[auth_cookie_one],
+        )
+        assert response.status_code == 404
+        assert {
+            "detail": "No trade request with the given plant ids exists."
+        } == response.json()
+
+
+def test_reject_trade_request_successful(client: TestClient, db: Session):
+    with create_random_trade_request(client, db) as (
+        user_one,
+        password_one,
+        auth_cookie_one,
+        plant_one,
+        user_two,
+        password_two,
+        auth_cookie_two,
+        plant_two,
+        trade_request,
+    ):
+        response = client.post(
+            f"/requests/reject/{plant_one.id}/{plant_two.id}",
+            cookies=[auth_cookie_two],
+        )
+        assert response.status_code == 200
+        assert_if_trade_request_json_and_trade_request_data_match(
+            plant_one,
+            plant_two,
+            response.json(),
+            [],
+            status=2,
+        )
+
+
+def test_reject_trade_request_plant_not_owned(client: TestClient, db: Session):
+    with create_random_trade_request(client, db) as (
+        user_one,
+        password_one,
+        auth_cookie_one,
+        plant_one,
+        user_two,
+        password_two,
+        auth_cookie_two,
+        plant_two,
+        trade_request,
+    ):
+        response = client.post(
+            f"/requests/reject/{plant_one.id}/{plant_two.id}",
+            cookies=[auth_cookie_one],
+        )
+        assert response.status_code == 401
+        assert {
+            "detail": "You do not own a plant with the provided incoming plant id."
+        } == response.json()
+
+
+def test_reject_trade_request_trade_request_not_found(client: TestClient, db: Session):
+    with create_random_plant(client, db) as (
+        user_one,
+        password_one,
+        auth_cookie_one,
+        plant_one,
+    ):
+        response = client.post(
+            f"/requests/reject/{uuid.uuid4()}/{plant_one.id}",
             cookies=[auth_cookie_one],
         )
         assert response.status_code == 404

@@ -127,7 +127,21 @@ def accept_trade_request(session: Session, trade_request: TradeRequest) -> Trade
     :param session: Current database session
     :return: Updated trade request as TradeRequest instance
     """
-    trade_request.accepted = True
+    trade_request.status = 1
+    session.add(trade_request)
+    session.commit()
+    session.refresh(trade_request)
+    return trade_request
+
+
+def reject_trade_request(session: Session, trade_request: TradeRequest) -> TradeRequest:
+    """
+    Set a trade request as rejected.
+    :param trade_request: Trade request to be set as rejected
+    :param session: Current database session
+    :return: Updated trade request as TradeRequest instance
+    """
+    trade_request.status = 2
     session.add(trade_request)
     session.commit()
     session.refresh(trade_request)
