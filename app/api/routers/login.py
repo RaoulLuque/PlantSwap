@@ -61,5 +61,11 @@ async def logout(request: Request, response: Response):
     # TODO: Remove this line
     print(request.cookies.get(ACCESS_TOKEN_COOKIE_NAME))
 
-    response.delete_cookie(ACCESS_TOKEN_COOKIE_NAME)
+    # Manually override the cookie to expire it, using the same attributes.
+    response.delete_cookie(
+        key=ACCESS_TOKEN_COOKIE_NAME,
+        httponly=True,
+        secure=True,
+        samesite="none",
+    )
     return {"message": "Logout successful"}
