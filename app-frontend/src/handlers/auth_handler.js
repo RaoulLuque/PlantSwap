@@ -63,13 +63,23 @@ export const handleLogout = async (toast) => {
       window.location.reload();
     }
   } catch (error) {
-    toast({
-      title: "Logout failed",
-      description: error.response?.data?.detail || "An error occurred",
-      status: "error",
-      duration: 5000,
-      isClosable: true,
-    });
+    if (error.response?.status === 405) {
+        toast({
+            title: "Logout failed",
+            description: "You are not logged in",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+        });
+    } else {
+      toast({
+        title: "Logout failed",
+        description: error.response?.data?.detail || "An error occurred",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   }
 };
 

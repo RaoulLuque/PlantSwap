@@ -125,6 +125,8 @@ export default function TopBar() {
   // Show toasts after reloading page
   showStoredToastAfterWindowReload(toast);
 
+  console.log(isLoggedIn, currentUserId);
+
   return (
     <>
       <Box
