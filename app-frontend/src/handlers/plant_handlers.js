@@ -190,14 +190,12 @@ export const PlantImageHandler = ({ imageUrl, plantId, alt = "Plant image", ...p
     ? `/images/default_plant${(hashUUIDToNumber(plantId) % 5) + 1}.png`
     : `/images/default_plant${Math.floor(Math.random() * 5) + 1}.png`;
 
-  const src = imageUrl || defaultImage;
-
+  // If imageUrl exists, use it without a fallback; otherwise use the default image.
   return (
     <Image
       {...props}
-      src={src}
-      alt={alt}
-      fallbackSrc={defaultImage}
+      src={imageUrl || defaultImage}
+      fallbackSrc={!imageUrl ? defaultImage : undefined}
     />
   );
 };
