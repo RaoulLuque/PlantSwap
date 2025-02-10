@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Box,
   Flex,
@@ -63,6 +63,10 @@ import {
 export default function TopBar() {
   const toast = useToast();
 
+  useEffect(() => {
+    showStoredToastAfterWindowReload(toast);
+  }, [toast]);
+
   const {
     isOpen: isLoginOpen,
     onOpen: onLoginOpen,
@@ -121,9 +125,6 @@ export default function TopBar() {
   const [tradeRequests, setTradeRequests] = useState([]);
   const [selectedTradeRequest, setSelectedTradeRequest] = useState(null);
   const [newMessage, setNewMessage] = useState('');
-
-  // Show toasts after reloading page
-  showStoredToastAfterWindowReload(toast);
 
   // TODO: remove this line
   console.log(isLoggedIn, currentUserId);

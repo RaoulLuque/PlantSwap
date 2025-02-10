@@ -1,19 +1,24 @@
 export function showStoredToastAfterWindowReload(toast) {
-  window.onload = function () {
+  // Check immediately in case the component mounted after load event
+  const checkAndShowToast = () => {
     const toastData = localStorage.getItem('toast');
-
     if (toastData) {
       const { title, status, duration, isClosable } = JSON.parse(toastData);
-
       toast({
         title,
         status,
         duration,
         isClosable,
       });
-
-      // Clear the stored toast information
       localStorage.removeItem('toast');
     }
   };
+
+  // If document is already loaded, run immediately
+  if (document.readyState === 'complete') {
+    checkAndShowToast();
+  } else {
+    // Otherwise wait for load event
+    window.addEventListener('load', checkAndShowToast);
+  }
 }
