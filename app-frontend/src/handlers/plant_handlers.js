@@ -4,6 +4,7 @@ import {Image} from "@chakra-ui/react";
 export const handleCreatePlant = async (
   name,
   description,
+  city,
   tags,
   image,
   toast,
@@ -14,6 +15,7 @@ export const handleCreatePlant = async (
   const formData = new FormData();
   formData.append('name', name);
   formData.append('description', description);
+  formData.append('city', city);
 
   // Process tags assuming tags is an array of strings.
   // Trim each tag and filter out empty strings.

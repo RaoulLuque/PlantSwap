@@ -106,6 +106,7 @@ export default function TopBar() {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [city, setCity] = useState('');
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -283,6 +284,14 @@ export default function TopBar() {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </FormControl>
+              <FormControl isRequired>
+                <FormLabel>City</FormLabel>
+                <Input
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </FormControl>
               <FormControl>
                 <FormLabel>Tags (comma-separated)</FormLabel>
                 <Input
@@ -350,6 +359,7 @@ export default function TopBar() {
                 handleCreatePlant(
                   name,
                   description,
+                  city,
                   tagsArray,
                   image,
                   toast,
