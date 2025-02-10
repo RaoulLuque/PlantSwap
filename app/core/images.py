@@ -29,7 +29,7 @@ def upload_image_to_cloudinary(image: UploadFile, plant_uuid: str) -> str:
         result = upload(
             file=image.file,
             resource_type="image",
-            folder="plantswap_plants",
+            folder=f"{settings.CLOUDINARY_FOLDER}",
             public_id=f"{plant_uuid}",
         )
         return result["secure_url"]
@@ -43,6 +43,7 @@ def delete_image_from_cloudinary(public_id: str) -> None:
     :param public_id: Public id of the image to delete. It is the uuid of the plant.
     """
     try:
-        destroy(public_id)
+        cloudinary_public_id = f"{settings.CLOUDINARY_FOLDER}/{public_id}"
+        result = destroy(cloudinary_public_id)
     except CloudinaryError as e:
         raise ValueError(f"Failed to delete image: {e}")
