@@ -5,13 +5,29 @@ export const handleRegistration = async (event, onRegisterClose, toast) => {
 
   const formData = new FormData(event.target);
 
-  try {
-    const userData = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-      full_name: formData.get("full_name"),
-    };
+  const password = formData.get("password");
+  const confirmPassword = formData.get("confirmPassword");
 
+  // Check if the passwords match
+  if (password !== confirmPassword) {
+    toast({
+      title: "Passwords do not match",
+      description: "Please ensure both password fields are identical.",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+    return;
+  }
+
+  // Build the user data object for signup
+  const userData = {
+    email: formData.get("email"),
+    password: password,
+    full_name: formData.get("full_name"),
+  };
+
+  try {
     const response = await api.post("/users/signup", userData);
 
     if (response.status === 200) {

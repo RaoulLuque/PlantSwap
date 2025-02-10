@@ -211,7 +211,7 @@ export default function TopBar() {
           <ModalBody>
             <form id="login-form" onSubmit={(e) => handleLogin(e, onLoginClose, toast, setIsLoggingIn)}>
               <Stack spacing={4}>
-                <Input name="username" placeholder="Username" required />
+                <Input name="username" placeholder="Email" required />
                 <Input name="password" type="password" placeholder="Password" required />
               </Stack>
             </form>
@@ -241,11 +241,20 @@ export default function TopBar() {
           <ModalHeader>Register</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <form id="register-form" onSubmit={(e) => handleRegistration(e, onRegisterClose, toast)}>
+            <form
+              id="register-form"
+              onSubmit={(e) => handleRegistration(e, onRegisterClose, toast)}
+            >
               <Stack spacing={4}>
-                <Input name="full_name" placeholder="Full Name" required />
+                <Input name="full_name" placeholder="Name" required />
                 <Input name="email" type="email" placeholder="Email" required />
                 <Input name="password" type="password" placeholder="Password" required />
+                <Input
+                  name="confirmPassword"
+                  type="password"
+                  placeholder="Confirm Password"
+                  required
+                />
               </Stack>
             </form>
           </ModalBody>
