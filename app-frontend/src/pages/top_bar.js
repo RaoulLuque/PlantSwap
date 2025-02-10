@@ -225,7 +225,7 @@ export default function TopBar() {
               isLoading={isLoggingIn}
               disabled={isLoggingIn}
             >
-              Create
+              Login
             </Button>
             <Button variant="ghost" onClick={onLoginClose}>
               Cancel
