@@ -39,6 +39,7 @@ services:
       - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
       - CLOUDINARY_FOLDER=${CLOUDINARY_FOLDER}
       - FRONTEND_URLS=${FRONTEND_URLS}
+      - DOMAIN=${DOMAIN}
     ports:
       - "8000:8000"
     volumes:

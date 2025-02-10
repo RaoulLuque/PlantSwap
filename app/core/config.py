@@ -32,6 +32,7 @@ class Settings(BaseSettings):
 
     # Frontend
     FRONTEND_URLS: list[str]
+    DOMAIN: str
 
     @computed_field  # type: ignore[prop-decorator]
     @property
