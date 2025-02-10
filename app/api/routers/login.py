@@ -59,8 +59,6 @@ async def logout(request: Request, response: Response):
     """
     if request.cookies.get(ACCESS_TOKEN_COOKIE_NAME) is None:
         raise HTTPException(status_code=405, detail="You are not logged in")
-    # TODO: Remove this line
-    print(request.cookies.get(ACCESS_TOKEN_COOKIE_NAME))
 
     # Manually override the cookie to expire it, using the same attributes.
     response.delete_cookie(

@@ -126,9 +126,6 @@ export default function TopBar() {
   const [selectedTradeRequest, setSelectedTradeRequest] = useState(null);
   const [newMessage, setNewMessage] = useState('');
 
-  // TODO: remove this line
-  console.log(isLoggedIn, currentUserId);
-
   return (
     <>
       <Box
