@@ -60,7 +60,7 @@ export const handleLogout = async (toast) => {
         duration: 5000,
         isClosable: true,
       }));
-      // window.location.reload(); TODO: Uncomment this line
+      window.location.reload();
     }
   } catch (error) {
     if (error.response?.status === 405) {
