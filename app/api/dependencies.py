@@ -1,5 +1,5 @@
 from collections.abc import Generator
-from typing import Annotated
+from typing import Annotated, Optional
 
 import jwt
 from fastapi import Depends, HTTPException, status, Request
@@ -80,6 +80,23 @@ async def get_current_user(token: TokenDep, session: SessionDep) -> User:
 
 # Dependency for when current user data is wanted
 CurrentUserDep = Annotated[User, Depends(get_current_user)]
+
+
+async def get_current_user_optional(token: TokenDep, session: SessionDep) -> Optional[User]:
+    """
+    Returns the current user if a token is provided and it is valid, otherwise returns None.
+    :param token: Token used for validation
+    :param session: Database session
+    :return: User data including hashed password
+    """
+    if token is None:
+        return None
+    else:
+        return await get_current_user(token, session)
+
+
+# Dependency for when the user may not be logged in or they may be and if so the user data is wanted
+OptionalCurrentUserDep = Annotated[Optional[User], Depends(get_current_user_optional)]
 
 
 async def get_current_active_user(

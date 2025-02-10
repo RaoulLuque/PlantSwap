@@ -1,10 +1,10 @@
 import uuid
-from typing import Any
+from typing import Any, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
 from app.core.crud import users_crud
-from app.api.dependencies import CurrentUserDep, SessionDep
+from app.api.dependencies import CurrentUserDep, SessionDep, OptionalCurrentUserDep
 from app.models import UserPublic, UserCreate, User, UsersPublic
 
 # Router for api endpoints regarding user functionality
@@ -54,18 +54,30 @@ def read_users(session: SessionDep, skip: int = 0, limit: int = 100) -> Any:
 
 
 @router.post("/users/signup", response_model=UserPublic)
-def create_user(session: SessionDep, user_in: UserCreate):
+def create_user(session: SessionDep, optional_current_user: OptionalCurrentUserDep,  user_in: UserCreate):
     """
     Create new user.
     :param session: Current database session.
+    :param optional_current_user: None if the user is not logged in or currently logged-in user otherwise
     :param user_in: The user data for the to-be-created user.
     :return: User data excluding password in shape of a UserPublic instance.
     """
+    if optional_current_user is None and user_in.is_superuser:
+        raise HTTPException(
+            status_code=401,
+            detail="You are not authorized to create superusers.",
+        )
+    if optional_current_user is not None:
+        if not optional_current_user.is_superuser:
+            raise HTTPException(
+                status_code=401,
+                detail="You are not authorized to create superusers.",
+            )
     user = users_crud.get_user_by_email(session, str(user_in.email))
     if user:
         raise HTTPException(
             status_code=400,
-            detail="The user with this email already exists in the system.",
+            detail="A user with this email already exists.",
         )
     user = users_crud.create_user(session, user_in)
     return user

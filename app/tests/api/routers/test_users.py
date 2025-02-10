@@ -105,7 +105,7 @@ def test_create_user_new_email(client: TestClient, db: Session) -> None:
         "/users/signup",
         json=data,
     )
-    assert 200 <= response.status_code < 300
+    assert 200 == response.status_code
     created_user = response.json()
     user = users_crud.get_user_by_email(session=db, email=str(username))
     assert user
@@ -175,7 +175,7 @@ def test_create_user_read_user_and_delete_user(client: TestClient, db: Session) 
         "/users/signup",
         json=data,
     )
-    assert 200 <= response.status_code < 300
+    assert 200 == response.status_code
     user = users_crud.get_user_by_email(db, str(data["email"]))
     assert user
     id = user.id
