@@ -28,7 +28,11 @@ import {
 import { ListAllPlantsHook } from "../../../hooks/list_all_plants_hook";
 import { IsLoggedInHook } from "../../../hooks/is_logged_in_hook";
 import {useEffect, useState} from 'react';
-import { handleCreateTradeRequest, handleTradeRequestClick } from "../../../handlers/trade_request_handler";
+import {
+  handleCreateTradeRequest,
+  handleLoginToTradeClick,
+  handleTradeRequestClick
+} from "../../../handlers/trade_request_handler";
 import {PlantImageHandler} from "../../../handlers/plant_handlers";
 
 const PlantTags = ({ marginTop = 0, tags }) => {
@@ -176,6 +180,20 @@ function PlantList() {
                       onClick={() => handleTradeRequestClick(plant.id, setIncomingPlantId, toast, setMyPlants, onTradeRequestOpen)}
                     >
                       Request Trade
+                    </Button>
+                  )}
+
+                  {!isLoggedIn && (
+                    <Button
+                      colorScheme="green"
+                      size="md"
+                      width={{ base: "100%", md: "50%" }}
+                      mt={4}
+
+                      onClick={() => handleLoginToTradeClick(toast)}
+                      variant="outline"
+                    >
+                      Login to Trade
                     </Button>
                   )}
                 </Box>

@@ -215,3 +215,13 @@ export const handleAddMessageToTradeRequest = async (outgoingId, incomingId, mes
     handleTradeError(error, toast);
   }
 };
+
+export const handleLoginToTradeClick = (toast) => {
+  toast({
+    title: 'Login Required',
+    description: 'You need to be logged in to trade plants. Please login or register by clicking on the top right icon.',
+    status: 'info',
+    duration: 5000,
+    isClosable: true,
+  })
+}
