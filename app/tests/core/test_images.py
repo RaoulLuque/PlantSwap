@@ -48,8 +48,8 @@ def test_delete_image_from_cloudinary():
 
     with patch("app.core.images.destroy") as mocked_destroy:
         delete_image_from_cloudinary(public_id)
-
-    mocked_destroy.assert_called_once_with(public_id)
+    called_with = f"{settings.CLOUDINARY_FOLDER}/{public_id}"
+    mocked_destroy.assert_called_once_with(called_with)
 
 
 def test_delete_image_from_cloudinary_exception():

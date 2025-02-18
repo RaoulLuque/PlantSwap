@@ -44,6 +44,6 @@ def delete_image_from_cloudinary(public_id: str) -> None:
     """
     try:
         cloudinary_public_id = f"{settings.CLOUDINARY_FOLDER}/{public_id}"
-        result = destroy(cloudinary_public_id)
+        destroy(cloudinary_public_id)
     except CloudinaryError as e:
         raise ValueError(f"Failed to delete image: {e}")
