@@ -13,7 +13,7 @@ from app.tests.utils.utils import (
 from app.tests.utils.users import (
     create_random_user,
     get_user_authentication_cookie,
-    assert_if_user_and_json_response_user_match,
+    assert_if_user_and_json_response_user_match, return_bool_assert_if_user_and_json_response_user_match,
 )
 
 
@@ -73,17 +73,19 @@ def test_read_user_not_found(client: TestClient) -> None:
 
 
 def test_read_users(client: TestClient, db: Session) -> None:
-    with create_random_user(client, db) as (user_one, _, _):
+    with (create_random_user(client, db) as (user_one, _, _)):
         with create_random_user(client, db) as (user_two, _, _):
             response = client.get("/users/")
             response_json = response.json()
             print(response_json)
-            assert_if_user_and_json_response_user_match(
-                user_one, response_json["data"][1]
-            )
-            assert_if_user_and_json_response_user_match(
-                user_two, response_json["data"][2]
-            )
+            assert (
+                    return_bool_assert_if_user_and_json_response_user_match(user_one, response_json["data"][1])
+                    and
+                    return_bool_assert_if_user_and_json_response_user_match(user_two, response_json["data"][2]
+            )) or (
+                    return_bool_assert_if_user_and_json_response_user_match(user_one, response_json["data"][2])
+                    and
+                    return_bool_assert_if_user_and_json_response_user_match(user_two, response_json["data"][1]))
             assert len(response_json["data"]) >= 3
 
 

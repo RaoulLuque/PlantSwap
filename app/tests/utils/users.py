@@ -49,11 +49,8 @@ def get_user_authentication_cookie(
     }
     response = client.post("/login/token", data=login_data)
     access_token_cookie_value = ""
-    print("Response cookies:", response.cookies)
     if ACCESS_TOKEN_COOKIE_NAME in response.cookies:
-        print("Empty cookie:", access_token_cookie_value)
         access_token_cookie_value = response.cookies[ACCESS_TOKEN_COOKIE_NAME]
-    print("Cookie tuple before returning:", ACCESS_TOKEN_COOKIE_NAME, access_token_cookie_value)
     return ACCESS_TOKEN_COOKIE_NAME, access_token_cookie_value
 
 
@@ -66,7 +63,6 @@ def get_superuser_authentication_cookie(client: TestClient) -> tuple[str, str]:
     cookie = get_user_authentication_cookie(
         client, settings.FIRST_SUPERUSER, settings.FIRST_SUPERUSER_PASSWORD
     )
-    print("superuser auth cookie:", cookie)
     return cookie
 
 
@@ -84,3 +80,27 @@ def assert_if_user_and_json_response_user_match(user: User, json_user: dict) -> 
     assert json_user["is_active"] == user.is_active
     assert json_user["is_superuser"] == user.is_superuser
     assert json_user["full_name"] == user.full_name
+
+
+def return_bool_assert_if_user_and_json_response_user_match(user: User, json_user: dict) -> bool:
+    """
+    Asserts if the User instance and the JSON response user match.
+    :param user: User instance
+    :param json_user: Response user as JSON dict
+    :return: None
+    """
+    if user is None:
+        return False
+    if json_user is None:
+        return False
+    if not json_user["id"] == str(user.id):
+        return False
+    if not json_user["email"] == user.email:
+        return False
+    if not json_user["is_active"] == user.is_active:
+        return False
+    if not json_user["is_superuser"] == user.is_superuser:
+        return False
+    if not json_user["full_name"] == user.full_name:
+        return False
+    return True
