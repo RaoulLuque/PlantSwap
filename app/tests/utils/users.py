@@ -49,8 +49,11 @@ def get_user_authentication_cookie(
     }
     response = client.post("/login/token", data=login_data)
     access_token_cookie_value = ""
+    print("Response cookies:", response.cookies)
     if ACCESS_TOKEN_COOKIE_NAME in response.cookies:
+        print("Empty cookie:", access_token_cookie_value)
         access_token_cookie_value = response.cookies[ACCESS_TOKEN_COOKIE_NAME]
+    print("Cookie tuple before returning:", ACCESS_TOKEN_COOKIE_NAME, access_token_cookie_value)
     return ACCESS_TOKEN_COOKIE_NAME, access_token_cookie_value
 
 
@@ -63,6 +66,7 @@ def get_superuser_authentication_cookie(client: TestClient) -> tuple[str, str]:
     cookie = get_user_authentication_cookie(
         client, settings.FIRST_SUPERUSER, settings.FIRST_SUPERUSER_PASSWORD
     )
+    print("superuser auth cookie:", cookie)
     return cookie
 
 

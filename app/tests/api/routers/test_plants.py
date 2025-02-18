@@ -172,6 +172,7 @@ def test_delete_plant_superuser_success(
     client: TestClient, db: Session, superuser_auth_cookie
 ) -> None:
     with create_random_plant(client, db) as (_, _, _, plant):
+        print(superuser_auth_cookie)
         response = client.post(f"/plants/{plant.id}", cookies=[superuser_auth_cookie])
         assert response.status_code == 200
         response_json = response.json()
