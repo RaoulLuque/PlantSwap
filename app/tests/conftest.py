@@ -9,6 +9,7 @@ os.environ["CLOUDINARY_API_SECRET"] = "Test"
 from collections.abc import Generator
 
 import pytest
+from fastapi import Response
 from fastapi.testclient import TestClient
 from sqlmodel import Session, delete
 
@@ -43,3 +44,14 @@ def db() -> Generator[Session, None, None]:
         statement = delete(TradeRequest)
         session.execute(statement)
         session.commit()
+
+
+@pytest.fixture
+def override_set_cookie(monkeypatch):
+    original_set_cookie = Response.set_cookie
+
+    def fake_set_cookie(self, key, value, **kwargs):
+        kwargs.pop("domain", None)
+        return original_set_cookie(self, key, value, **kwargs)
+
+    monkeypatch.setattr(Response, "set_cookie", fake_set_cookie)
