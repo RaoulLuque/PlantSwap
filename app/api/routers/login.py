@@ -3,10 +3,11 @@ from datetime import timedelta
 from fastapi import Depends, APIRouter, HTTPException, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.api.dependencies import SessionDep, ACCESS_TOKEN_COOKIE_NAME
+from app.api.dependencies import SessionDep, ACCESS_TOKEN_COOKIE_NAME, OptionalCurrentUserDep
 from app.core.crud.users_crud import authenticate_user
 from app.core.security import create_access_token
 from app.core.config import settings
+from app.models import User
 
 # Router for api endpoints regarding login functionality
 router = APIRouter()
@@ -50,14 +51,14 @@ async def login_for_access_token(
 
 
 @router.post("/logout")
-async def logout(request: Request, response: Response):
+async def logout(optional_user: OptionalCurrentUserDep, response: Response):
     """
     Logout endpoint to delete the access token cookie. If user is not logged in returns a 405 HTTPException.
-    :param request: Request object to check if cookie exists
+    :param optional_user: Optional user to check if logged in
     :param response: Response object to delete cookie
     :return: Message indicating successful logout
     """
-    if request.cookies.get(ACCESS_TOKEN_COOKIE_NAME) is None:
+    if optional_user is None:
         raise HTTPException(status_code=405, detail="You are not logged in")
 
     # Manually override the cookie to expire it, using the same attributes.

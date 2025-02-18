@@ -122,6 +122,50 @@ def test_create_user_existing_email(client: TestClient, db: Session) -> None:
     assert response.status_code == 400
 
 
+def test_create_superuser(client: TestClient, db: Session, superuser_auth_cookie: tuple[str, str]) -> None:
+    username = random_email()
+    password = random_lower_string()
+    data = {"email": username, "password": password, "is_superuser": True}
+    response = client.post(
+        "/users/signup",
+        json=data,
+        cookies=[superuser_auth_cookie],
+    )
+    assert response.status_code == 200
+    created_user = response.json()
+    user = users_crud.get_user_by_email(db, str(username))
+    assert user
+    assert user.is_superuser
+    assert_if_user_and_json_response_user_match(user, created_user)
+    users_crud.delete_user(db, user)
+
+
+def test_create_superuser_unauthorized_not_logged_in(client: TestClient, db: Session) -> None:
+    username = random_email()
+    password = random_lower_string()
+    data = {"email": username, "password": password, "is_superuser": True}
+    response = client.post(
+        "/users/signup",
+        json=data,
+    )
+    assert response.status_code == 401
+    assert response.json() == {"detail": "You are not authorized to create superusers."}
+
+
+def test_create_superuser_unauthorized_logged_in(client: TestClient, db: Session) -> None:
+    with create_random_user(client, db) as (user, _, auth_cookie):
+        username = random_email()
+        password = random_lower_string()
+        data = {"email": username, "password": password, "is_superuser": True}
+        response = client.post(
+            "/users/signup",
+            json=data,
+            cookies=[auth_cookie],
+        )
+        assert response.status_code == 401
+        assert response.json() == {"detail": "You are not authorized to create superusers."}
+
+
 def test_delete_user_existing_user(client: TestClient, db: Session):
     username = random_email()
     password = random_lower_string()

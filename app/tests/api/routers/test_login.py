@@ -72,3 +72,13 @@ def test_logout(client: TestClient, db: Session) -> None:
         assert ACCESS_TOKEN_COOKIE_NAME not in response.cookies
         assert response.status_code == 200
         assert response.json() == {"message": "Logout successful"}
+        response = client.post("/logout")
+        assert response.status_code == 405
+        assert response.json() == {"detail": "You are not logged in"}
+
+
+def test_logout_not_logged_in(client: TestClient) -> None:
+    response = client.post("/logout")
+    assert response.status_code == 405
+    assert response.json() == {"detail": "You are not logged in"}
+    assert ACCESS_TOKEN_COOKIE_NAME not in response.cookies

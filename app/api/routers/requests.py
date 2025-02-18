@@ -333,7 +333,7 @@ def add_message_to_trade_request(
     if not user_involved_in_trade:
         raise HTTPException(
             status_code=404,
-            detail="No trade request with the given plant ids exists.",
+            detail="You do not own a plant with the given ids.",
         )
     trade_request = session.get(TradeRequest, (outgoing_plant_id, incoming_plant_id))
     if trade_request is None:

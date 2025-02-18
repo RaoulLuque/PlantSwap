@@ -210,6 +210,112 @@ def test_create_trade_request_existing_trade_request(client: TestClient, db: Ses
         } == response.json()
 
 
+def test_create_trade_request_existing_inverse_trade_request(client: TestClient, db: Session):
+    with create_random_trade_request(client, db) as (
+        user_one,
+        password_one,
+        auth_cookie_one,
+        plant_one,
+        user_two,
+        password_two,
+        auth_cookie_two,
+        plant_two,
+        trade_request,
+    ):
+        response = client.post(
+            f"/requests/create/{plant_two.id}/{plant_one.id}",
+            cookies=[auth_cookie_two],
+        )
+        assert response.status_code == 409
+        assert {
+            "detail": "You already have a trade request for these two plants."
+        } == response.json()
+
+
+def test_add_message_to_existing_trade_request(client: TestClient, db: Session):
+    with create_random_trade_request(client, db) as (
+        user_one,
+        _,
+        auth_cookie_one,
+        plant_one,
+        user_two,
+        _,
+        auth_cookie_two,
+        plant_two,
+        trade_request,
+    ):
+        message_content = random_lower_string()
+        response = client.post(
+            f"/requests/message/{plant_one.id}/{plant_two.id}",
+            data={"message": message_content},
+            cookies=[auth_cookie_one],
+        )
+        assert response.status_code == 200
+        messages = [
+            Message(
+                sender_id=user_one.id,
+                content=message_content,
+                outgoing_plant_id=plant_one.id,
+                incoming_plant_id=plant_two.id,
+            )
+        ]
+        assert_if_trade_request_json_and_trade_request_data_match(
+            plant_one, plant_two, response.json(), messages
+        )
+
+
+def test_add_message_to_non_existing_trade_request(client: TestClient, db: Session):
+    with create_random_plant(client, db) as (
+        user_one,
+        _,
+        auth_cookie_one,
+        plant_one,
+    ):
+        with create_random_plant(client, db) as (
+            _,
+            _,
+            _,
+            plant_two,
+        ):
+            message_content = random_lower_string()
+            response = client.post(
+                f"/requests/message/{plant_one.id}/{plant_two.id}",
+                data={"message": message_content},
+                cookies=[auth_cookie_one],
+            )
+            assert response.status_code == 404
+            assert {"detail": "No trade request with the given plant ids exists."} == response.json()
+
+
+def test_add_message_to_trade_request_plant_not_owned(client: TestClient, db: Session):
+    with create_random_trade_request(client, db) as (
+        user_one,
+        _,
+        auth_cookie_one,
+        plant_one,
+        user_two,
+        _,
+        auth_cookie_two,
+        plant_two,
+        trade_request,
+    ):
+        with create_random_user(client, db) as (
+            _,
+            _,
+            cookie,
+        ):
+            message_content = random_lower_string()
+            response = client.post(
+                f"/requests/message/{plant_one.id}/{plant_two.id}",
+                data={"message": message_content},
+                cookies=[cookie],
+            )
+            assert response.status_code == 404
+            assert {
+                "detail": "You do not own a plant with the given ids."
+            } == response.json()
+
+
 def test_read_specific_outgoing_trade_request_existing_trade_request(
     client: TestClient, db: Session
 ):
