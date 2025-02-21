@@ -1,6 +1,6 @@
 # PlantSwap
 
-![Logo created using Dall-E](docs/milestone_1/logo.webp)
+[![Logo created using Dall-E](docs/milestone_1/logo.webp)](https://plantswap.live/)
 
 [![tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fgist.githubusercontent.com%2FRaoulLuque%2F5d6fa85dbeff94c59c734a06a656267f%2Fraw%2FPlantSwap-junit-tests.json&style=flat
 )](https://github.com/RaoulLuque/PlantSwap/actions)
