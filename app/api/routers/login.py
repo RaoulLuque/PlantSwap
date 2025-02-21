@@ -67,5 +67,6 @@ async def logout(optional_user: OptionalCurrentUserDep, response: Response):
         httponly=True,
         secure=True,
         samesite="none",
+        domain=f".{settings.DOMAIN}",
     )
     return {"message": "Logout successful"}
